@@ -113,11 +113,12 @@ function showMap() {
 				//try { hCtx.drawImage(map.images[0], 24 * +c, 0, 24, 24, x * 8, y * 8, 24, 24); } catch(e) { /*console.log(e);*/ }
 				hCtx.fillStyle = "rgb(" + [28 * c, 28 * c, 28 * c].join() + ")";
 				hCtx.fillRect(x * 24, y * 24, 24, 24);
-				hCtx.fillStyle = "rgb(" + [255-28 * c, 255-28 * c, 255-28 * c].join() + ")";
-				hCtx.fillText("Ж" + c, x * 24+12, y * 24+24);
-			} else
-			if(d > 0 && map.images.length > d)
-				hCtx.drawImage(map.images[d], x * 24, y * 24);
+			} else {
+			//if(d > 0 && map.images.length > d) {
+				//hCtx.drawImage(map.images[d], x * 24, y * 24);
+				hCtx.fillStyle = "red";
+				hCtx.fillText(plot.charAt(0), x * 24, y * 24+24);
+			}
 			plot = plot.substr(1);
 			++ x;
 		}
