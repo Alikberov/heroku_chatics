@@ -142,7 +142,7 @@ const server = http.createServer((req, res) => {
 	hCtx.fillStyle = 'red';
 	hCtx.fillRect(0, 0, hCanvas.width, hCanvas.height);
 	hXML.open("GET", szPage, false);
-	hXML.send(szPage);
+//	hXML.send(szPage);
 	if(200 != hXML.status) {
 		console.log(hXML.status + ": " + hXML.statusText);
 	} else {
@@ -161,22 +161,3 @@ const server = http.createServer((req, res) => {
 		hCanvas.pngStream().pipe(res);
 	}
 });
-
-server.listen(hostport, hostname, () => {
-  console.log(`Server running at http://${hostname}:${hostport}/`);
-});
-/*	hXML.open("GET", szPage, false);
-	hXML.send();
-	if(200 != hXML.status) {
-		console.log(hXML.status + ": " + hXML.statusText);
-	} else {
-		const dom = new JSDOM(hXML.responseText);
-		hSecret = dom.window.document;
-		GetUp();
-//		var		document = parser.Parse(hXML.responseText);
-		//sys.puts(sys.inspect(handler.dom, false, null));
-//		console.log("GetUp(); showMap(hSelect)"); // Ждём загрузки всех изображений
-	}
-		parser.parseComplete(hXML.responseText);
-		console.log(parser);
-*/
