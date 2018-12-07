@@ -179,7 +179,7 @@ const server = http.createServer((req, res) => {
 				console.log("Timer:user=" + nickun + ";map=" + pictun + ";secret=" + dom + ":" + hSecret);
 				var tmp = GetUp();
 				aMaps = tmp;
-				showMap(aMaps, nickun, pictun);
+				try { showMap(aMaps, nickun, pictun); } catch(e) { };
 			//}, 1000); // Ждём загрузки всех изображений
 			res.statusCode = 200;
 			res.setHeader('Content-Type', 'image/png');
