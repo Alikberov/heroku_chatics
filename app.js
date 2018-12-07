@@ -95,6 +95,9 @@ function GetUp() {
 function showMap(nick, place) {
 	//var	nick = info[0];
 	//var	place = info[1];
+	console.log("Show:user=" + nick + ";map=" + place);
+	console.log("Show:user=" + aMaps[nick]);
+	console.log("Show:user=" + aMaps[nick][place]);
 	var	map = aMaps[nick][place];
 	var	y = 0;
 	//
@@ -164,7 +167,11 @@ const server = http.createServer((req, res) => {
 			nickun = picture[1];
 			const dom = new JSDOM(hXML.responseText);
 			hSecret = dom.window.document;
-			setTimeout(() => {GetUp(); showMap(nickun, pictun); }, 1000); // Ждём загрузки всех изображений
+			setTimeout(() => {
+				console.log("Timer:user=" + nickun + ";map=" + pictun);
+				GetUp();
+				showMap(nickun, pictun);
+			}, 1000); // Ждём загрузки всех изображений
 			res.statusCode = 200;
 			res.setHeader('Content-Type', 'image/png');
 			hCanvas.pngStream().pipe(res);
