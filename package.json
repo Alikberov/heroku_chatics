@@ -4,7 +4,7 @@
 	"description": "node app ",
 	"main": "app.js",
 	"scripts": {
-		"start": "npm install --save canvas"
+		"start": "node app.js"
 	},
 	"repository": {
 		"type": "git",
