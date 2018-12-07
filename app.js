@@ -10,6 +10,7 @@ logs(`Start at "http://${hosting}:${port}/" for parse "${phorum}"`);
 
 //const	sys		= require('sys');
 const	http	= require("http");
+const	util	= require("util");
 
 const	htmlparser = require(log = "htmlparser");
 logs(`require("${log}") is ` + (htmlparser ? "loaded..." : "fails."));
@@ -122,6 +123,7 @@ function showMap(aMaps, nick, place) {
 	//var	nick = info[0];
 	//var	place = info[1];
 	console.log("Show:user=" + nick + ";map=" + place);
+	logs(util.inspect(aMaps, false, null, true /* enable colors */));
 	console.log("Show:user=" + aMaps[nick]);
 	console.log("Show:user=" + aMaps[nick][place]);
 	var	map = aMaps[nick][place];
