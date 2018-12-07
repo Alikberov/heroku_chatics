@@ -12,6 +12,7 @@
 	"description": "node app ",
 	"main": "app.js",
 	"scripts": {
+		"start": "npm install --save & node app"
 	},
 	"repository": {
 		"type": "git",
