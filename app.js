@@ -139,7 +139,9 @@ hCtx.beginPath()
 hCtx.lineTo(50, 102)
 hCtx.lineTo(50 + text.width, 102)
 hCtx.stroke()
- 
+
+var	pictun;
+
 const server = http.createServer((req, res) => {
 	var	picture = req.url.match(/post=(\d)/);
 	if(picture) {
@@ -157,9 +159,10 @@ const server = http.createServer((req, res) => {
 			//var		document = parser.Parse(hXML.responseText);
 			//sys.puts(sys.inspect(handler.dom, false, null));
 			console.log("GetUp(); showMap("  + picture[1] + ")"); // Ждём загрузки всех изображений
+			pictun = picture[1];
 			const dom = new JSDOM(hXML.responseText);
 			hSecret = dom.window.document;
-			setTimeout("GetUp(); showMap("  + picture[1] + ")", 1000); // Ждём загрузки всех изображений
+			setTimeout(() => {GetUp(); showMap(pictun); }, 1000); // Ждём загрузки всех изображений
 			res.statusCode = 200;
 			res.setHeader('Content-Type', 'image/png');
 			hCanvas.pngStream().pipe(res);
