@@ -7,7 +7,7 @@
 	    "canvas": "^2.1.0",
 	    "htmlparser": "^1.7.7",
 	    "jsdom": "^13.0.0",
-	    "xmlhttprequest": "^1.8.0",
+	    "xmlhttprequest": "^1.8.0"
 	},
 	"description": "node app ",
 	"main": "app.js",
