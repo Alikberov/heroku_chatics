@@ -2,6 +2,8 @@ const	szPage	= "https://gamedev.ru/flame/forum/?id=240242";
 const	hostname = "";
 const	hostport = 3000;
 
+console.log("http://" + hostname + ":" + hostport + "/ --- " + szPage);
+
 const	http = require("http");
 const	htmlparser = require("htmlparser");
 const	jsdom	= require("jsdom");
@@ -10,7 +12,6 @@ const	hXML = new XMLHttpRequest();
 
 const	{ JSDOM } = jsdom;
 
-console.log("http://" + hostname + ":" + hostport + "/");
 
 var		handler = new htmlparser.DefaultHandler(function (error, dom) {
     if(error) {
