@@ -74,11 +74,11 @@ function GetUp() {
 			hUser = hCaption[0].querySelector("a");
 			nick = hUser.textContent;
 			pics = hDiv.querySelectorAll("img");
-			for(var i in pics) {
+			/*for(var i in pics) {
 				loadImage(pics[i].src).then((image) => {
 					console.log(image);
 				});
-			}
+			}*/
 			console.log(pics);
 			hDiv
 			.querySelectorAll("pre")
