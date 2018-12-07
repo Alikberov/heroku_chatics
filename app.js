@@ -1,6 +1,6 @@
 const	szPage	= "https://gamedev.ru/flame/forum/?id=240242";
 const	hostname = "";
-const	hostport = 5000;
+const	hostport = process.env.PORT || 5000;
 
 console.log("http://" + hostname + ":" + hostport + "/ --- " + szPage);
 
