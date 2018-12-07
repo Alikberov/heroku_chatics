@@ -3,13 +3,14 @@ const	hostname = "";
 const	hostport = 3000;
 
 const	http = require("http");
+const	htmlparser = require("htmlparser");
+const	jsdom	= require("jsdom");
 const	XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
 const	hXML = new XMLHttpRequest();
 
-const	jsdom	= require("jsdom");
 const	{ JSDOM } = jsdom;
 
-const	htmlparser = require("htmlparser");
+console.log("http://" + hostname + ":" + hostport + "/");
 
 var		handler = new htmlparser.DefaultHandler(function (error, dom) {
     if(error) {
