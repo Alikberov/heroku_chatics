@@ -1,4 +1,4 @@
-const	szPage	= "http://gamedev.ru/flame/forum/?id=240242";
+const	szPage	= "https://gamedev.ru/flame/forum/?id=240242";
 const	hostname = "";
 const	hostport = 3000;
 
@@ -162,4 +162,7 @@ const server = http.createServer((req, res) => {
 		res.setHeader('Content-Type', 'image/png');
 		hCanvas.pngStream().pipe(res);
 	}
+});
+server.listen(hostport, hostname, () => {
+  console.log(`Server running at http://${hostname}:${hostport}/`);
 });
