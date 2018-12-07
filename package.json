@@ -4,7 +4,7 @@
 	"description": "node app ",
 	"main": "app.js",
 	"scripts": {
-		"start": "npm install --save jsdom"
+		"start": "npm install --save htmlparser"
 	},
 	"repository": {
 		"type": "git",
