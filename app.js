@@ -145,6 +145,7 @@ hCtx.stroke()
 
 var	nickun;
 var	pictun;
+var	dom;
 
 const server = http.createServer((req, res) => {
 	var	picture = unescape(req.url).match(/nick="(.*?)"&post=(\d)/);
@@ -165,10 +166,10 @@ const server = http.createServer((req, res) => {
 			console.log("GetUp(); showMap("  + picture[1] + ")"); // Ждём загрузки всех изображений
 			pictun = picture[2];
 			nickun = picture[1];
-			const dom = new JSDOM(hXML.responseText);
+			dom = new JSDOM(hXML.responseText);
 			hSecret = dom.window.document;
 			setTimeout(() => {
-				console.log("Timer:user=" + nickun + ";map=" + pictun);
+				console.log("Timer:user=" + nickun + ";map=" + pictun + ";secret=" + dom + ":" + hSecret);
 				GetUp();
 				showMap(nickun, pictun);
 			}, 1000); // Ждём загрузки всех изображений
