@@ -1,18 +1,41 @@
-const	szPage	= "https://gamedev.ru/flame/forum/?id=240242";
-const	hostname = "";
-const	hostport = process.env.PORT || 5000;
+const	logs	= console.log;
 
-console.log("http://" + hostname + ":" + hostport + "/ --- " + szPage);
+const	phorum	= "https://gamedev.ru/flame/forum/?id=240242";
+const	hosting	= "";
+const	port	= process.env.PORT || 5000;
 
-const	http = require("http");
-const	htmlparser = require("htmlparser");
-const	jsdom	= require("jsdom");
-const	XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
-const	hXML = new XMLHttpRequest();
+var		log;
 
-const	{ JSDOM } = jsdom;
+logs(`Start at "http://${hosting}:${port}/" for parse "${phorum}"`);
 
+//const	sys		= require('sys');
+const	http	= require("http");
 
+const	htmlparser = require(log = "htmlparser");
+logs(`require("${log}") is ` + (htmlparser ? "loaded..." : "fails."));
+if(!htmlparser)
+	return 1;
+
+const	jsdom = require(log = "jsdom");
+logs(`require("${log}") is ` + (jsdom ? "loaded..." : "fails."));
+if(!jsdom)
+	return 2;
+
+const	XMLhttprequest = require(log = "xmlhttprequest");
+logs(`require("${log}") is ` + (htmlparser ? "loaded..." : "fails."));
+if(!XMLhttprequest)
+	return 3;
+
+const	{createCanvas, loadImage} = require(log = 'canvas');
+logs(`require("${log}") is ` + (createCanvas ? "loaded..." : "fails."));
+if(!createCanvas)
+	return 4;
+
+const	XMLHttpRequest = XMLhttprequest.XMLHttpRequest;
+const	hXML	= new XMLHttpRequest();
+const	{JSDOM}	= jsdom;
+
+logs(`Define the HTML-Parser...`);
 var		handler = new htmlparser.DefaultHandler(function (error, dom) {
     if(error) {
         console.log("Parse error...");
@@ -22,19 +45,17 @@ var		handler = new htmlparser.DefaultHandler(function (error, dom) {
 	}
 });
 
-var		hSecret;
-var		aMaps	= {};
-var		info;
-
+logs(`Binding the HTML-Parser...`);
 const	parser = new htmlparser.Parser(handler);
 
-const	{ createCanvas, loadImage } = require('canvas');
-//const	sys = require('sys');
+var		hSecret;
+var		info;
 
+logs(`Create Canvas...`);
 const	hCanvas = createCanvas(640, 480);
+logs(`Get 2D-Context...`);
 const	hCtx = hCanvas.getContext('2d');
 
-//
 /*loadImage('examples/images/lime-cat.jpg').then((image) => {
 	hCtx.drawImage(image, 50, 0, 70, 70)
 	var img = hCanvas.toDataURL();*/
