@@ -98,7 +98,7 @@ function GetUp() {
 	});
 	return aMaps;
 }
-function showMap(nick, place) {
+function showMap(aMaps, nick, place) {
 	//var	nick = info[0];
 	//var	place = info[1];
 	console.log("Show:user=" + nick + ";map=" + place);
@@ -179,7 +179,7 @@ const server = http.createServer((req, res) => {
 				console.log("Timer:user=" + nickun + ";map=" + pictun + ";secret=" + dom + ":" + hSecret);
 				var tmp = GetUp();
 				aMaps = tmp;
-				showMap(nickun, pictun);
+				showMap(aMaps, nickun, pictun);
 			//}, 1000); // Ждём загрузки всех изображений
 			res.statusCode = 200;
 			res.setHeader('Content-Type', 'image/png');
