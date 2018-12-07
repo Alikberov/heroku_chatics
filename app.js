@@ -110,10 +110,11 @@ function showMap() {
 			var	c = plot.charAt(0);
 			var	d = plot.charCodeAt(0) - 64;
 			if(isFinite(c)) {
-				//hCtx.fillText("" + c, x * 32, y * 32);
 				//try { hCtx.drawImage(map.images[0], 24 * +c, 0, 24, 24, x * 8, y * 8, 24, 24); } catch(e) { /*console.log(e);*/ }
 				hCtx.fillStyle = "rgb(" + [28 * c, 28 * c, 28 * c].join() + ")";
 				hCtx.fillRect(x * 24, y * 24, 24, 24);
+				hCtx.fillStyle = "rgb(" + [255-28 * c, 255-28 * c, 255-28 * c].join() + ")";
+				hCtx.fillText("Ж" + c, x * 24+12, y * 24+24);
 			} else
 			if(d > 0 && map.images.length > d)
 				hCtx.drawImage(map.images[d], x * 24, y * 24);
