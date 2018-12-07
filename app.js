@@ -1,5 +1,5 @@
 const	szPage	= "https://gamedev.ru/flame/forum/?id=240242";
-const	hostname = "127.0.0.1";
+const	hostname = "";
 const	hostport = 3000;
 
 const	http = require("http");
