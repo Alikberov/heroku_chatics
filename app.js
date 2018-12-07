@@ -139,13 +139,15 @@ hCtx.lineTo(50 + text.width, 102)
 hCtx.stroke()
  
 const server = http.createServer((req, res) => {
-	hCtx.fillStyle = 'red';
-	hCtx.fillRect(0, 0, hCanvas.width, hCanvas.height);
+	console.log("hXML.open::get");
 	hXML.open("GET", szPage, false);
-//	hXML.send(szPage);
+	console.log("hXML.send");
+	hXML.send();
 	if(200 != hXML.status) {
 		console.log(hXML.status + ": " + hXML.statusText);
 	} else {
+		hCtx.fillStyle = 'red';
+		hCtx.fillRect(0, 0, hCanvas.width, hCanvas.height);
 		parser.parseComplete(hXML.responseText);
 		console.log("hXML.responseText");
 		//var		document = parser.Parse(hXML.responseText);
