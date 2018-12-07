@@ -4,7 +4,7 @@
 	"description": "node app ",
 	"main": "app.js",
 	"scripts": {
-		"start": "npm install --save htmlparser"
+		"start": "npm install --save canvas"
 	},
 	"repository": {
 		"type": "git",
