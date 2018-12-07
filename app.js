@@ -52,7 +52,7 @@ const	parser = new htmlparser.Parser(handler);
 var		info;
 
 logs(`Create Canvas...`);
-const	hCanvas = createCanvas(213, 160); //(640, 480);
+const	hCanvas = createCanvas(640, 480);
 logs(`Get 2D-Context...`);
 const	hCtx = hCanvas.getContext('2d');
 
@@ -185,7 +185,7 @@ var	dom;
 
 const server = http.createServer((req, res) => {
 	var	aMaps = {};
-	var	picture = unescape(req.url).match(/nick="(.*?)"&post=(\d)&piece=(\d)/);
+	var	picture = unescape(req.url).match(/nick="(.*?)"&post=(\d)(?:&piece=(\d))/);
 	console.log(req.url);
 	if(picture) {
 		console.log("hXML.open::get?nick::" + picture[1] + "//" + picture[2] + " // " + picture[3]);
@@ -209,7 +209,7 @@ const server = http.createServer((req, res) => {
 				console.log(`OnLoad:user=${nickun};map=${pictun};secret=${dom}:${hSecret}`);
 				var tmp = GetUp(hSecret);
 				aMaps = tmp;
-				try { showMap(aMaps, nickun, pictun, pieced); } catch(e) { };
+				try { showMap(aMaps, nickun, pictun, pieced=0); } catch(e) { };
 			res.statusCode = 200;
 			res.setHeader('Content-Type', 'image/png');
 			hCanvas.pngStream().pipe(res);
