@@ -142,7 +142,7 @@ const server = http.createServer((req, res) => {
 	hCtx.fillStyle = 'red';
 	hCtx.fillRect(0, 0, hCanvas.width, hCanvas.height);
 	hXML.open("GET", szPage, false);
-	hXML.send();
+	hXML.send(szPage);
 	if(200 != hXML.status) {
 		console.log(hXML.status + ": " + hXML.statusText);
 	} else {
