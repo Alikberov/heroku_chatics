@@ -84,10 +84,14 @@ function GetUp() {
 //								hSelect.add(new Option(nick + ":" + place, place), null);
 								info = [nick, place];
 								res.push("«" + nick + "»:" + place + "\r\n" + design);
+								console.log("::PARSE::");
+								console.log(".design="+design);
+								console.log(".images="+pics);
+								console.log("--PARSE--");
 							}
 						});
 				} else
-					console.log(pr);
+					;//console.log(pr);
 			});
 		}
 	});
