@@ -180,7 +180,7 @@ const server = http.createServer((req, res) => {
 	console.log(req.url);
 	if(picture) {
 		console.log("hXML.open::get?nick::" + picture[1] + "//" + picture[2]);
-		hXML.open("GET", szPage, false);
+		hXML.open("GET", phorum, false);
 		hXML.send();
 		if(200 != hXML.status) {
 			console.log(hXML.status + ": " + hXML.statusText);
