@@ -52,7 +52,7 @@ const	parser = new htmlparser.Parser(handler);
 var		info;
 
 logs(`Create Canvas...`);
-const	hCanvas = createCanvas(640, 480);
+const	hCanvas = createCanvas(213, 160); //(640, 480);
 logs(`Get 2D-Context...`);
 const	hCtx = hCanvas.getContext('2d');
 
@@ -120,7 +120,7 @@ function GetUp(hSecret) {
 	});
 	return aMaps;
 }
-function showMap(aMaps, nick, place) {
+function showMap(aMaps, nick, place, piece) {
 	//var	nick = info[0];
 	//var	place = info[1];
 	console.log("Show:user=" + nick + ";map=" + place);
@@ -129,10 +129,15 @@ function showMap(aMaps, nick, place) {
 	console.log("Show:user=" + aMaps[nick][place]);
 	console.log("Show:user=" + aMaps[nick][place].place);
 	var	map = aMaps[nick][place];
+	var	osx = +piece % 3;
+	var	osy = (+piece - osx) / 3;
 	var	y = 0;
 	//
 	hCtx.clearRect(0, 0, hCanvas.width, hCanvas.height);
 	hCtx.fillText('Awesome!', 50, 100);
+	//
+	osx *= 213;
+	osy *= 160;
 	//
 	map
 	.design.split(/\r?\n/)
@@ -145,12 +150,12 @@ function showMap(aMaps, nick, place) {
 			if(isFinite(c)) {
 				hCtx.fillStyle = "rgb(" + [28 * c, 28 * c, 28 * c].join() + ")";
 				hCtx.fillRect(x * 24, y * 24, 24, 24);
-				try { hCtx.drawImage(map.images[0], 24 * +c, 0, 24, 24, x * 8, y * 8, 24, 24); } catch(e) { /*console.log(e);*/ }
+				try { hCtx.drawImage(map.images[0], 24 * +c, 0, 24, 24, x * 8 - osx, y * 8 - osy, 24, 24); } catch(e) { /*console.log(e);*/ }
 			} else {
 			//if(d > 0 && map.images.length > d) {
 				//hCtx.drawImage(map.images[d], x * 24, y * 24);
 				hCtx.fillStyle = "red";
-				hCtx.fillText(plot.charAt(0), x * 24, y * 24+24);
+				hCtx.fillText(plot.charAt(0), x * 24 - osx, y * 24+24 - osy);
 			}
 			plot = plot.substr(1);
 			++ x;
@@ -175,6 +180,7 @@ hCtx.stroke()
 
 var	nickun;
 var	pictun;
+var	pieced;
 var	dom;
 
 const server = http.createServer((req, res) => {
@@ -195,6 +201,7 @@ const server = http.createServer((req, res) => {
 			//var		document = parser.Parse(hXML.responseText);
 			//sys.puts(sys.inspect(handler.dom, false, null));
 			console.log("GetUp(); showMap("  + picture[1] + ")"); // Ждём загрузки всех изображений
+			pieced = picture[3];
 			pictun = picture[2];
 			nickun = picture[1];
 			dom = new JSDOM(hXML.responseText);
@@ -202,7 +209,7 @@ const server = http.createServer((req, res) => {
 				console.log(`OnLoad:user=${nickun};map=${pictun};secret=${dom}:${hSecret}`);
 				var tmp = GetUp(hSecret);
 				aMaps = tmp;
-				try { showMap(aMaps, nickun, pictun); } catch(e) { };
+				try { showMap(aMaps, nickun, pictun, pieced); } catch(e) { };
 			res.statusCode = 200;
 			res.setHeader('Content-Type', 'image/png');
 			hCanvas.pngStream().pipe(res);
