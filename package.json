@@ -1156,7 +1156,7 @@
 			"resolved": "https://registry.npmjs.org/yallist/-/yallist-3.0.3.tgz",
 			"integrity": "sha512-S+Zk8DEWE6oKpV+vI3qWkaK+jSbIK86pCwe2IF/xwIpQ8jEuxpw9NyaGjmp9+BoJv5FV2piqCDcoCtStppiq2A=="
 		}
-	}
+	},
 	"description": "node app ",
 	"main": "app.js",
 	"scripts": {
