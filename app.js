@@ -172,11 +172,11 @@ const server = http.createServer((req, res) => {
 			nickun = picture[1];
 			dom = new JSDOM(hXML.responseText);
 			hSecret = dom.window.document;
-			setTimeout(() => {
+			//setTimeout(() => {
 				console.log("Timer:user=" + nickun + ";map=" + pictun + ";secret=" + dom + ":" + hSecret);
 				GetUp();
 				showMap(nickun, pictun);
-			}, 1000); // Ждём загрузки всех изображений
+			//}, 1000); // Ждём загрузки всех изображений
 			res.statusCode = 200;
 			res.setHeader('Content-Type', 'image/png');
 			hCanvas.pngStream().pipe(res);
