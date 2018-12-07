@@ -60,6 +60,10 @@
 	"description": "node app ",
 	"main": "app.js",
 	"scripts": {
+		"init1": "npm install --save canvas",
+		"init2": "npm install --save htmlparser",
+		"init3": "npm install --save jsdom",
+		"init4": "npm install --save xmlhttprequest",
 		"start": "node app.js"
 	},
 	"repository": {
