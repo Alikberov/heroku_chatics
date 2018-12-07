@@ -179,10 +179,10 @@ var	dom;
 
 const server = http.createServer((req, res) => {
 	var	aMaps = {};
-	var	picture = unescape(req.url).match(/nick="(.*?)"&post=(\d)/);
+	var	picture = unescape(req.url).match(/nick="(.*?)"&post=(\d)&piece=(\d)/);
 	console.log(req.url);
 	if(picture) {
-		console.log("hXML.open::get?nick::" + picture[1] + "//" + picture[2]);
+		console.log("hXML.open::get?nick::" + picture[1] + "//" + picture[2] + " // " + picture[3]);
 		hXML.open("GET", phorum, false);
 		hXML.send();
 		if(200 != hXML.status) {
