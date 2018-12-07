@@ -98,11 +98,12 @@ function GetUp(hSecret) {
 								place = mp[2];
 								design = mp[3];
 								if(!(nick in aMaps))
-									aMaps[nick] = [];
-								aMaps[nick][place] = {
+									aMaps[nick] = [[]];
+								aMaps[nick].push({
+									place	:place,
 									design	:design,
 									images	:pics
-								};
+								});
 //								hSelect.add(new Option(nick + ":" + place, place), null);
 								info = [nick, place];
 								res.push("«" + nick + "»:" + place + "\r\n" + design);
@@ -123,9 +124,10 @@ function showMap(aMaps, nick, place) {
 	//var	nick = info[0];
 	//var	place = info[1];
 	console.log("Show:user=" + nick + ";map=" + place);
-	logs(util.inspect(aMaps, false, null, true /* enable colors */));
+	//logs(util.inspect(aMaps, false, null, true /* enable colors */));
 	console.log("Show:user=" + aMaps[nick]);
 	console.log("Show:user=" + aMaps[nick][place]);
+	console.log("Show:user=" + aMaps[nick][place].place);
 	var	map = aMaps[nick][place];
 	var	y = 0;
 	//
