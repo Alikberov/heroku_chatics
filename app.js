@@ -92,8 +92,8 @@ function GetUp() {
 		}
 	});
 }
-function showMap(place) {
-	var	nick = info[0];
+function showMap(nick, place) {
+	//var	nick = info[0];
 	//var	place = info[1];
 	var	map = aMaps[nick][place];
 	var	y = 0;
@@ -140,14 +140,14 @@ hCtx.lineTo(50, 102)
 hCtx.lineTo(50 + text.width, 102)
 hCtx.stroke()
 
+var	nickun;
 var	pictun;
 
 const server = http.createServer((req, res) => {
-	var	picture = req.url.match(/post=(\d)/);
+	var	picture = req.url.match(/nick="(.*?)"&post=(\d)/);
 	if(picture) {
-		console.log("hXML.open::get");
+		console.log("hXML.open::get?nick::" + picture[1] + "//" + picture[2]);
 		hXML.open("GET", szPage, false);
-		console.log("hXML.send");
 		hXML.send();
 		if(200 != hXML.status) {
 			console.log(hXML.status + ": " + hXML.statusText);
@@ -159,10 +159,11 @@ const server = http.createServer((req, res) => {
 			//var		document = parser.Parse(hXML.responseText);
 			//sys.puts(sys.inspect(handler.dom, false, null));
 			console.log("GetUp(); showMap("  + picture[1] + ")"); // Ждём загрузки всех изображений
-			pictun = picture[1];
+			pictun = picture[2];
+			nickun = picture[1];
 			const dom = new JSDOM(hXML.responseText);
 			hSecret = dom.window.document;
-			setTimeout(() => {GetUp(); showMap(pictun); }, 1000); // Ждём загрузки всех изображений
+			setTimeout(() => {GetUp(); showMap(nickun, pictun); }, 1000); // Ждём загрузки всех изображений
 			res.statusCode = 200;
 			res.setHeader('Content-Type', 'image/png');
 			hCanvas.pngStream().pipe(res);
