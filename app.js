@@ -92,9 +92,9 @@ function GetUp() {
 		}
 	});
 }
-function showMap() {
+function showMap(place) {
 	var	nick = info[0];
-	var	place = info[1];
+	//var	place = info[1];
 	var	map = aMaps[nick][place];
 	var	y = 0;
 	//
@@ -141,28 +141,29 @@ hCtx.lineTo(50 + text.width, 102)
 hCtx.stroke()
  
 const server = http.createServer((req, res) => {
-	console.log("hXML.open::get");
-	hXML.open("GET", szPage, false);
-	console.log("hXML.send");
-	hXML.send();
-	if(200 != hXML.status) {
-		console.log(hXML.status + ": " + hXML.statusText);
-	} else {
-		hCtx.fillStyle = 'red';
-		hCtx.fillRect(0, 0, hCanvas.width, hCanvas.height);
-		parser.parseComplete(hXML.responseText);
-		console.log("hXML.responseText");
-		//var		document = parser.Parse(hXML.responseText);
-		//sys.puts(sys.inspect(handler.dom, false, null));
-		console.log("GetUp(); showMap(hSelect)"); // Ждём загрузки всех изображений
-
-		const dom = new JSDOM(hXML.responseText);
-		hSecret = dom.window.document;
-		GetUp();
-		showMap();
-		res.statusCode = 200;
-		res.setHeader('Content-Type', 'image/png');
-		hCanvas.pngStream().pipe(res);
+	var	picture = req.url.match(/post=(\d)/);
+	if(picture) {
+		console.log("hXML.open::get");
+		hXML.open("GET", szPage, false);
+		console.log("hXML.send");
+		hXML.send();
+		if(200 != hXML.status) {
+			console.log(hXML.status + ": " + hXML.statusText);
+		} else {
+			hCtx.fillStyle = 'red';
+			hCtx.fillRect(0, 0, hCanvas.width, hCanvas.height);
+			parser.parseComplete(hXML.responseText);
+			console.log("hXML.responseText");
+			//var		document = parser.Parse(hXML.responseText);
+			//sys.puts(sys.inspect(handler.dom, false, null));
+			console.log("GetUp(); showMap("  + picture[1] + ")"); // Ждём загрузки всех изображений
+			const dom = new JSDOM(hXML.responseText);
+			hSecret = dom.window.document;
+			setTimeout("GetUp(); showMap("  + picture[1] + ")", 1000); // Ждём загрузки всех изображений
+			res.statusCode = 200;
+			res.setHeader('Content-Type', 'image/png');
+			hCanvas.pngStream().pipe(res);
+		}
 	}
 });
 server.listen(hostport, hostname, () => {
