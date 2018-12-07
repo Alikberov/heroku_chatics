@@ -206,6 +206,10 @@ const server = http.createServer((req, res) => {
 			res.setHeader('Content-Type', 'image/png');
 			hCanvas.pngStream().pipe(res);
 		}
+	} else {
+		res.statusCode = 404;
+		res.setHeader('Content-Type', 'image/png');
+		res.end();
 	}
 });
 server.listen(port, hosting, () => {
