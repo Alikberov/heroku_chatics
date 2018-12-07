@@ -145,6 +145,7 @@ var	pictun;
 
 const server = http.createServer((req, res) => {
 	var	picture = req.url.match(/nick="(.*?)"&post=(\d)/);
+	console.log(req.url);
 	if(picture) {
 		console.log("hXML.open::get?nick::" + picture[1] + "//" + picture[2]);
 		hXML.open("GET", szPage, false);
