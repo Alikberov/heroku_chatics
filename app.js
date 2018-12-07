@@ -1,4 +1,4 @@
-const	szPage	= "https://gamedev.ru/flame/forum/?id=240242";
+const	szPage	= "http://gamedev.ru/flame/forum/?id=240242";
 const	hostname = "";
 const	hostport = 3000;
 
