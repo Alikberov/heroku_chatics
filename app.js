@@ -41,6 +41,7 @@ const	hCtx = hCanvas.getContext('2d');
 
 function GetUp() {
 	var	html;
+	var	aMaps = {};
 	var	res	= [];
 	hSecret
 	.querySelector("#main_body")
@@ -95,6 +96,7 @@ function GetUp() {
 			});
 		}
 	});
+	return aMaps;
 }
 function showMap(nick, place) {
 	//var	nick = info[0];
@@ -152,6 +154,7 @@ var	pictun;
 var	dom;
 
 const server = http.createServer((req, res) => {
+	var	aMaps = {};
 	var	picture = unescape(req.url).match(/nick="(.*?)"&post=(\d)/);
 	console.log(req.url);
 	if(picture) {
@@ -174,7 +177,8 @@ const server = http.createServer((req, res) => {
 			hSecret = dom.window.document;
 			//setTimeout(() => {
 				console.log("Timer:user=" + nickun + ";map=" + pictun + ";secret=" + dom + ":" + hSecret);
-				GetUp();
+				var tmp = GetUp();
+				aMaps = tmp;
 				showMap(nickun, pictun);
 			//}, 1000); // Ждём загрузки всех изображений
 			res.statusCode = 200;
