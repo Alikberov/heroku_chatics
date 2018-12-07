@@ -48,7 +48,6 @@ var		handler = new htmlparser.DefaultHandler(function (error, dom) {
 logs(`Binding the HTML-Parser...`);
 const	parser = new htmlparser.Parser(handler);
 
-var		hSecret;
 var		info;
 
 logs(`Create Canvas...`);
@@ -60,7 +59,7 @@ const	hCtx = hCanvas.getContext('2d');
 	hCtx.drawImage(image, 50, 0, 70, 70)
 	var img = hCanvas.toDataURL();*/
 
-function GetUp() {
+function GetUp(hSecret) {
 	var	html;
 	var	aMaps = {};
 	var	res	= [];
@@ -195,14 +194,11 @@ const server = http.createServer((req, res) => {
 			pictun = picture[2];
 			nickun = picture[1];
 			dom = new JSDOM(hXML.responseText);
-			hSecret = dom.window.document;
-			hSecret.onload = function() {
+			var	hSecret = dom.window.document;
 				console.log(`OnLoad:user=${nickun};map=${pictun};secret=${dom}:${hSecret}`);
-				var tmp = GetUp();
+				var tmp = GetUp(hSecret);
 				aMaps = tmp;
 				try { showMap(aMaps, nickun, pictun); } catch(e) { };
-			};
-			//}, 1000); // Ждём загрузки всех изображений
 			res.statusCode = 200;
 			res.setHeader('Content-Type', 'image/png');
 			hCanvas.pngStream().pipe(res);
