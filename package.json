@@ -1,28 +1,28 @@
 {
-	"name": "coolnodeapp",
-	"version": "1.0.0",
+	"name"		:"coolnodeapp",
+	"version"	:"1.0.0",
 	"lockfileVersion": 1,
-	"requires": true,
-	"dependencies": {
-	    "canvas": "^2.1.0",
-	    "htmlparser": "^1.7.7",
-	    "jsdom": "^13.0.0",
-		"jsgif": "^1.0.2",
-	    "xmlhttprequest": "^1.8.0"
+	"requires"	:true,
+	"dependencies"	: {
+		"canvas"	:"^2.1.0",
+		"gifencoder"	:"^1.1.0",
+		"htmlparser"	:"^1.7.7",
+		"jsdom":	"^13.0.0",
+		"xmlhttprequest":"^1.8.0"
 	},
-	"description": "node app ",
-	"main": "app.js",
-	"scripts": {
-		"start": "npm install --save & node app"
+	"description"	:"node app",
+	"main"		:"app.js",
+	"scripts"	: {
+		"start"	:"npm install --save & node app"
 	},
-	"repository": {
-		"type": "git",
-		"url": ""
+	"repository"	: {
+		"type"	:"git",
+		"url"	:""
 	},
-	"author": "",
-	"license": "ISC",
-	"bugs": {
-		"url": ""
+	"author"	:"Alikberov",
+	"license"	:"ISC",
+	"bugs"		: {
+		"url"	:""
 	},
-	"homepage": ""
+	"homepage"	:"https://gamedev.ru/pages/nullpost/"
 }
