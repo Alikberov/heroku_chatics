@@ -56,6 +56,16 @@ const	hCanvas = createCanvas(640, 480);
 logs(`Get 2D-Context...`);
 const	hCtx = hCanvas.getContext('2d');
 
+var	Matrix	= [];
+
+var	i, j;
+
+for(i = 0; i < 100; ++ i) {
+	Matrix[i] = [];
+	for(j = 0; j < 100; ++ j)
+		Matrix[i][j] = 10;
+}
+
 /*loadImage('examples/images/lime-cat.jpg').then((image) => {
 	hCtx.drawImage(image, 50, 0, 70, 70)
 	var img = hCanvas.toDataURL();*/
@@ -151,6 +161,8 @@ function showMap(aMaps, nick, place, piece) {
 			var	c = plot.charAt(0);
 			var	d = plot.charCodeAt(0) - 64;
 			if(isFinite(c)) {
+				if(Matrix[y][x] < 10)
+					c = Matrix[y][x];
 				hCtx.fillStyle = "rgb(" + [28 * c, 28 * c, 28 * c].join() + ")";
 				hCtx.fillRect(x * 24 - osx, y * 24 - osy, 24, 24);
 				try { hCtx.drawImage(map.images[0], 24 * +c, 0, 24, 24, x * 8 - osx, y * 8 - osy, 24, 24); } catch(e) { /*console.log(e);*/ }
@@ -158,7 +170,8 @@ function showMap(aMaps, nick, place, piece) {
 			//if(d > 0 && map.images.length > d) {
 				//hCtx.drawImage(map.images[d], x * 24, y * 24);
 				hCtx.fillStyle = "red";
-				hCtx.fillText(plot.charAt(0), x * 24 - osx, y * 24+24 - osy);
+				if(Matrix[y][x] > 9)
+					hCtx.fillText(plot.charAt(0), x * 24 - osx, y * 24+24 - osy);
 			}
 			plot = plot.substr(1);
 			++ x;
@@ -228,7 +241,10 @@ const server = http.createServer((req, res) => {
 	if(click) {
 		res.statusCode = 302;
 		res.setHeader('Location', phorum);
-		PosX = click[2], PosY = click[1];
+		if(PosX != click[2] || PosY != click[1])
+			PosX = click[2], PosY = click[1];
+		else
+			Matrix[x][y] = (Matrix[x][y] + 1) % 11;
 		res.end();
 	} else {
 		res.statusCode = 404;
