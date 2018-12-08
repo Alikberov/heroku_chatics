@@ -219,10 +219,10 @@ const server = http.createServer((req, res) => {
 		}
 	} else
 	if(click) {
-		res.statusCode = 301;
-		res.setHeader('Content-Type', 'text/html');
+		res.statusCode = 302;
+		res.setHeader('Location', phorum);
 		PosX = click[1], PosY = click[2];
-		res.end("Location: " + phorum);
+		res.end();
 	} else {
 		res.statusCode = 404;
 		res.setHeader('Content-Type', 'image/png');
