@@ -138,7 +138,7 @@ function GetUp(hSecret) {
 
 var	PosX = 0, PosY = 0;
 
-function showMap(aMaps, nick, place, piece) {
+function showMap(aMaps, nick, place, piece, hGif) {
 	//var	nick = info[0];
 	//var	place = info[1];
 	console.log("Show:user=" + nick + ";map=" + place);
@@ -246,7 +246,7 @@ const server = http.createServer((req, res) => {
 					hGif.setRepeat(0);
 					hGif.setDelay(500);
 					hGif.setQuality(10);
-					showMap(aMaps, nickun, pictun, pieced=0);
+					showMap(aMaps, nickun, pictun, pieced=0, hGif);
 					res.statusCode = 200;
 					res.setHeader('Content-Type', 'image/gif');
 					hGif.finish();
