@@ -37,6 +37,11 @@ logs(`require("${log}") is ` + (hGIF ? "loaded..." : "fails."));
 if(!hGIF)
 	return 5;
 
+const	dateFmt = require(log = 'dateformat');
+logs(`require("${log}") is ` + (dateFmt ? "loaded..." : "fails."));
+if(!dateFmt)
+	return 6;
+
 const	XMLHttpRequest = XMLhttprequest.XMLHttpRequest;
 const	hXML	= new XMLHttpRequest();
 const	{JSDOM}	= jsdom;
@@ -292,7 +297,7 @@ const server = http.createServer((req, res) => {
 			theChat.push({
 				nick	:"guest",
 				text	:chat[1],
-				time	:(new Date()).toUTCString()
+				time	:dateFmt(new Date(), "dd/HH:MM")
 			});
 			if(theChat.length > 10)
 				theChat.splice(1, 1);
