@@ -215,11 +215,20 @@ var	pictun;
 var	pieced;
 var	dom;
 
+var	theChat	= [
+		{
+			nick	:"Нуль-Пост",
+			text	:"Добро Пожаловать!",
+			time	:"2018/12/09"
+		}
+	];
+
 const server = http.createServer((req, res) => {
 	var	aMaps = {};
 	var	picture = unescape(req.url).match(/nick="(.*?)"&post=(\d)(?:&piece=(\d))/);
 	var	click	= unescape(req.url).match(/\/(\d)(\d)/);
 	var	choice	= unescape(req.url).match(/\/(\d)/);
+	var	chat	= unescape(req.url).match(/chat(?:=(.*));
 	console.log(req.url);
 	if(picture) {
 		console.log("hXML.open::get?nick::" + picture[1] + "//" + picture[2] + " // " + picture[3]);
@@ -277,6 +286,24 @@ const server = http.createServer((req, res) => {
 		res.setHeader("Location", "https://gamedev.ru/pages/nullpost/play");
 		Matrix[PosY][PosX] = +choice[1];
 		res.end();
+	} else
+	if(chat) {
+		if(chat[1]) {
+			theChat.push(chat[1]);
+			if(theChat.length > 10)
+				theChat.splice(1, 1);
+			res.statusCode = 302;
+			res.setHeader("Location", "https://gamedev.ru/pages/nullpost/play");
+			res.end();
+		} else {
+			var	tmp = [];
+			theChat.forEach(function(msg) {
+				tmp.push("<i>" + msg.time + "</i>|<b>«" + msg.nick + "»</b>:" + msg.text);
+			});
+			res.statusCode = 200;
+			res.setHeader("Content-Type", "text/plain");
+			res.end(tmp.join("<br />"));
+		}
 	} else {
 		res.statusCode = 404;
 		res.setHeader('Content-Type', 'image/png');
