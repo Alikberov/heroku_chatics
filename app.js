@@ -275,7 +275,7 @@ const server = http.createServer((req, res) => {
 	if(choice) {
 		res.statusCode = 302;
 		res.setHeader("Location", "https://gamedev.ru/pages/nullpost/play");
-		Matrix[PosY][PosX] = +choice;
+		Matrix[PosY][PosX] = +choice[1];
 		res.end();
 	} else {
 		res.statusCode = 404;
