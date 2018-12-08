@@ -23,7 +23,7 @@ if(!jsdom)
 	return 2;
 
 const	XMLhttprequest = require(log = "xmlhttprequest");
-logs(`require("${log}") is ` + (XMLHttpRequest ? "loaded..." : "fails."));
+logs(`require("${log}") is ` + (XMLhttprequest ? "loaded..." : "fails."));
 if(!XMLhttprequest)
 	return 3;
 
