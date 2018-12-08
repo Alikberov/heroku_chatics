@@ -297,7 +297,17 @@ const server = http.createServer((req, res) => {
 			theChat.push({
 				nick	:"guest",
 				text	:chat[1],
-				time	:dateFmt(new Date(), "dd/HH:MM")
+				time	:dateFmt(new Date(), "dd/HH:MM").replace(/:(\d\d)/, function(match, minutes) {
+							var	res = "";
+							for(var i = 0, c; i < minutes.length; ++ i) {
+								c = minutes.charAt(i);
+								if(isFinite(c))
+									res += "⁰¹²³⁴⁵⁶⁷⁸⁹".charAt(+c);
+								else
+									res += c;
+							}
+							return res;
+						});
 			});
 			if(theChat.length > 10)
 				theChat.splice(1, 1);
