@@ -61,8 +61,6 @@ const	hCanvas = createCanvas(640, 640);
 logs(`Get 2D-Context...`);
 const	hCtx = hCanvas.getContext('2d');
 
-const	hGif = new hGIF(640, 640);
-
 var	Matrix	= [];
 
 var	i, j;
@@ -242,9 +240,10 @@ const server = http.createServer((req, res) => {
 				var tmp = GetUp(hSecret);
 				aMaps = tmp;
 				try {
+					var	hGif = new hGIF(640, 640);
 					hGif.createReadStream().pipe(res);
 					hGif.start();
-					hGif.setRepeat(-1);
+					hGif.setRepeat(0);
 					hGif.setDelay(500);
 					hGif.setQuality(10);
 					showMap(aMaps, nickun, pictun, pieced=0);
