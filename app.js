@@ -165,8 +165,12 @@ function showMap(aMaps, nick, place, piece) {
 		}
 		++ y;
 	});
-	hCtx.fillStyle = "rgba(127,127,127,0.5)";
+	hCtx.fillStyle = "rgba(227,167,127,0.75)";
 	hCtx.fillRect(PosX * 64, PosY * 64, 64, 64);
+	hCtx.beginPath();
+	hCtx.strokeStyle = "rgba(127,227,167,0.75)";
+	hCtx.rect(PosX * 64 + 16, PosY * 64 + 16, 32, 32);
+	hCtx.stroke();
 	//Dropbox.save("/", "nullpost.jpeg", "");
 }
 
@@ -224,7 +228,7 @@ const server = http.createServer((req, res) => {
 	if(click) {
 		res.statusCode = 302;
 		res.setHeader('Location', phorum);
-		PosX = click[1], PosY = click[2];
+		PosX = click[2], PosY = click[1];
 		res.end();
 	} else {
 		res.statusCode = 404;
