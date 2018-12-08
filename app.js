@@ -168,7 +168,10 @@ function showMap(aMaps, nick, place, piece, hGif) {
 			if(isFinite(c)) {
 				if(Matrix[y][x] < 10)
 					c = Matrix[y][x];
-				hCtx.fillStyle = "rgb(" + [28 * c, 28 * c, 28 * c].join() + ")";
+				if(c < 8)
+					hCtx.fillStyle = "rgb(" + [(c & 4 ? 255:0), (c & 2 ? 255:0), (c & 1 ? 255:0)].join() + ")";
+				else
+					hCtx.fillStyle = "rgb(" + (c & 1 ? [192,192,192]:[128,128,128]).join() + ")";
 				hCtx.fillRect(x * 64 - osx, y * 64 - osy, 64, 64);
 				try { hCtx.drawImage(map.images[0], 24 * +c, 0, 24, 24, x * 8 - osx, y * 8 - osy, 24, 24); } catch(e) { /*console.log(e);*/ }
 			} else {
@@ -216,6 +219,7 @@ const server = http.createServer((req, res) => {
 	var	aMaps = {};
 	var	picture = unescape(req.url).match(/nick="(.*?)"&post=(\d)(?:&piece=(\d))/);
 	var	click	= unescape(req.url).match(/\/(\d)(\d)/);
+	var	choice	= unescape(req.url).match(/\/(\d)/);
 	console.log(req.url);
 	if(picture) {
 		console.log("hXML.open::get?nick::" + picture[1] + "//" + picture[2] + " // " + picture[3]);
@@ -267,6 +271,9 @@ const server = http.createServer((req, res) => {
 		else
 			Matrix[PosY][PosX] = (Matrix[PosY][PosX] + 1) % 11;
 		res.end();
+	} else
+	if(choice) {
+		Matrix[PosY][PosX] = +choice;
 	} else {
 		res.statusCode = 404;
 		res.setHeader('Content-Type', 'image/png');
