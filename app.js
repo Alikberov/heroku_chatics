@@ -228,7 +228,7 @@ const server = http.createServer((req, res) => {
 	var	picture = unescape(req.url).match(/nick="(.*?)"&post=(\d)(?:&piece=(\d))/);
 	var	click	= unescape(req.url).match(/\/(\d)(\d)/);
 	var	choice	= unescape(req.url).match(/\/(\d)/);
-	var	chat	= unescape(req.url).match(/chat(?:=(.*)/);
+	var	chat	= unescape(req.url).match(/chat(?:=(.*))/);
 	console.log(req.url);
 	if(picture) {
 		console.log("hXML.open::get?nick::" + picture[1] + "//" + picture[2] + " // " + picture[3]);
