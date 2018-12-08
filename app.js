@@ -164,14 +164,14 @@ function showMap(aMaps, nick, place, piece) {
 				if(Matrix[y][x] < 10)
 					c = Matrix[y][x];
 				hCtx.fillStyle = "rgb(" + [28 * c, 28 * c, 28 * c].join() + ")";
-				hCtx.fillRect(x * 24 - osx, y * 24 - osy, 24, 24);
+				hCtx.fillRect(x * 64 - osx, y * 64 - osy, 64, 64);
 				try { hCtx.drawImage(map.images[0], 24 * +c, 0, 24, 24, x * 8 - osx, y * 8 - osy, 24, 24); } catch(e) { /*console.log(e);*/ }
 			} else {
 			//if(d > 0 && map.images.length > d) {
 				//hCtx.drawImage(map.images[d], x * 24, y * 24);
 				hCtx.fillStyle = "red";
 				if(Matrix[y][x] > 9)
-					hCtx.fillText(plot.charAt(0), x * 24 - osx, y * 24+24 - osy);
+					hCtx.fillText(plot.charAt(0), x * 64 - osx, y * 64+64 - osy);
 			}
 			plot = plot.substr(1);
 			++ x;
