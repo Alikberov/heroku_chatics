@@ -244,7 +244,7 @@ const server = http.createServer((req, res) => {
 		if(PosX != click[2] || PosY != click[1])
 			PosX = click[2], PosY = click[1];
 		else
-			Matrix[x][y] = (Matrix[x][y] + 1) % 11;
+			Matrix[PosY][PosX] = (Matrix[PosY][PosX] + 1) % 11;
 		res.end();
 	} else {
 		res.statusCode = 404;
