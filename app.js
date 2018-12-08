@@ -244,6 +244,9 @@ const server = http.createServer((req, res) => {
 				try {
 					hGif.createReadStream().pipe(res);
 					hGif.start();
+					hGif.setRepeat(-1);
+					hGif.setDelay(500);
+					hGif.setQuality(10);
 					showMap(aMaps, nickun, pictun, pieced=0);
 					res.statusCode = 200;
 					res.setHeader('Content-Type', 'image/gif');
