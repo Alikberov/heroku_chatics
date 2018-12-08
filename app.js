@@ -228,7 +228,7 @@ const server = http.createServer((req, res) => {
 	var	picture = unescape(req.url).match(/nick="(.*?)"&post=(\d)(?:&piece=(\d))/);
 	var	click	= unescape(req.url).match(/\/(\d)(\d)/);
 	var	choice	= unescape(req.url).match(/\/(\d)/);
-	var	chat	= unescape(req.url).match(/chat(?:=(.*))/;
+	var	chat	= unescape(req.url).match(/chat(?:=(.*)/);
 	console.log(req.url);
 	if(picture) {
 		console.log("hXML.open::get?nick::" + picture[1] + "//" + picture[2] + " // " + picture[3]);
@@ -289,7 +289,11 @@ const server = http.createServer((req, res) => {
 	} else
 	if(chat) {
 		if(chat[1]) {
-			theChat.push(chat[1]);
+			theChat.push({
+				nick	:"guest",
+				text	:chat[1],
+				time	:(new Date()).toUTCString()
+			});
 			if(theChat.length > 10)
 				theChat.splice(1, 1);
 			res.statusCode = 302;
