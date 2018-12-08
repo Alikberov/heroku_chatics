@@ -307,7 +307,7 @@ const server = http.createServer((req, res) => {
 									res += c;
 							}
 							return res;
-						});
+						})
 			});
 			if(theChat.length > 10)
 				theChat.splice(1, 1);
