@@ -296,7 +296,7 @@ const server = http.createServer((req, res) => {
 			});
 			if(theChat.length > 10)
 				theChat.splice(1, 1);
-			res.statusCode = 302;
+			res.statusCode = 307;
 			res.setHeader("Location", "https://gamedev.ru/pages/nullpost/play");
 			res.end();
 		} else {
