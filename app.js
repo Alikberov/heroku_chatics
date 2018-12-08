@@ -52,7 +52,7 @@ const	parser = new htmlparser.Parser(handler);
 var		info;
 
 logs(`Create Canvas...`);
-const	hCanvas = createCanvas(640, 480);
+const	hCanvas = createCanvas(640, 640);
 logs(`Get 2D-Context...`);
 const	hCtx = hCanvas.getContext('2d');
 
@@ -240,7 +240,7 @@ const server = http.createServer((req, res) => {
 	} else
 	if(click) {
 		res.statusCode = 302;
-		res.setHeader('Location', phorum);
+		res.setHeader("Location", "https://gamedev.ru/pages/nullpost/play");
 		if(PosX != click[2] || PosY != click[1])
 			PosX = click[2], PosY = click[1];
 		else
