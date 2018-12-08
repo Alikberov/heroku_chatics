@@ -228,7 +228,7 @@ const server = http.createServer((req, res) => {
 	var	picture = unescape(req.url).match(/nick="(.*?)"&post=(\d)(?:&piece=(\d))/);
 	var	click	= unescape(req.url).match(/\/(\d)(\d)/);
 	var	choice	= unescape(req.url).match(/\/(\d)/);
-	var	chat	= unescape(req.url).match(/chat(?:\=(.*))/);
+	var	chat	= unescape(req.url).match(/chat(?:=(.*))?/);
 	console.log(req.url);
 	if(picture) {
 		console.log("hXML.open::get?nick::" + picture[1] + "//" + picture[2] + " // " + picture[3]);
@@ -302,12 +302,11 @@ const server = http.createServer((req, res) => {
 		} else {
 			var	tmp = [];
 			theChat.forEach(function(msg) {
-				tmp.push("<i>" + msg.time + "</i>|<b>«" + msg.nick + "»</b>:" + msg.text);
+				tmp.push("" + msg.time + "|«" + msg.nick + "»:" + msg.text);
 			});
 			res.statusCode = 200;
-			res.setHeader("Content-Type", "text/plain");
-			res.end(tmp.join("<br />"));
-			console.log(tmp.join("<br />"));
+			res.setHeader("Content-Type", "text/plain; charset=utf-8");
+			res.end(tmp.join("\r\n"));
 		}
 	} else {
 		res.statusCode = 404;
