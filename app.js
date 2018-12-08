@@ -183,9 +183,12 @@ var	pictun;
 var	pieced;
 var	dom;
 
+var	PosX = 0, PosY = 0;
+
 const server = http.createServer((req, res) => {
 	var	aMaps = {};
 	var	picture = unescape(req.url).match(/nick="(.*?)"&post=(\d)(?:&piece=(\d))/);
+	var	click	= unescape(req.url).match(/\/(\d)(\d))/);
 	console.log(req.url);
 	if(picture) {
 		console.log("hXML.open::get?nick::" + picture[1] + "//" + picture[2] + " // " + picture[3]);
@@ -214,6 +217,12 @@ const server = http.createServer((req, res) => {
 			res.setHeader('Content-Type', 'image/png');
 			hCanvas.pngStream().pipe(res);
 		}
+	} else
+	if(click) {
+		res.statusCode = 301;
+		res.setHeader('Content-Type', 'text/html');
+		PosX = click[1], PosY = click[2];
+		res.end("Location: " + phorum);
 	} else {
 		res.statusCode = 404;
 		res.setHeader('Content-Type', 'image/png');
