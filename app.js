@@ -23,7 +23,7 @@ if(!jsdom)
 	return 2;
 
 const	XMLhttprequest = require(log = "xmlhttprequest");
-logs(`require("${log}") is ` + (htmlparser ? "loaded..." : "fails."));
+logs(`require("${log}") is ` + (XMLHttpRequest ? "loaded..." : "fails."));
 if(!XMLhttprequest)
 	return 3;
 
@@ -31,6 +31,11 @@ const	{createCanvas, loadImage} = require(log = 'canvas');
 logs(`require("${log}") is ` + (createCanvas ? "loaded..." : "fails."));
 if(!createCanvas)
 	return 4;
+
+const	hGIF = require(log = 'gifencoder');
+logs(`require("${log}") is ` + (hGIF ? "loaded..." : "fails."));
+if(!hGIF)
+	return 5;
 
 const	XMLHttpRequest = XMLhttprequest.XMLHttpRequest;
 const	hXML	= new XMLHttpRequest();
@@ -55,6 +60,8 @@ logs(`Create Canvas...`);
 const	hCanvas = createCanvas(640, 640);
 logs(`Get 2D-Context...`);
 const	hCtx = hCanvas.getContext('2d');
+
+const	hGif = new hGIF(640, 640);
 
 var	Matrix	= [];
 
@@ -178,12 +185,14 @@ function showMap(aMaps, nick, place, piece) {
 		}
 		++ y;
 	});
+	hGif.addFrame(hCtx);
 	hCtx.fillStyle = "rgba(227,167,127,0.75)";
 	hCtx.fillRect(PosX * 64, PosY * 64, 64, 64);
 	hCtx.beginPath();
 	hCtx.strokeStyle = "rgba(127,227,167,0.75)";
 	hCtx.rect(PosX * 64 + 16, PosY * 64 + 16, 32, 32);
 	hCtx.stroke();
+	hGif.addFrame(hCtx);
 	//Dropbox.save("/", "nullpost.jpeg", "");
 }
 
@@ -232,10 +241,20 @@ const server = http.createServer((req, res) => {
 				console.log(`OnLoad:user=${nickun};map=${pictun};secret=${dom}:${hSecret}`);
 				var tmp = GetUp(hSecret);
 				aMaps = tmp;
-				try { showMap(aMaps, nickun, pictun, pieced=0); } catch(e) { };
+				try {
+					hGif.createReadStream().pipe(res);
+					hGif.start();
+					showMap(aMaps, nickun, pictun, pieced=0);
+					res.statusCode = 200;
+					res.setHeader('Content-Type', 'image/gif');
+					hGif.finish();
+				} catch(e) {
+					res.statusCode = 404;
+					res.end(e);
+				};
 			res.statusCode = 200;
-			res.setHeader('Content-Type', 'image/png');
-			hCanvas.pngStream().pipe(res);
+			//res.setHeader('Content-Type', 'image/png');
+			//hCanvas.pngStream().pipe(res);
 		}
 	} else
 	if(click) {
