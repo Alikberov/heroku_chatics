@@ -120,6 +120,9 @@ function GetUp(hSecret) {
 	});
 	return aMaps;
 }
+
+var	PosX = 0, PosY = 0;
+
 function showMap(aMaps, nick, place, piece) {
 	//var	nick = info[0];
 	//var	place = info[1];
@@ -162,6 +165,8 @@ function showMap(aMaps, nick, place, piece) {
 		}
 		++ y;
 	});
+	hCtx.fillStyle = "rgba(127,127,127,0.5)";
+	hCtx.fillRect(PosX * 64, PosY * 64, 64, 64);
 	//Dropbox.save("/", "nullpost.jpeg", "");
 }
 
@@ -182,8 +187,6 @@ var	nickun;
 var	pictun;
 var	pieced;
 var	dom;
-
-var	PosX = 0, PosY = 0;
 
 const server = http.createServer((req, res) => {
 	var	aMaps = {};
