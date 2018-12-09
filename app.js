@@ -76,9 +76,12 @@ for(i = 0; i < 100; ++ i) {
 		Matrix[i][j] = 10;
 }
 
-/*loadImage('examples/images/lime-cat.jpg').then((image) => {
-	hCtx.drawImage(image, 50, 0, 70, 70)
-	var img = hCanvas.toDataURL();*/
+var	hImage;
+
+loadImage("NullWall.gif").then((image) => {
+	hImage = image;
+	logs(`// Image loaded...`);
+};
 
 function GetUp(hSecret) {
 	var	html;
@@ -177,8 +180,8 @@ function showMap(aMaps, nick, place, piece, hGif) {
 					hCtx.fillStyle = "rgb(" + [(c & 4 ? 255:0), (c & 2 ? 255:0), (c & 1 ? 255:0)].join() + ")";
 				else
 					hCtx.fillStyle = "rgb(" + (c & 1 ? [192,192,192]:[128,128,128]).join() + ")";
-				hCtx.fillRect(x * 64 - osx, y * 64 - osy, 64, 64);
-				try { hCtx.drawImage(map.images[0], 24 * +c, 0, 24, 24, x * 8 - osx, y * 8 - osy, 24, 24); } catch(e) { /*console.log(e);*/ }
+				//hCtx.fillRect(x * 64 - osx, y * 64 - osy, 64, 64);
+				try { hCtx.drawImage(hImages, 128 * +c, 0, 128, 128, x * 64 - osx - 64, y * 64 - osy - 64, 128, 128); } catch(e) { /*console.log(e);*/ }
 			} else {
 			//if(d > 0 && map.images.length > d) {
 				//hCtx.drawImage(map.images[d], x * 24, y * 24);
