@@ -159,8 +159,9 @@ function showMap(aMaps, nick, place, piece, hGif) {
 	var	osy = (+piece - osx) / 3;
 	var	y = 0;
 	//
+	hCtx.save();
 	hCtx.clearRect(0, 0, hCanvas.width, hCanvas.height);
-	hCtx.fillText('Awesome!', 50, 100);
+	hCtx.fillText("Error!", 50, 100);
 	//
 	osx *= 213;
 	osy *= 160;
@@ -201,6 +202,7 @@ function showMap(aMaps, nick, place, piece, hGif) {
 	hCtx.strokeStyle = "rgba(127,227,167,0.75)";
 	hCtx.rect(PosX * 64 + 16, PosY * 64 + 16, 32, 32);
 	hCtx.stroke();
+	hCtx.restore();
 	hGif.addFrame(hCtx);
 	//Dropbox.save("/", "nullpost.jpeg", "");
 }
@@ -371,12 +373,12 @@ const server = http.createServer((req, res) => {
 			theChat.forEach(function(msg) {
 				tmp.push("" + msg.time + "|«" + msg.nick + "»:" + msg.text);
 			});
-			tmp.push("Your Nick/IP is " + nick + "/" + req.connection.remoteAddress);
-			tmp.push("Use colon «:» to change nick -> «Your_Nick:»");
+			tmp.push(`Your Nick is ${nick}`);
+			tmp.push(`Your IP is ${req.connection.remoteAddress}$`);
 			res.statusCode = 200;
 			res.setHeader("Content-Type", "text/html; charset=utf-8");
-			res.write("<html><meta http-equiv='refresh' content='60'><body><pre>");
-			res.write(tmp.join("\r\n").replace(/&/g, "№").replace(/</g, "«").replace(/>/g, "»"));
+			res.write("<html><meta http-equiv='refresh' content='90'><body><pre>");
+			res.write(tmp.join("\r\n").replace(/&/g, "№").replace(/</g, "«").replace(/>/g, "»").replace(/\.+/g, "…");
 			res.end("</pre></body>");
 		}
 	} else {
