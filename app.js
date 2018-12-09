@@ -378,7 +378,7 @@ const server = http.createServer((req, res) => {
 			res.statusCode = 200;
 			res.setHeader("Content-Type", "text/html; charset=utf-8");
 			res.write("<html><meta http-equiv='refresh' content='90'><body><pre>");
-			res.write(tmp.join("\r\n").replace(/&/g, "№").replace(/</g, "«").replace(/>/g, "»").replace(/\.+/g, "…");
+			res.write(tmp.join("\r\n").replace(/&/g, "№").replace(/</g, "«").replace(/>/g, "»").replace(/\.+/g, "…"));
 			res.end("</pre></body>");
 		}
 	} else {
