@@ -47,12 +47,12 @@ const	hXML	= new XMLHttpRequest();
 const	{JSDOM}	= jsdom;
 
 logs(`Define the HTML-Parser...`);
-var		handler = new htmlparser.DefaultHandler(function (error, dom) {
-    if(error) {
-        console.log("Parse error...");
+var	handler = new htmlparser.DefaultHandler(function(error, dom) {
+	if(error) {
+		console.log("Parse error...");
 		console.log(error);
-    } else {
-        console.log("Parsed - " + dom.length);
+	} else {
+		console.log("Parsed - " + dom.length);
 	}
 });
 
@@ -216,7 +216,7 @@ function ParsePhorum() {
 		res.end(hXML.status + ": " + hXML.statusText);
 		return false;
 	} else {
-		console.log(`// Parse the Prorum page...`);
+		console.log(`// Parse the Phorum page...`);
 		parser.parseComplete(hXML.responseText);
 		console.log(`// Calling JSDOM...`);
 				//var		document = parser.Parse(hXML.responseText);
@@ -305,7 +305,10 @@ const server = http.createServer((req, res) => {
 			hGif.setRepeat(0);
 			hGif.setDelay(500);
 			hGif.setQuality(10);
-			showMap(aMaps, nickun=0, pictun=0, pieced=0, hGif);
+			pieced = picture[3];
+			pictun = picture[2];
+			nickun = picture[1];
+			showMap(aMaps, nickun, pictun, pieced=0, hGif);
 			res.statusCode = 200;
 			res.setHeader("Content-Type", "image/gif");
 			hGif.finish();
