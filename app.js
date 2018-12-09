@@ -181,7 +181,7 @@ function showMap(aMaps, nick, place, piece, hGif) {
 				else
 					hCtx.fillStyle = "rgb(" + (c & 1 ? [192,192,192]:[128,128,128]).join() + ")";
 				//hCtx.fillRect(x * 64 - osx, y * 64 - osy, 64, 64);
-				try { hCtx.drawImage(hImages, 128 * +c, 0, 128, 128, x * 64 - osx - 64, y * 64 - osy - 64, 128, 128); } catch(e) { /*console.log(e);*/ }
+				try { hCtx.drawImage(hImage, 128 * +c, 0, 128, 128, x * 64 - osx - 64, y * 64 - osy - 64, 128, 128); } catch(e) { console.log(e); }
 			} else {
 			//if(d > 0 && map.images.length > d) {
 				//hCtx.drawImage(map.images[d], x * 24, y * 24);
