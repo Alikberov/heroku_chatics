@@ -339,13 +339,14 @@ const server = http.createServer((req, res) => {
 		if(chat[1]) {
 			if(chat[1].substr(-1) == ":") {
 				console.log(`// User ${nick} is now ${chat[1]}`);
-				var	tmp = chat[1].split(/[^-A-Z_a-z0-9.]/)[0];
+				var	tmp = nick;
+				nick = chat[1].split(/[^-A-Z_a-z0-9.]/)[0];
 				theChat.push({
-					nick	:nick,
-					text	:tmp + ":",
+					nick	:tmp,
+					text	:nick + ":",
 					time	:time
 				});
-				nick = theUsers[theIP].nick = tmp;
+				theUsers[theIP].nick = nick;
 			} else
 				theChat.push({
 					nick	:nick,
