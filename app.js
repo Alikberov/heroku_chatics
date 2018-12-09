@@ -335,7 +335,7 @@ const server = http.createServer((req, res) => {
 	if(chat) {
 		if(chat[1]) {
 			if(chat[1].substr(-1) == ":") {
-				console.log(`// User ${nick} is now ${chat[1]}`};
+				console.log(`// User ${nick} is now ${chat[1]}`);
 				var	tmp = chat[1].split(/[^-A-Z_a-z0-9.]/)[0];
 				theChat.push({
 					nick	:nick,
