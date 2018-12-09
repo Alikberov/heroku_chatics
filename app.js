@@ -318,7 +318,7 @@ const server = http.createServer((req, res) => {
 			pieced = picture[3];
 			pictun = picture[2];
 			nickun = picture[1];
-			showMap(aMaps, nickun, pictun, pieced=0, hGif);
+			showMap(aMaps, nickun, pictun, pieced, hGif);
 			res.statusCode = 200;
 			res.setHeader("Content-Type", "image/gif");
 			hGif.finish();
@@ -347,6 +347,8 @@ const server = http.createServer((req, res) => {
 	} else
 	if(chat) {
 		if(chat[1]) {
+			if(chat[1] == "!remap")
+				ParsePhorum();
 			if(chat[1].substr(-1) == ":") {
 				console.log(`// User ${nick} is now ${chat[1]}`);
 				var	tmp = nick;
