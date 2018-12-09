@@ -290,7 +290,7 @@ const server = http.createServer((req, res) => {
 	console.log(req.url);
 	if(picture) {
 		console.log("hXML.open::get?nick::" + picture[1] + "//" + picture[2] + " // " + picture[3]);
-		if(!dom) {
+		if(!dom)
 			if(!ParsePhorum())
 				return 10;
 		hCtx.fillStyle = 'red';
