@@ -81,7 +81,7 @@ var	hImage;
 loadImage("NullWall.gif").then((image) => {
 	hImage = image;
 	logs(`// Image loaded...`);
-};
+});
 
 function GetUp(hSecret) {
 	var	html;
