@@ -263,8 +263,7 @@ const server = http.createServer((req, res) => {
 	var	click	= unescape(req.url).match(/\/(\d)(\d)/);
 	var	choice	= unescape(req.url).match(/\/(\d)/);
 	var	chat	= unescape(req.url).match(/chat(?:=(.*))?/);
-	console.log(req.connection.remoteAddress);
-	var	theIP	= req.connection.remoteAddress.join("");
+	var	theIP	= req.connection.remoteAddress.split(/:+/)[2].splt(".").join("");
 	var	nick;
 	var	time	= dateFmt(new Date(), "dd/HH:MM")
 			.replace(/:(\d\d)/, function(match, minutes) {
