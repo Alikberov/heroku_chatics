@@ -365,8 +365,10 @@ const server = http.createServer((req, res) => {
 			tmp.push("Your Nick/IP is " + nick + "/" + req.connection.remoteAddress);
 			tmp.push("Use colon «:» to change nick -> «Your_Nick:»");
 			res.statusCode = 200;
-			res.setHeader("Content-Type", "text/plain; charset=utf-8");
-			res.end(tmp.join("\r\n"));
+			res.setHeader("Content-Type", "text/html; charset=utf-8");
+			res.write("<html><meta http-equiv='refresh' content='60'><body><pre>");
+			res.write(tmp.join("\r\n").replace(/&/g, "№").replace(/</g, "«").replace(/>/g, "»"));
+			res.end("</pre></body>");
 		}
 	} else {
 		res.statusCode = 404;
