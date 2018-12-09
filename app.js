@@ -263,7 +263,12 @@ const server = http.createServer((req, res) => {
 	var	click	= unescape(req.url).match(/\/(\d)(\d)/);
 	var	choice	= unescape(req.url).match(/\/(\d)/);
 	var	chat	= unescape(req.url).match(/chat(?:=(.*))?/);
-	var	theIP	= req.connection.remoteAddress.split(/:+/)[2].split(".").join("");
+	var	ipAddr	= req.headers["x-forwarded-for"];
+	if(ipAddr) 
+		ipAddr	= ipAddr.split(",").pop();
+	else
+		ipAddr	= req.connection.remoteAddress;
+	var	theIP	= ipAddr.split(/:+/).pop().split(".").join("");
 	var	nick;
 	var	time	= dateFmt(new Date(), "dd/HH:MM")
 			.replace(/:(\d\d)/, function(match, minutes) {
