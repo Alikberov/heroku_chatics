@@ -59,7 +59,7 @@ var		handler = new htmlparser.DefaultHandler(function (error, dom) {
 logs(`Binding the HTML-Parser...`);
 const	parser = new htmlparser.Parser(handler);
 
-var		info;
+var	info;
 
 logs(`Create Canvas...`);
 const	hCanvas = createCanvas(640, 640);
@@ -99,7 +99,7 @@ function GetUp(hSecret) {
 					console.log(image);
 				});
 			}*/
-			console.log(pics);
+			//console.log(pics);
 			hDiv
 			.querySelectorAll("pre")
 			.forEach
@@ -127,10 +127,10 @@ function GetUp(hSecret) {
 //								hSelect.add(new Option(nick + ":" + place, place), null);
 								info = [nick, place];
 								res.push("«" + nick + "»:" + place + "\r\n" + design);
-								console.log("::PARSE::");
-								console.log(".design="+design);
-								console.log(".images="+pics);
-								console.log("--PARSE--");
+								//console.log("::PARSE::");
+								//console.log(".design="+design);
+								//console.log(".images="+pics);
+								//console.log("--PARSE--");
 							}
 						});
 				} else
@@ -202,6 +202,33 @@ function showMap(aMaps, nick, place, piece, hGif) {
 	//Dropbox.save("/", "nullpost.jpeg", "");
 }
 
+function ParsePhorum() {
+	if(!dom)
+		console.log(`// First time for Phorum parse`);
+	else
+		console.log(`// Reload the Phorum`);
+	hXML.open("GET", phorum, false);
+	hXML.send();
+	if(200 != hXML.status) {
+		console.log(hXML.status + ": " + hXML.statusText);
+		res.statusCode = 200;
+		res.setHeader("Content-Type", "text/plan");
+		res.end(hXML.status + ": " + hXML.statusText);
+		return false;
+	} else {
+		console.log(`// Parse the Prorum page...`);
+		parser.parseComplete(hXML.responseText);
+		console.log(`// Calling JSDOM...`);
+				//var		document = parser.Parse(hXML.responseText);
+				//sys.puts(sys.inspect(handler.dom, false, null));
+		dom = new JSDOM(hXML.responseText);
+		hSecret = dom.window.document;
+		console.log(`// Parse the Phorum`);
+		aMaps = GetUp(hSecret);
+		return true;
+	}
+}
+
 //
 // Write "Awesome!"
 hCtx.font = '30px "Impact"';
@@ -219,6 +246,8 @@ var	nickun;
 var	pictun;
 var	pieced;
 var	dom;
+var	hSecret;
+var	aMaps = {};
 
 var	theChat	= [
 		{
@@ -227,55 +256,66 @@ var	theChat	= [
 			time	:"2018/12/09"
 		}
 	];
+var	theUsers = {};
 
 const server = http.createServer((req, res) => {
-	var	aMaps = {};
 	var	picture = unescape(req.url).match(/nick="(.*?)"&post=(\d)(?:&piece=(\d))/);
 	var	click	= unescape(req.url).match(/\/(\d)(\d)/);
 	var	choice	= unescape(req.url).match(/\/(\d)/);
 	var	chat	= unescape(req.url).match(/chat(?:=(.*))?/);
+	var	theIP	= req.connection.remoteAddress.join("");
+	var	nick;
+	var	time	= dateFmt(new Date(), "dd/HH:MM")
+			.replace(/:(\d\d)/, function(match, minutes) {
+				var	res = "";
+				for(var i = 0, c; i < minutes.length; ++ i) {
+					c = minutes.charAt(i);
+					if(isFinite(c))
+						res += "⁰¹²³⁴⁵⁶⁷⁸⁹".charAt(+c);
+					else
+						res += c;
+				}
+				return res;
+			});
+	//
+	if(theIP in theUsers)
+		nick = theUsers[theIP].nick;
+	else {
+		theUsers[theIP] = {
+			nick	:(nick = "guest_" + dateFmt(new Date(), "HHMMss")),
+			map	:null
+		};
+		console.log("// New user connected: " + nick);
+	}
 	console.log(req.url);
 	if(picture) {
 		console.log("hXML.open::get?nick::" + picture[1] + "//" + picture[2] + " // " + picture[3]);
-		hXML.open("GET", phorum, false);
-		hXML.send();
-		if(200 != hXML.status) {
-			console.log(hXML.status + ": " + hXML.statusText);
-		} else {
-			hCtx.fillStyle = 'red';
-			hCtx.fillRect(0, 0, hCanvas.width, hCanvas.height);
-			parser.parseComplete(hXML.responseText);
-			console.log("hXML.responseText");
-			//var		document = parser.Parse(hXML.responseText);
-			//sys.puts(sys.inspect(handler.dom, false, null));
-			console.log("GetUp(); showMap("  + picture[1] + ")"); // Ждём загрузки всех изображений
-			pieced = picture[3];
-			pictun = picture[2];
-			nickun = picture[1];
-			dom = new JSDOM(hXML.responseText);
-			var	hSecret = dom.window.document;
-				console.log(`OnLoad:user=${nickun};map=${pictun};secret=${dom}:${hSecret}`);
-				var tmp = GetUp(hSecret);
-				aMaps = tmp;
-				try {
-					var	hGif = new hGIF(640, 640);
-					hGif.createReadStream().pipe(res);
-					hGif.start();
-					hGif.setRepeat(0);
-					hGif.setDelay(500);
-					hGif.setQuality(10);
-					showMap(aMaps, nickun, pictun, pieced=0, hGif);
-					res.statusCode = 200;
-					res.setHeader('Content-Type', 'image/gif');
-					hGif.finish();
-				} catch(e) {
-					res.statusCode = 404;
-					res.end(e);
-				};
+		if(!dom) {
+			if(!ParsePhorum())
+				return 10;
+		hCtx.fillStyle = 'red';
+		hCtx.fillRect(0, 0, hCanvas.width, hCanvas.height);
+			console.log(`OnLoad:user=${nickun};map=${pictun};secret=${dom}:${hSecret}`);
+		var tmp = GetUp(hSecret);
+		aMaps = tmp;
+		try {
+			var	hGif = new hGIF(640, 640);
+			hGif.createReadStream().pipe(res);
+			hGif.start();
+			hGif.setRepeat(0);
+			hGif.setDelay(500);
+			hGif.setQuality(10);
+			showMap(aMaps, nickun=0, pictun=0, pieced=0, hGif);
 			res.statusCode = 200;
-			//res.setHeader('Content-Type', 'image/png');
-			//hCanvas.pngStream().pipe(res);
-		}
+			res.setHeader("Content-Type", "image/gif");
+			hGif.finish();
+		} catch(e) {
+			res.statusCode = 404;
+			res.setHeader("Content-Type", "text/plain");
+				//hCanvas.pngStream().pipe(res);
+			res.end(e);
+		};
+		res.statusCode = 200;
 	} else
 	if(click) {
 		res.statusCode = 302;
@@ -294,21 +334,21 @@ const server = http.createServer((req, res) => {
 	} else
 	if(chat) {
 		if(chat[1]) {
-			theChat.push({
-				nick	:"guest",
-				text	:chat[1],
-				time	:dateFmt(new Date(), "dd/HH:MM").replace(/:(\d\d)/, function(match, minutes) {
-							var	res = "";
-							for(var i = 0, c; i < minutes.length; ++ i) {
-								c = minutes.charAt(i);
-								if(isFinite(c))
-									res += "⁰¹²³⁴⁵⁶⁷⁸⁹".charAt(+c);
-								else
-									res += c;
-							}
-							return res;
-						})
-			});
+			if(chat[1].substr(-1) == ":") {
+				console.log(`// User ${nick} is now ${chat[1]}`};
+				var	tmp = chat[1].split(/[^-A-Z_a-z0-9.]/)[0];
+				theChat.push({
+					nick	:nick,
+					text	:tmp + ":",
+					time	:time
+				});
+				nick = theUsers[theIP] = tmp;
+			} else
+				theChat.push({
+					nick	:nick,
+					text	:chat[1],
+					time	:time
+				});
 			if(theChat.length > 10)
 				theChat.splice(1, 1);
 			res.statusCode = 307;
@@ -319,6 +359,8 @@ const server = http.createServer((req, res) => {
 			theChat.forEach(function(msg) {
 				tmp.push("" + msg.time + "|«" + msg.nick + "»:" + msg.text);
 			});
+			tmp.push("Your IP is " + req.connection.remoteAddress.join());
+			tmp.push("Use colon «:» to change nick -> «Your_Nick:»");
 			res.statusCode = 200;
 			res.setHeader("Content-Type", "text/plain; charset=utf-8");
 			res.end(tmp.join("\r\n"));
