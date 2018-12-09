@@ -78,7 +78,7 @@ for(i = 0; i < 100; ++ i) {
 
 var	hImage;
 
-loadImage("NullWall.gif").then((image) => {
+loadImage("NullWall.png").then((image) => {
 	hImage = image;
 	logs(`// Image loaded...`);
 });
