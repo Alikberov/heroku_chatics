@@ -359,7 +359,7 @@ const server = http.createServer((req, res) => {
 			theChat.forEach(function(msg) {
 				tmp.push("" + msg.time + "|«" + msg.nick + "»:" + msg.text);
 			});
-			tmp.push("Your IP is " + req.connection.remoteAddress.join());
+			tmp.push("Your IP is " + req.connection.remoteAddress);
 			tmp.push("Use colon «:» to change nick -> «Your_Nick:»");
 			res.statusCode = 200;
 			res.setHeader("Content-Type", "text/plain; charset=utf-8");
