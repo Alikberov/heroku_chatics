@@ -345,7 +345,7 @@ const server = http.createServer((req, res) => {
 					text	:tmp + ":",
 					time	:time
 				});
-				nick = theUsers[theIP] = tmp;
+				nick = theUsers[theIP].nick = tmp;
 			} else
 				theChat.push({
 					nick	:nick,
