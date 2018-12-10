@@ -350,14 +350,13 @@ const server = http.createServer((req, res) => {
 			if(chat[1] == "!remap")
 				ParsePhorum();
 			if(chat[1].substr(-1) == ":") {
-				var	cells = chat[1].match(/(\d{3})+/);
+				var	cells = chat[1]..match(/(\d{3})+/g);
 				if(cells) {
-					cells.split(/\D+/)
-					.forEach(function(cell) {
-							var	xyz = cell.split("");
-							Matrix[+xyz[1]][+xyz[0]] = +xyz[2];
-						}
-					);
+					cells.forEach
+					(function(cell) {
+						var	xyz = cell.split("");
+						Matrix[+xyz[1]][+xyz[0]] = +xyz[2];
+					});
 					log(`// Painting by ${nick}`);
 				} else {
 					console.log(`// User ${nick} is now ${chat[1]}`);
