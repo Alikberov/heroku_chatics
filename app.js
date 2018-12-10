@@ -290,7 +290,7 @@ var	theChat	= [
 		{
 			nick	:"Нуль-Пост",
 			text	:"Добро Пожаловать!",
-			time	:dateFmt(new Date(), "(_dd)(|m)YYYY/HH(^MM)(_SS)").shifted
+			time	:dateFmt(new Date(), "(_dd)(|m)yyyy/HH(^MM)(_ss)").shifted
 		}
 	];
 var	theUsers = {};
