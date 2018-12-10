@@ -350,7 +350,7 @@ const server = http.createServer((req, res) => {
 			if(chat[1] == "!remap")
 				ParsePhorum();
 			if(chat[1].substr(-1) == ":") {
-				var	cells = chat[1]..match(/(\d{3})+/g);
+				var	cells = chat[1].match(/(\d{3})+/g);
 				if(cells) {
 					cells.forEach
 					(function(cell) {
