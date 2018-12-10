@@ -402,7 +402,7 @@ const server = http.createServer((req, res) => {
 			} else
 				theChat.push({
 					nick	:nick,
-					text	:chat[1].win1251
+					text	:chat[1].win1251,
 					time	:time
 				});
 			if(theChat.length > 10)
