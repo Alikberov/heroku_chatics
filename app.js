@@ -357,7 +357,7 @@ const server = http.createServer((req, res) => {
 						var	xyz = cell.split("");
 						Matrix[+xyz[1]][+xyz[0]] = +xyz[2];
 					});
-					log(`// Painting by ${nick}`);
+					logs(`// Painting by ${nick}`);
 				} else {
 					console.log(`// User ${nick} is now ${chat[1]}`);
 					var	tmp = nick;
