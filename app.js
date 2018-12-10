@@ -16,7 +16,7 @@ const	htmlparser = require(log = "htmlparser");
 logs(`require("${log}") is ` + (htmlparser ? "loaded..." : "fails."));
 if(!htmlparser)
 	return 1;
-
+	
 const	jsdom = require(log = "jsdom");
 logs(`require("${log}") is ` + (jsdom ? "loaded..." : "fails."));
 if(!jsdom)
@@ -253,7 +253,7 @@ var	pieced;
 var	dom;
 var	hSecret;
 var	aMaps = {};
-
+var	nUsers = 0;
 var	theChat	= [
 		{
 			nick	:"Нуль-Пост",
@@ -295,7 +295,7 @@ const server = http.createServer((req, res) => {
 			nick	:(nick = "guest_" + dateFmt(new Date(), "HHMMss")),
 			map	:null
 		};
-		console.log("// New user connected: " + nick);
+		console.log(`// New user #${++ nUsers} is connected: ${nick}`);
 	}
 	console.log(req.url);
 	if(picture) {
@@ -376,6 +376,7 @@ const server = http.createServer((req, res) => {
 				tmp.push("" + msg.time + "|«" + msg.nick + "»:" + msg.text);
 			});
 			tmp.push(`Your Nick is ${nick}`);
+			tmp.push(`Total users is ${nUsers}`);
 			tmp.push(`Your IP is ${req.connection.remoteAddress}$`);
 			res.statusCode = 200;
 			res.setHeader("Content-Type", "text/html; charset=utf-8");
