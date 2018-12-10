@@ -1,6 +1,6 @@
 const	logs	= console.log;
 
-const	phorum	= "https://gamedev.ru/flame/forum/?id=240242";
+const	phorum	= "https://gamedev.ru/pages/nullpost/forum/?id=240744#m1";
 const	hosting	= "";
 const	port	= process.env.PORT || 5000;
 
