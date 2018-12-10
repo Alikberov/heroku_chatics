@@ -6,6 +6,40 @@ const	port	= process.env.PORT || 5000;
 
 var		log;
 
+Object.defineProperty(
+	String.prototype, "shifted", {
+		//	"3(_14159)".shifted == "3₁₄₁₅₉"
+		//	"23(^59)30".shifted == "23⁵⁹30"
+		//	"31(|12)18".shifted == "31Ⅻ18"
+		get: function () {
+			return this
+				.replace(
+					/\((_|\^|\|)(\d+)\)/gm
+					,function(match, prefix, numbers) {
+						console.log(`match:${match}; prefix:${prefix}; numbers:${numbers}`);
+						var	pattern = {
+								"_"	:"₀₁₂₃₄₅₆₇₈₉",
+								"^"	:"⁰¹²³⁴⁵⁶⁷⁸⁹",
+								"|"	:"ØⅠⅡⅢⅣⅤⅥⅦⅧⅨⅩⅪⅫ"
+							}[prefix].split("");
+						return	numbers
+							.replace(
+								"|" == prefix
+									? (/10|11|12|\d/g)
+									: (/\d/g)
+								,function(n) {
+									log(`\t${n}`);
+									return	pattern[n];
+								}
+							)
+						;
+					}
+				)
+			;
+		}
+	}
+);
+
 logs(`Start at "http://${hosting}:${port}/" for parse "${phorum}"`);
 
 //const	sys		= require('sys');
@@ -258,7 +292,7 @@ var	theChat	= [
 		{
 			nick	:"Нуль-Пост",
 			text	:"Добро Пожаловать!",
-			time	:"2018/12/09"
+			time	:dateFmt(new Date(), "(_dd)(|m)YYYY/HH(^MM)(_SS)").shifted
 		}
 	];
 var	theUsers = {};
@@ -275,18 +309,7 @@ const server = http.createServer((req, res) => {
 		ipAddr	= req.connection.remoteAddress;
 	var	theIP	= ipAddr.split(/:+/).pop().split(".").join("");
 	var	nick;
-	var	time	= dateFmt(new Date(), "dd/HH:MM")
-			.replace(/:(\d\d)/, function(match, minutes) {
-				var	res = "";
-				for(var i = 0, c; i < minutes.length; ++ i) {
-					c = minutes.charAt(i);
-					if(isFinite(c))
-						res += "⁰¹²³⁴⁵⁶⁷⁸⁹".charAt(+c);
-					else
-						res += c;
-				}
-				return res;
-			});
+	var	time	= dateFmt(new Date(), "(_dd)(|m)/HH(^MM)").shifted;
 	//
 	if(theIP in theUsers)
 		nick = theUsers[theIP].nick;
@@ -383,14 +406,14 @@ const server = http.createServer((req, res) => {
 		} else {
 			var	tmp = [];
 			theChat.forEach(function(msg) {
-				tmp.push("" + msg.time + "|«" + msg.nick + "»:" + msg.text);
+				tmp.push("" + msg.time + "|«" + msg.nick + "»:" + msg.text.shifted);
 			});
 			tmp.push(`Your Nick is ${nick}`);
 			tmp.push(`Total users is ${nUsers}`);
 			tmp.push(`Your IP is ${req.connection.remoteAddress}$`);
 			res.statusCode = 200;
 			res.setHeader("Content-Type", "text/html; charset=utf-8");
-			res.write("<html><meta http-equiv='refresh' content='90'><body><pre>");
+			res.write("<html><meta http-equiv='refresh' content='900'><body><pre>");
 			res.write(tmp.join("\r\n").replace(/&/g, "№").replace(/</g, "«").replace(/>/g, "»").replace(/\.+/g, "…"));
 			res.end("</pre></body>");
 		}
