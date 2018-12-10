@@ -305,10 +305,13 @@ var	theChat	= [
 var	theUsers = {};
 
 const server = http.createServer((req, res) => {
-	var	picture = unescape(req.url).match(/nick="(.*?)"&post=(\d)(?:&piece=(\d))/);
-	var	click	= unescape(req.url).match(/\/(\d)(\d)/);
-	var	choice	= unescape(req.url).match(/\/(\d)/);
-	var	chat	= unescape(req.url).match(/chat(?:=(.*))?/);
+	var	requrl	= unescape(req.url).replace(/\+/g, " ");
+	//
+	var	picture = requrl.match(/nick="(.*?)"&post=(\d)(?:&piece=(\d))/);
+	var	click	= requrl.match(/\/(\d)(\d)/);
+	var	choice	= requrl.match(/\/(\d)/);
+	var	chat	= requrl.match(/chat(?:=(.*))?/);
+	//
 	var	ipAddr	= req.headers["x-forwarded-for"];
 	if(ipAddr) 
 		ipAddr	= ipAddr.split(",").pop();
