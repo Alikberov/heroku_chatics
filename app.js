@@ -16,7 +16,6 @@ Object.defineProperty(
 				.replace(
 					/\((_|\^|\|)(\d+)\)/gm
 					,function(match, prefix, numbers) {
-						console.log(`match:${match}; prefix:${prefix}; numbers:${numbers}`);
 						var	pattern = {
 								"_"	:"₀₁₂₃₄₅₆₇₈₉",
 								"^"	:"⁰¹²³⁴⁵⁶⁷⁸⁹",
@@ -28,7 +27,6 @@ Object.defineProperty(
 									? (/10|11|12|\d/g)
 									: (/\d/g)
 								,function(n) {
-									log(`\t${n}`);
 									return	pattern[n];
 								}
 							)
