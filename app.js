@@ -350,15 +350,26 @@ const server = http.createServer((req, res) => {
 			if(chat[1] == "!remap")
 				ParsePhorum();
 			if(chat[1].substr(-1) == ":") {
-				console.log(`// User ${nick} is now ${chat[1]}`);
-				var	tmp = nick;
-				nick = chat[1].split(/[^-A-Z_a-z0-9.]/)[0];
-				theChat.push({
-					nick	:tmp,
-					text	:nick + ":",
-					time	:time
-				});
-				theUsers[theIP].nick = nick;
+				var	cells = chat[1].match(/(\d{3})+/);
+				if(cells) {
+					cells.split(/\D+/)
+					.forEach(function(cell) {
+							var	xyz = cell.split("");
+							Matrix[+xyz[1]][+xyz[0]] = +xyz[2];
+						}
+					);
+					log(`// Painting by ${nick}`);
+				} else {
+					console.log(`// User ${nick} is now ${chat[1]}`);
+					var	tmp = nick;
+					nick = chat[1].split(/[^-A-Z_a-z0-9.]/)[0];
+					theChat.push({
+						nick	:tmp,
+						text	:nick + ":",
+						time	:time
+					});
+					theUsers[theIP].nick = nick;
+				}
 			} else
 				theChat.push({
 					nick	:nick,
