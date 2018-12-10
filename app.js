@@ -43,6 +43,15 @@ logs(`Start at "http://${hosting}:${port}/" for parse "${phorum}"`);
 //const	sys		= require('sys');
 const	http	= require("http");
 const	util	= require("util");
+const	iconv	= require("iconv-lite");
+
+Object.defineProperty(
+	String.prototype, "win1251", {
+		get: function () {
+			return	iconv.decode(Buffer.from(this, "ascii"), "win1251").toString();
+		}
+	}
+);
 
 const	htmlparser = require(log = "htmlparser");
 logs(`require("${log}") is ` + (htmlparser ? "loaded..." : "fails."));
@@ -393,7 +402,7 @@ const server = http.createServer((req, res) => {
 			} else
 				theChat.push({
 					nick	:nick,
-					text	:chat[1],
+					text	:chat[1].win1251
 					time	:time
 				});
 			if(theChat.length > 10)
