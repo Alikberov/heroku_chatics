@@ -163,7 +163,7 @@ function LoadConfig(hSecret) {
 						pr.forEach
 						(function(map) {
 							console.log(map);
-							mp = map.match(/(\[config]([^\0]+)\[\/config])+/gm);
+							mp = map.match(/(\[config]([^\0]+)\[\/config])+/m);
 							console.log(mp);
 							if(mp) {
 								mp[2].split(/\r?\n/)
