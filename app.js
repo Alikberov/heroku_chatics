@@ -232,7 +232,7 @@ function showWorld(aMaps, nick, place, piece, hGif) {
 				//hCtx.fillRect(x * 64 - osx, y * 64 - osy, 64, 64);
 				try {
 					hCtx.drawImage
-						(hSprite
+						(hSprites
 						,256 * Math.floor(Math.random() * 4)
 						,256 * +c, 256, 256
 						,160 + x * 128 - y * 128 - osx
