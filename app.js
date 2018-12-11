@@ -1,5 +1,6 @@
 const	logs	= console.log;
 
+const	sprites	= "./collection.png";
 const	phorum	= "https://gamedev.ru/pages/nullpost/forum/?id=240744#m1";
 const	hosting	= "";
 const	port	= process.env.PORT || 5000;
@@ -117,7 +118,13 @@ for(i = 0; i < 100; ++ i) {
 		Matrix[i][j] = 10;
 }
 
-var	hImage;
+var	hImage	= null;
+var	hSprites= null;
+
+loadImage(sprites).then((image) => {
+	hSprites = image;
+	logs(`// Sprites loaded...`);
+});
 
 loadImage("NullWall.png").then((image) => {
 	hImage = image;
@@ -186,6 +193,75 @@ function GetUp(hSecret) {
 }
 
 var	PosX = 0, PosY = 0;
+
+function showWorld(aMaps, nick, place, piece, hGif) {
+	//var	nick = info[0];
+	//var	place = info[1];
+	console.log("Show:user=" + nick + ";map=" + place);
+	//logs(util.inspect(aMaps, false, null, true /* enable colors */));
+	console.log("Show:user=" + aMaps[nick]);
+	console.log("Show:user=" + aMaps[nick][place]);
+	console.log("Show:user=" + aMaps[nick][place].place);
+	var	map = aMaps[nick][place];
+	var	osx = +piece % 3;
+	var	osy = (+piece - osx) / 3;
+	var	y = 0;
+	//
+	hCtx.save();
+	hCtx.clearRect(0, 0, hCanvas.width, hCanvas.height);
+	hCtx.fillText("Error!", 50, 100);
+	//
+	osx *= 256;
+	osy *= 256;
+	//
+	map
+	.design.split(/\r?\n/)
+	.forEach
+	(function(plot) {
+		var	x = 0;
+		while(plot.length) {
+			var	c = plot.charAt(0);
+			var	d = plot.charCodeAt(0) - 64;
+			if(isFinite(c)) {
+				if(Matrix[y][x] < 10)
+					c = Matrix[y][x];
+				if(c < 8)
+					hCtx.fillStyle = "rgb(" + [(c & 4 ? 255:0), (c & 2 ? 255:0), (c & 1 ? 255:0)].join() + ")";
+				else
+					hCtx.fillStyle = "rgb(" + (c & 1 ? [192,192,192]:[128,128,128]).join() + ")";
+				//hCtx.fillRect(x * 64 - osx, y * 64 - osy, 64, 64);
+				try {
+					hCtx.drawImage
+						(hSprite
+						,256 * Math.floor(Math.random() * 4)
+						,256 * +c, 256, 256
+						,160 + x * 128 - y * 128 - osx
+						,160 + y * 128 + x * 128 - osy, 256, 256
+						);
+				} catch(e) { console.log(e); }
+			} else {
+			//if(d > 0 && map.images.length > d) {
+				//hCtx.drawImage(map.images[d], x * 24, y * 24);
+				hCtx.fillStyle = "red";
+				if(Matrix[y][x] > 9)
+					hCtx.fillText(plot.charAt(0), x * 64 - osx, y * 64+64 - osy);
+			}
+			plot = plot.substr(1);
+			++ x;
+		}
+		++ y;
+	});
+	hGif.addFrame(hCtx);
+	hCtx.fillStyle = "rgba(227,167,127,0.75)";
+	hCtx.fillRect(PosX * 64, PosY * 64, 64, 64);
+	hCtx.beginPath();
+	hCtx.strokeStyle = "rgba(127,227,167,0.75)";
+	hCtx.rect(PosX * 64 + 16, PosY * 64 + 16, 32, 32);
+	hCtx.stroke();
+	hCtx.restore();
+//	hGif.addFrame(hCtx);
+	//Dropbox.save("/", "nullpost.jpeg", "");
+}
 
 function showMap(aMaps, nick, place, piece, hGif) {
 	//var	nick = info[0];
@@ -308,6 +384,7 @@ const server = http.createServer((req, res) => {
 	var	requrl	= unescape(req.url).replace(/\+/g, " ");
 	//
 	var	picture = requrl.match(/nick="(.*?)"&post=(\d)(?:&piece=(\d))/);
+	var	ortho	= requrl.match(/ortho/);
 	var	click	= requrl.match(/\/(\d)(\d)/);
 	var	choice	= requrl.match(/\/(\d)/);
 	var	chat	= requrl.match(/chat(?:=(.*))?/);
@@ -351,7 +428,10 @@ const server = http.createServer((req, res) => {
 			pieced = picture[3];
 			pictun = picture[2];
 			nickun = picture[1];
-			showMap(aMaps, nickun, pictun, pieced, hGif);
+			if(ortho)
+				showWorld(aMaps, nickun, pictun, pieced, hGif);
+			else
+				showMap(aMaps, nickun, pictun, pieced, hGif);
 			res.statusCode = 200;
 			res.setHeader("Content-Type", "image/gif");
 			hGif.finish();
