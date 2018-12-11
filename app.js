@@ -138,7 +138,7 @@ function LoadConfig(hSecret) {
 	var	html;
 	var	aMaps = {};
 	var	res	= [];
-	var	Section	= null;
+	var	Section	= "";
 	hSecret
 	.querySelector("#main_body")
 	.querySelectorAll(".mes")
@@ -176,7 +176,8 @@ function LoadConfig(hSecret) {
 											Config[Section] = [];
 										if(info[1])
 											logs(`// ${info[1]}`);
-									} else {
+									} else
+									if("" != info[1] && Section != "" && Section in Config) {
 										Config[Section].push(info[1]);
 									}
 								});
