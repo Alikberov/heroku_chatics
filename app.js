@@ -235,8 +235,8 @@ function showWorld(aMaps, nick, place, piece, hGif) {
 						(hSprites
 						,256 * Math.floor(Math.random() * 4)
 						,256 * +c, 256, 256
-						,160 + x * 128 - y * 128 - osx
-						,160 + y * 128 + x * 128 - osy, 256, 256
+						,160 + x * 64 - y * 64 - osx
+						,160 + y * 64 + x * 64 - osy, 256, 256
 						);
 				} catch(e) { console.log(e); }
 			} else {
