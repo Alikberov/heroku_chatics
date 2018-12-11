@@ -1,6 +1,8 @@
 const	logs	= console.log;
 
+const	Owner	= "Alikberov";
 const	sprites	= "./collection.png";
+const	config	= "https://gamedev.ru/pages/nullpost/forum/?id=240744";
 const	phorum	= "https://gamedev.ru/pages/nullpost/forum/?id=240744#m1";
 const	hosting	= "";
 const	port	= process.env.PORT || 5000;
@@ -108,6 +110,7 @@ const	hCanvas = createCanvas(640, 640);
 logs(`Get 2D-Context...`);
 const	hCtx = hCanvas.getContext('2d');
 
+var	Config	= {};
 var	Matrix	= [];
 
 var	i, j;
@@ -130,6 +133,58 @@ loadImage("NullWall.png").then((image) => {
 	hImage = image;
 	logs(`// Image loaded...`);
 });
+
+function LoadConfig(hSecret) {
+	var	html;
+	var	aMaps = {};
+	var	res	= [];
+	var	Section	= null;
+	hSecret
+	.querySelector("#main_body")
+	.querySelectorAll(".mes")
+	.forEach
+	(function(hDiv) {
+		if("DIV" == hDiv.tagName) {
+			hCaption = hDiv.querySelector("table").rows[0].cells;
+			hUser = hCaption[0].querySelector("a");
+			nick = hUser.textContent;
+			logs(`// Configuration: "${nick}" - ${nick != Owner ? "Player" : "Owner"}...`);
+			if(nick != Owner)
+				return;
+			hDiv
+			.querySelectorAll("pre")
+			.forEach
+			(function(hPre) {
+				pr = hPre.innerHTML;
+				if(pr) {
+//					console.log(pr);
+					pr = pr.match(/(\[config]([^\0]+?)\[\/config])+/gm);
+					if(pr)
+						pr.forEach
+						(function(map) {
+//							console.log(map);
+							mp = map.match(/(\[config]([^\0]+)\[\/config])+/m);
+//							console.log(mp);
+							if(mp) {
+								info = mp[2].split(/\t+/);
+								if("" != info[0]) {
+									Section = info[0];
+									if(!(Section in Config))
+										Config[Section] = [];
+									if(info[1])
+										logs(`// ${info[1]}`);
+								} else {
+									Config[Section].push(info[1]);
+								}
+							}
+						});
+				} else
+					;//console.log(pr);
+			});
+		}
+	});
+	return aMaps;
+}
 
 function GetUp(hSecret) {
 	var	html;
@@ -324,6 +379,30 @@ function showMap(aMaps, nick, place, piece, hGif) {
 	//Dropbox.save("/", "nullpost.jpeg", "");
 }
 
+function ParseConfig() {
+	console.log(`// Reload the Config from Phorum...`);
+	hXML.open("GET", config, false);
+	hXML.send();
+	if(200 != hXML.status) {
+		console.log(hXML.status + ": " + hXML.statusText);
+		res.statusCode = 200;
+		res.setHeader("Content-Type", "text/plan");
+		res.end(hXML.status + ": " + hXML.statusText);
+		return false;
+	} else {
+		console.log(`// Parse the Phorum page...`);
+		parser.parseComplete(hXML.responseText);
+		console.log(`// Calling JSDOM...`);
+				//var		document = parser.Parse(hXML.responseText);
+				//sys.puts(sys.inspect(handler.dom, false, null));
+		var	dom = new JSDOM(hXML.responseText);
+		hSecret = dom.window.document;
+		console.log(`// Parse the Phorum`);
+		LoadConfig(hSecret);
+		return true;
+	}
+}
+
 function ParsePhorum() {
 	if(!dom)
 		console.log(`// First time for Phorum parse`);
@@ -379,6 +458,8 @@ var	theChat	= [
 		}
 	];
 var	theUsers = {};
+
+ParseConfig();
 
 const server = http.createServer((req, res) => {
 	var	requrl	= unescape(req.url).replace(/\+/g, " ");
