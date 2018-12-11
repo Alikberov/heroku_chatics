@@ -211,8 +211,8 @@ function showWorld(aMaps, nick, place, piece, hGif) {
 	hCtx.clearRect(0, 0, hCanvas.width, hCanvas.height);
 	hCtx.fillText("Error!", 50, 100);
 	//
-	osx *= 256;
-	osy *= 256;
+	osx *= 128;
+	osy *= 64;
 	//
 	map
 	.design.split(/\r?\n/)
@@ -236,7 +236,7 @@ function showWorld(aMaps, nick, place, piece, hGif) {
 						,256 * Math.floor(Math.random() * 4)
 						,256 * +c, 256, 256
 						,160 + x * 64 - y * 64 - osx
-						,160 + y * 64 + x * 64 - osy, 256, 256
+						,160 + y * 32 + x * 64 - osy, 256, 256
 						);
 				} catch(e) { console.log(e); }
 			} else {
