@@ -488,10 +488,14 @@ const server = http.createServer((req, res) => {
 	else {
 		theUsers[theIP] = {
 			nick	:(nick = "guest_" + dateFmt(new Date(), "HHMMss")),
-			map	:null
+			map	:null,
+			login	:0
 		};
 		console.log(`// New user #${++ nUsers} is connected: ${nick}`);
 	}
+	if(theUsers[theIP].login > 0) {
+	}
+	theUsers[theIP].login = 0;
 	console.log(req.url);
 	if(picture) {
 		console.log("hXML.open::get?nick::" + picture[1] + "//" + picture[2] + " // " + picture[3]);
@@ -547,6 +551,20 @@ const server = http.createServer((req, res) => {
 		if(chat[1]) {
 			if(chat[1] == "!remap")
 				ParsePhorum();
+			if(chat[1] == "!login") {
+				if(("ChatLogin" in Config) && Config.ChatLogin) {
+					theUsers[theIP].login = Math.floor(Math.random() * 87655 + 12345);
+					res.statusCode = 307;
+					res.setHeader("Location", Config.ChatLogin + "&YourPassWord= " + theUsers[theIP].login);
+					res.end();
+					return;
+				} else
+					theChat.push({
+						nick	:"Error",
+						text	:"Not supported",
+						time	:time
+					});
+			}
 			if(chat[1].substr(-1) == ":") {
 				var	cells = chat[1].match(/(\d{3})+/g);
 				if(cells) {
