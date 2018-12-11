@@ -155,16 +155,16 @@ function LoadConfig(hSecret) {
 			.querySelectorAll("pre")
 			.forEach
 			(function(hPre) {
-				pr = hPre.innerHTML;
+				pr = hPre.textContent;
 				if(pr) {
-//					console.log(pr);
+					console.log(pr);
 					pr = pr.match(/(\[config]([^\0]+?)\[\/config])+/gm);
 					if(pr)
 						pr.forEach
 						(function(map) {
-//							console.log(map);
+							console.log(map);
 							mp = map.match(/(\[config]([^\0]+)\[\/config])+/m);
-//							console.log(mp);
+							console.log(mp);
 							if(mp) {
 								info = mp[2].split(/\t+/);
 								if("" != info[0]) {
