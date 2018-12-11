@@ -148,7 +148,6 @@ function LoadConfig(hSecret) {
 			hCaption = hDiv.querySelector("table").rows[0].cells;
 			hUser = hCaption[0].querySelector("a");
 			nick = hUser.textContent;
-			logs(`// Configuration: "${nick}" - ${nick != Owner ? "Player" : "Owner"}...`);
 			if(nick != Owner)
 				return;
 			hDiv
@@ -177,7 +176,7 @@ function LoadConfig(hSecret) {
 										if(info[1])
 											logs(`// ${info[1]}`);
 									} else
-									if("" != info[1] && Section != "" && Section in Config) {
+									if(info[1] && Section != "" && Section in Config) {
 										Config[Section].push(info[1]);
 									}
 								});
@@ -188,7 +187,6 @@ function LoadConfig(hSecret) {
 			});
 		}
 	});
-	return aMaps;
 }
 
 function GetUp(hSecret) {
@@ -585,9 +583,19 @@ const server = http.createServer((req, res) => {
 			theChat.forEach(function(msg) {
 				tmp.push("" + msg.time + "|«" + msg.nick + "»:" + msg.text.shifted);
 			});
+			if(("ChatPrompt" in Config) && Config.ChatPrompt.length)
+				Config
+				.ChatPrompt
+				.forEach(
+				function(str) {
+					str = str.replace(/\(\\Nick\)/g, nick);
+					str = str.replace(/\(\\Guests\)/g, nUsers);
+					str = str.replace(/\(\\IP\)/g, req.connection.remoteAddress);
+					tmp.push(str);
+				});
 			tmp.push(`Your Nick is ${nick}`);
 			tmp.push(`Total users is ${nUsers}`);
-			tmp.push(`Your IP is ${req.connection.remoteAddress}$`);
+			tmp.push(`Your IP is ${req.connection.remoteAddress}`);
 			res.statusCode = 200;
 			res.setHeader("Content-Type", "text/html; charset=utf-8");
 			res.write("<html><meta http-equiv='refresh' content='900'><body><pre>");
