@@ -163,19 +163,23 @@ function LoadConfig(hSecret) {
 						pr.forEach
 						(function(map) {
 							console.log(map);
-							mp = map.match(/(\[config]([^\0]+)\[\/config])+/m);
+							mp = map.match(/(\[config]([^\0]+)\[\/config])+/gm);
 							console.log(mp);
 							if(mp) {
-								info = mp[2].split(/\t+/);
-								if("" != info[0]) {
-									Section = info[0];
-									if(!(Section in Config))
-										Config[Section] = [];
-									if(info[1])
-										logs(`// ${info[1]}`);
-								} else {
-									Config[Section].push(info[1]);
-								}
+								mp[2].split(/\r?\n/)
+								.forEach(function(s) {
+									logs(`// "${s}"`);
+									info = s.split(/\t+/);
+									if("" != info[0]) {
+										Section = info[0];
+										if(!(Section in Config))
+											Config[Section] = [];
+										if(info[1])
+											logs(`// ${info[1]}`);
+									} else {
+										Config[Section].push(info[1]);
+									}
+								});
 							}
 						});
 				} else
