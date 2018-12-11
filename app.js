@@ -460,6 +460,7 @@ var	theChat	= [
 var	theUsers = {};
 
 ParseConfig();
+logs(util.inspect(Config, false, null, true));
 
 const server = http.createServer((req, res) => {
 	var	requrl	= unescape(req.url).replace(/\+/g, " ");
