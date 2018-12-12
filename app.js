@@ -150,7 +150,7 @@ function LoginUser(hSecret, PassWord) {
 			hUser = hCaption[0].querySelector("a");
 			nick = hUser.textContent;
 			logs(`// Login mode: User "${nick}"`);
-			var	posts = hDiv.querySelectorAll("pre");
+			var	posts = hDiv.querySelectorAll("div.block");
 			for(var i = 0; i < posts.length; ++ i) {
 				if(posts[i].textContent.indexOf(PassWord) >= 0) {
 					theUser = nick;
