@@ -152,7 +152,7 @@ function LoginUser(hSecret, PassWord) {
 			logs(`// Login mode: User "${nick}"`);
 			var	posts = hDiv.querySelectorAll("pre");
 			for(var i = 0; i < posts.length; ++ i) {
-				if(posts[i].textContent == PassWord) {
+				if(posts[i].textContent.indexOf(PassWord) >= 0) {
 					theUser = nick;
 					logs(`// Login for "${nick}"`);
 					return;
