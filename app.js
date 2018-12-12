@@ -412,7 +412,7 @@ function showMap(aMaps, nick, place, piece, hGif) {
 }
 
 function ParseLogin(PassWord) {
-	console.log(`// Reload the Config from Phorum...`);
+	console.log(`// Find user in phorum...`);
 	hXML.open("GET", Config.ChatLogin, false);
 	hXML.send();
 	if(200 != hXML.status) {
@@ -429,7 +429,7 @@ function ParseLogin(PassWord) {
 				//sys.puts(sys.inspect(handler.dom, false, null));
 		var	dom = new JSDOM(hXML.responseText);
 		hSecret = dom.window.document;
-		console.log(`// Parse the Phorum`);
+		console.log(`// Search for user`);
 		return LoginUser(hSecret, PassWord);
 	}
 }
