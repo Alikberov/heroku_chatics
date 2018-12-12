@@ -678,11 +678,11 @@ const server = http.createServer((req, res) => {
 				if(("ChatLogin" in Config) && Config.ChatLogin) {
 					theUsers[theIP].login = Math.floor(Math.random() * 87655 + 12345);
 /**/
-res.write(`<form name="postform" method="POST" action="${Config.ChatLogin}#preview"  onSubmit="return verifySubmitFields(this)">`);
+res.write(`<form name="postform" method="POST" target="_blank" action="${Config.ChatLogin}#preview"  onSubmit="return verifySubmitFields(this)">`);
 res.write(`<input type="hidden" name="text" value="${theUsers[theIP].login}" />`);
 res.write(`<input type="hidden" name="action" value="autopost" />`);
 //res.write(`<input type="hidden" name="huyita" value="69b5ffc7a3eb8cd2" />`);
-res.write(`<input id="_gdr_post" name="_gdr_post" type="submit" value="Залогиниться" /></p>`);
+res.write(`<input id="_gdr_preview" name="_gdr_preview" type="submit" value="Залогиниться" /></p>`);
 res.write(`</form>`);
 /**/
 /*					res.statusCode = 307;
