@@ -533,6 +533,7 @@ const server = http.createServer((req, res) => {
 		ipAddr	= req.connection.remoteAddress;
 	var	theIP	= ipAddr.split(/:+/).pop().split(".").join("");
 	var	nick;
+	var	fail	= false;
 	var	time	= dateFmt(new Date(), "(_dd)(|m)/HH(^MM)").shifted;
 	//
 	if(theIP in theUsers)
@@ -581,12 +582,19 @@ const server = http.createServer((req, res) => {
 			res.setHeader("Content-Type", "image/gif");
 			hGif.finish();
 		} catch(e) {
-			res.statusCode = 404;
-			res.setHeader("Content-Type", "text/plain");
+			fail = e;
+		}
+		try {
+			if(fail) {
+				res.statusCode = 404;
+				res.setHeader("Content-Type", "text/plain");
 				//hCanvas.pngStream().pipe(res);
-			res.end(e);
-		};
-		res.statusCode = 200;
+				res.end(fail);
+			} else
+				res.statusCode = 200;
+		} catch(e) {
+			logs(`${e}`);
+		}
 	} else
 	if(click) {
 		res.statusCode = 302;
