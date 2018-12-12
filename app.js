@@ -134,6 +134,35 @@ loadImage("NullWall.png").then((image) => {
 	logs(`// Image loaded...`);
 });
 
+function LoginUser(hSecret, PassWord) {
+	var	html;
+	var	aMaps = {};
+	var	res	= [];
+	var	Section	= "";
+	var	theUser	= null;
+	hSecret
+	.querySelector("#main_body")
+	.querySelectorAll(".mes")
+	.forEach
+	(function(hDiv) {
+		if("DIV" == hDiv.tagName) {
+			hCaption = hDiv.querySelector("table").rows[0].cells;
+			hUser = hCaption[0].querySelector("a");
+			nick = hUser.textContent;
+			logs(`// Login mode: User "${nick}"`);
+			var	posts = hDiv.querySelectorAll("pre");
+			for(var i = 0; i < posts.length; ++ i) {
+				if(posts[i].textContent == PassWord) {
+					theUser = nick;
+					logs(`// Login for "${nick}"`);
+					return;
+				}
+			}
+		}
+	});
+	return theUser;
+}
+
 function LoadConfig(hSecret) {
 	var	html;
 	var	aMaps = {};
@@ -382,6 +411,29 @@ function showMap(aMaps, nick, place, piece, hGif) {
 	//Dropbox.save("/", "nullpost.jpeg", "");
 }
 
+function ParseLogin(PassWord) {
+	console.log(`// Reload the Config from Phorum...`);
+	hXML.open("GET", Config.ChatLogin, false);
+	hXML.send();
+	if(200 != hXML.status) {
+		console.log(hXML.status + ": " + hXML.statusText);
+		res.statusCode = 200;
+		res.setHeader("Content-Type", "text/plan");
+		res.end(hXML.status + ": " + hXML.statusText);
+		return false;
+	} else {
+		console.log(`// Parse the Phorum page...`);
+		parser.parseComplete(hXML.responseText);
+		console.log(`// Calling JSDOM...`);
+				//var		document = parser.Parse(hXML.responseText);
+				//sys.puts(sys.inspect(handler.dom, false, null));
+		var	dom = new JSDOM(hXML.responseText);
+		hSecret = dom.window.document;
+		console.log(`// Parse the Phorum`);
+		return LoginUser(hSecret, PassWord);
+	}
+}
+
 function ParseConfig() {
 	console.log(`// Reload the Config from Phorum...`);
 	hXML.open("GET", config, false);
@@ -493,9 +545,15 @@ const server = http.createServer((req, res) => {
 		};
 		console.log(`// New user #${++ nUsers} is connected: ${nick}`);
 	}
-	if(theUsers[theIP].login > 0) {
+	if(theUsers[theIP].login > 0 && ("ChatLogin" in Config)) {
+		tmp = ParseLogin("" + theUsers[theIP].login);
+		if(tmp && tmp.length > 2) {
+			theUsers[theIP].nick = tmp;
+			theUsers[theIP].login = -theUsers[theIP].login;
+		}
 	}
-	theUsers[theIP].login = 0;
+	if(theUsers[theIP].login > 0)
+		theUsers[theIP].login = 0;
 	console.log(req.url);
 	if(picture) {
 		console.log("hXML.open::get?nick::" + picture[1] + "//" + picture[2] + " // " + picture[3]);
@@ -551,11 +609,11 @@ const server = http.createServer((req, res) => {
 		if(chat[1]) {
 			if(chat[1] == "!remap")
 				ParsePhorum();
-			if(chat[1] == "!login") {
+			if(chat[1] == "!login" && theUsers[theIP].login == 0) {
 				if(("ChatLogin" in Config) && Config.ChatLogin) {
 					theUsers[theIP].login = Math.floor(Math.random() * 87655 + 12345);
 					res.statusCode = 307;
-					res.setHeader("Location", Config.ChatLogin + "&YourPassWord= " + theUsers[theIP].login);
+					res.setHeader("Location", Config.ChatLogin + "&YourPassWord=" + theUsers[theIP].login);
 					res.end();
 					return;
 				} else
