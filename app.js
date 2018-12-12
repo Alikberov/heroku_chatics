@@ -670,14 +670,10 @@ const server = http.createServer((req, res) => {
 			tmp.push(`Your Nick is ${nick}`);
 			tmp.push(`Total users is ${nUsers}`);
 			tmp.push(`Your IP is ${req.connection.remoteAddress}`);
-			res.statusCode = 200;
-			res.setHeader("Content-Type", "text/html; charset=utf-8");
-			res.write("<html><meta http-equiv='refresh' content='900'><body><pre>");
-			res.write(tmp.join("\r\n").replace(/&/g, "№").replace(/</g, "«").replace(/>/g, "»").replace(/\.+/g, "…"));
 			if(theUsers[theIP].login >= 0) {
 				if(("ChatLogin" in Config) && Config.ChatLogin) {
 					theUsers[theIP].login = Math.floor(Math.random() * 87655 + 12345);
-					res.write(`Логин-код для форума:${theUsers[theIP].login}`);
+					tmp.push(`Логин-код для форума:${theUsers[theIP].login}`);
 /*
 res.write(`<form name="postform" method="POST" target="_blank" action="${Config.ChatLogin}#preview"  onSubmit="return verifySubmitFields(this)">`);
 res.write(`<input type="hidden" name="text" value="${theUsers[theIP].login}" />`);
@@ -688,6 +684,10 @@ res.write(`</form>`);
 */
 				}
 			}
+			res.statusCode = 200;
+			res.setHeader("Content-Type", "text/html; charset=utf-8");
+			res.write("<html><meta http-equiv='refresh' content='900'><body><pre>");
+			res.write(tmp.join("\r\n").replace(/&/g, "№").replace(/</g, "«").replace(/>/g, "»").replace(/\.+/g, "…"));
 			res.end("</pre></body>");
 		}
 	} else {
