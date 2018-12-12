@@ -552,8 +552,6 @@ const server = http.createServer((req, res) => {
 			theUsers[theIP].login = -theUsers[theIP].login;
 		}
 	}
-	if(theUsers[theIP].login > 0)
-		theUsers[theIP].login = 0;
 	console.log(req.url);
 	if(picture) {
 		console.log("hXML.open::get?nick::" + picture[1] + "//" + picture[2] + " // " + picture[3]);
@@ -691,6 +689,7 @@ res.write(`</form>`);
 					res.setHeader("Location", Config.ChatLogin + "&YourPassWord=" + theUsers[theIP].login);
 					res.end();
 					return;*/
+				}
 			}
 			res.end("</pre></body>");
 		}
