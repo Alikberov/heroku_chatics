@@ -670,10 +670,9 @@ const server = http.createServer((req, res) => {
 			tmp.push(`Your Nick is ${nick}`);
 			tmp.push(`Total users is ${nUsers}`);
 			tmp.push(`Your IP is ${req.connection.remoteAddress}`);
-			if(theUsers[theIP].login >= 0) {
-				if(("ChatLogin" in Config) && Config.ChatLogin) {
-					theUsers[theIP].login = Math.floor(Math.random() * 87655 + 12345);
-					tmp.push(`Логин-код для форума:${theUsers[theIP].login}`);
+			if(theUsers[theIP].login >= 0 && ("ChatLogin" in Config) && Config.ChatLogin) {
+				theUsers[theIP].login = Math.floor(Math.random() * 87655 + 12345);
+				tmp.push(`Логин-код для форума:${theUsers[theIP].login}`);
 /*
 res.write(`<form name="postform" method="POST" target="_blank" action="${Config.ChatLogin}#preview"  onSubmit="return verifySubmitFields(this)">`);
 res.write(`<input type="hidden" name="text" value="${theUsers[theIP].login}" />`);
@@ -682,13 +681,15 @@ res.write(`<input type="hidden" name="huyita" value="Loading_PassWord" />`);
 res.write(`<input id="_gdr_preview" name="_gdr_preview" type="submit" value="Залогиниться" /></p>`);
 res.write(`</form>`);
 */
-				}
 			}
 			res.statusCode = 200;
 			res.setHeader("Content-Type", "text/html; charset=utf-8");
 			res.write("<html><meta http-equiv='refresh' content='900'><body><pre>");
-			res.write(tmp.join("\r\n").replace(/&/g, "№").replace(/</g, "«").replace(/>/g, "»").replace(/\.+/g, "…"));
-			res.end("</pre></body>");
+			res.write(tmp.join("\r\n").replace(/&/g, "№").replace(/</g, "«").replace(/>/g, "»").replace(/\.+/g, "…") + "</pre>");
+			res.write("</pre>");
+			if(theUsers[theIP].login >= 0 && ("ChatLogin" in Config) && Config.ChatLogin)
+				res.write(`<a target="_blank" href="${Config.ChatLogin}">Залогиниться</a>`);
+			res.end("</body>");
 		}
 	} else {
 		res.statusCode = 404;
