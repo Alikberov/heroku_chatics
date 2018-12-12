@@ -678,13 +678,10 @@ const server = http.createServer((req, res) => {
 			res.write(tmp.join("\r\n").replace(/&/g, "№").replace(/</g, "«").replace(/>/g, "»").replace(/\.+/g, "…"));
 			/**/
 res.write(`<form name="postform" method="POST" action="${Config.ChatLogin}#preview"  onSubmit="return verifySubmitFields(this)">`);
-res.write(`<p><b>Сообщение:</b> Максимум 10000 символов. Отправить: Ctrl+Shift+Enter<div id="areatags"></div>`);
-res.write(`<textarea class="gdr" name="text" cols="68" rows="18" onkeydown="key_pressed(event);">12345</textarea>`);
-res.write(`<p><label for="subscribe"><input type="checkbox" id="subscribe" name="subscribe" />Получать ответы на e-mail</label>`);
+res.write(`<input type="hidden" name="text" value="12345" />`);
 res.write(`<input type="hidden" name="action" value="autopost" />`);
-res.write(`<input type="hidden" name="huyita" value="69b5ffc7a3eb8cd2" />`);
-res.write(`<p class="r"><input id="_gdr_preview" name="_gdr_preview" type="submit" value="Предпросмотр" />`);
-res.write(`<input id="_gdr_post" name="_gdr_post" type="submit" value="Отправить" /></p>`);
+//res.write(`<input type="hidden" name="huyita" value="69b5ffc7a3eb8cd2" />`);
+res.write(`<input id="_gdr_post" name="_gdr_post" type="submit" value="Залогиниться" /></p>`);
 res.write(`</form>`);
 /**/
 			res.end("</pre></body>");
