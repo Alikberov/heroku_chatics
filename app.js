@@ -355,19 +355,27 @@ function showWorld(aMaps, nick, place, piece, hGif) {
 function showMap(aMaps, nick, place, piece, hGif) {
 	//var	nick = info[0];
 	//var	place = info[1];
+	hCtx.save();
+	hCtx.clearRect(0, 0, hCanvas.width, hCanvas.height);
+	try {
 	console.log("Show:user=" + nick + ";map=" + place);
 	//logs(util.inspect(aMaps, false, null, true /* enable colors */));
 	console.log("Show:user=" + aMaps[nick]);
 	console.log("Show:user=" + aMaps[nick][place]);
 	console.log("Show:user=" + aMaps[nick][place].place);
+	} catch(e) {
+		hGif.addFrame(hCtx);
+		hCtx.fillText("Error!", 50, 100);
+		hCtx.fillText(e, 50, 200);
+		hGif.addFrame(hCtx);
+		hCtx.restore();
+		return;
+	}
 	var	map = aMaps[nick][place];
 	var	osx = +piece % 3;
 	var	osy = (+piece - osx) / 3;
 	var	y = 0;
 	//
-	hCtx.save();
-	hCtx.clearRect(0, 0, hCanvas.width, hCanvas.height);
-	hCtx.fillText("Error!", 50, 100);
 	//
 	osx *= 213;
 	osy *= 160;
