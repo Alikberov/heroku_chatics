@@ -97,6 +97,8 @@ var	handler = new htmlparser.DefaultHandler(function(error, dom) {
 		console.log(error);
 	} else {
 		console.log("Parsed - " + dom.length);
+		console.log(`${dom}`);
+		console.log(util.inspect(dom, false, null, true /* enable colors */));
 	}
 });
 
