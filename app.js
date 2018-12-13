@@ -447,9 +447,8 @@ function ParseLogin(PassWord) {
 				//var		document = parser.Parse(hXML.responseText);
 				//sys.puts(sys.inspect(handler.dom, false, null));
 		var	dom = new JSDOM(hXML.responseText);
-		hSecret = dom.window.document;
 		console.log(`// Search for user`);
-		return LoginUser(hSecret, PassWord);
+		return LoginUser(dom.window.document, PassWord);
 	}
 }
 
@@ -470,9 +469,8 @@ function ParseConfig() {
 				//var		document = parser.Parse(hXML.responseText);
 				//sys.puts(sys.inspect(handler.dom, false, null));
 		var	dom = new JSDOM(hXML.responseText);
-		hSecret = dom.window.document;
 		console.log(`// Parse the Phorum`);
-		LoadConfig(hSecret);
+		LoadConfig(dom.window.document);
 		return true;
 	}
 }
@@ -506,7 +504,7 @@ function ParsePhorum() {
 
 //
 // Write "Awesome!"
-hCtx.font = '30px "Impact"';
+hCtx.font = '16px "Impact"';
 hCtx.rotate(0.1*0);
  
 // Draw line under text
