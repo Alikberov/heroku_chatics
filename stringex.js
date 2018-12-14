@@ -78,7 +78,7 @@ Object.defineProperty(
 					}
 				)
 				.replace(
-					/(http:\/\/[-a-z.A-Z_0-9%/]+)/g, "<a href='$1'>$1</a>"
+					/(http(s?):\/\/[-a-z.A-Z_0-9%/]+)/g, "<a href='$1'>$1</a>"
 				)
 			;
 		}
