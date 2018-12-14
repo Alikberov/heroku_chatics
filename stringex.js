@@ -1,5 +1,3 @@
-const	iconv	= require("iconv-lite");
-
 Object.defineProperty(
 	String.prototype, "win1251", {
 		get: function () {
@@ -10,17 +8,12 @@ Object.defineProperty(
 
 Object.defineProperty(
 	String.prototype, "shifted", {
-		//	"3(.14159)".shifted == "3₁₄₁₅₉"
-		//	"23(^59)30".shifted == "23⁵⁹30"
-		//	"31(|12)18".shifted == "31Ⅻ18"
-		//	"2(@10)127".shifted == "2⑩127"
-		//	"**words**".shifted == "<b>words</b>"
-		//	"//words//".shifted == "<i>words</i>"
-		//	"--words--".shifted == "<s>words</s>"
-		//	"__words__".shifted == "<u>words</u>"
-		//	"~~words~~".shifted == "<blink>words</blink>"
 		get: function () {
 			return	this
+				//	"3(.14159)".shifted == "3₁₄₁₅₉"
+				//	"23(^59)30".shifted == "23⁵⁹30"
+				//	"31(|12)18".shifted == "31Ⅻ18"
+				//	"2(@10)127".shifted == "2⑩127"
 				.replace(
 					/\(([|.^@])(\d+)\)/gm
 					,function(match, prefix, numbers) {
@@ -30,7 +23,6 @@ Object.defineProperty(
 								"|"	:"ØⅠⅡⅢⅣⅤⅥⅦⅧⅨⅩⅪⅫ",
 								"@"	:"Ⓞ①②③④⑤⑥⑦⑧⑨⑩⑪⑫⑬⑭⑮⑯⑰⑱⑲⑳"
 							}[prefix].split("");
-						console.log(`${match} -- ${prefix} -- ${numbers}`);
 						return	numbers
 							.replace(
 								"|" == prefix
@@ -46,29 +38,32 @@ Object.defineProperty(
 						;
 					}
 				)
+				//	"+-(c)`(r)-:(s)..".shifted == "±©×®÷§…"
 				.replace(
-					/(\+-|\([crs]\)|\.{2,}|[&<>*\\]|,(?:\s*))/gm
+					/(\+-|-:|\([crs]\)|\.{2,}|[&<`>]|,(?:\s*))/gm
 					,function(match, symbol) {
+						console.log(`${match}::${symbol}`);
 						return {
 								"+-"	:"±",
+								"-:"	:"÷",
 								"(c)"	:"©",
 								"(r)"	:"®",
 								"(s)"	:"§",
 								"&"	:"№",
 								"<"	:"«",
 								">"	:"»",
-								"*"	:"×",
-								"\\"	:"÷",
+								"`"	:"×",
 								","	:", ",
 								".."	:"…"
 							}[symbol.replace(/\.{2,}/, "..")];
 					}
 				)
+				//	"(*bold)".shifted == "<b>bold</b>"
 				.replace(
-					/([-×_/~])\1([^\1]+)\1\1/gm
+					/\(([-*_\/~])(.*)\)/gm
 					,function(match, prefix, text) {
 						var	tag = {
-								"×"	:"b",
+								"*"	:"b",
 								"/"	:"i",
 								"-"	:"s",
 								"_"	:"u",
@@ -78,7 +73,7 @@ Object.defineProperty(
 					}
 				)
 				.replace(
-					/(http(s?):\/\/[-a-z.A-Z_0-9%/]+)/g, "<a href='$1'>$1</a>"
+					/(http(s*):\/\/[-a-z.A-Z_0-9%/]+)/g, "<a href='$1'>$1</a>"
 				)
 			;
 		}
@@ -86,6 +81,5 @@ Object.defineProperty(
 );
 
 module.exports = {
-	iconv	:iconv,
 	String	:String
 };
