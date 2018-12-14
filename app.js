@@ -674,7 +674,10 @@ const server = http.createServer((req, res) => {
 			}
 			res.statusCode = 200;
 			res.setHeader("Content-Type", "text/html; charset=utf-8");
-			res.write("<html><meta http-equiv='refresh' content='900'><body><pre>");
+			res.write(`<html><head>\r\n`);
+			res.write(`<meta http-equiv='refresh' content='900'>\r\n`);
+			res.write(`<style>blink { position:absolute; } </style></head>\r\n`);
+			res.write(`<body><pre>`);
 			res.write(tmp.join("\r\n").shifted
 				  //.replace(/&/g, "№")
 				  //.replace(/</g, "«")
