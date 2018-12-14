@@ -1,3 +1,5 @@
+const	iconv	= require("iconv-lite");
+
 Object.defineProperty(
 	String.prototype, "win1251", {
 		get: function () {
@@ -84,5 +86,6 @@ Object.defineProperty(
 );
 
 module.exports = {
+	iconv	:iconv,
 	String	:String
 };
