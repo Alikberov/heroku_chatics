@@ -522,7 +522,11 @@ const server = http.createServer((req, res) => {
 	var	theIP	= ipAddr.split(/:+/).pop().split(".").join("");
 	var	nick;
 	var	fail	= false;
-	var	time	= dateFmt(new Date(), "(_dd)(|m)/HH(^MM)").shifted;
+	var	time	= dateFmt(new Date(),
+			("ChatTimeStamp" in Config
+			 	? Config.ChatTimeStamp
+			 	: "(_dd)(|m)/HH(^MM)"
+			 )).shifted;
 	//
 	if(theIP in theUsers)
 		nick = theUsers[theIP].nick;
@@ -603,10 +607,22 @@ const server = http.createServer((req, res) => {
 	} else
 	if(chat) {
 		if(chat[1]) {
-			if(chat[1] == "!remap")
+			if(chat[1] == "!remap") {
 				ParsePhorum();
-			if(chat[1] == "!config")
+				theChat.push({
+					nick	:"Server",
+					text	:"!remap",
+					time	:time
+				});
+			}
+			if(chat[1] == "!config") {
 				ParseConfig();
+				theChat.push({
+					nick	:"Server",
+					text	:"!config",
+					time	:time
+				});
+			}
 			if(chat[1] == "!login" && theUsers[theIP].login == 0) {
 				if(("ChatLogin" in Config) && Config.ChatLogin) {
 					theUsers[theIP].login = Math.floor(Math.random() * 87655 + 12345);
