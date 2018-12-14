@@ -18,13 +18,13 @@ const	http	= require("http");
 const	util	= require("util");
 const	iconv	= require("iconv-lite");
 
-Object.defineProperty(
+/*Object.defineProperty(
 	String.prototype, "win1251", {
 		get: function () {
 			return	iconv.decode(Buffer.from(this, "binary"), "utf8").toString();
 		}
 	}
-);
+);*/
 
 const	htmlparser = require(log = "htmlparser");
 logs(`require("${log}") is ` + (htmlparser ? "loaded..." : "fails."));
