@@ -681,7 +681,7 @@ const server = http.createServer((req, res) => {
 					str = str.replace(/\(\\Nick\)/g, nick);
 					str = str.replace(/\(\\Guests\)/g, nUsers);
 					str = str.replace(/\(\\IP\)/g, req.connection.remoteAddress);
-					tmp.push(str);
+					tmp.push(str.shifted);
 				});
 			tmp.push(`Your Nick is ${nick}`);
 			tmp.push(`Total users is ${nUsers}`);
@@ -696,7 +696,7 @@ const server = http.createServer((req, res) => {
 			res.write(`<meta http-equiv='refresh' content='900'>\r\n`);
 			res.write(`<style>blink { position:absolute; } </style></head>\r\n`);
 			res.write(`<body><pre>`);
-			res.write(tmp.join("\r\n").shifted
+			res.write(tmp.join("\r\n")
 				  //.replace(/&/g, "№")
 				  //.replace(/</g, "«")
 				  //.replace(/>/g, "»")
