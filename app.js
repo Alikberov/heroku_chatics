@@ -566,8 +566,10 @@ const server = http.createServer((req, res) => {
 	if(theUsers[theIP].login > 0 && ("ChatLogin" in Config)) {
 		tmp = ParseLogin("" + theUsers[theIP].login);
 		if(tmp && tmp.length > 2) {
+			logs(`// User "${theUsers[theIP].nick}" is founded as "${tmp}"`);
 			theUsers[theIP].nick = tmp;
 			theUsers[theIP].login = -theUsers[theIP].login;
+			nick = tmp;
 		}
 	}
 	console.log(req.url);
@@ -698,14 +700,6 @@ const server = http.createServer((req, res) => {
 			if(theUsers[theIP].login >= 0 && ("ChatLogin" in Config) && Config.ChatLogin) {
 				theUsers[theIP].login = Math.floor(Math.random() * 87655 + 12345);
 				tmp.push(`Логин-код для форума:${theUsers[theIP].login}`);
-/*
-res.write(`<form name="postform" method="POST" target="_blank" action="${Config.ChatLogin}#preview"  onSubmit="return verifySubmitFields(this)">`);
-res.write(`<input type="hidden" name="text" value="${theUsers[theIP].login}" />`);
-res.write(`<input type="hidden" name="action" value="autopost" />`);
-res.write(`<input type="hidden" name="huyita" value="Loading_PassWord" />`);
-res.write(`<input id="_gdr_preview" name="_gdr_preview" type="submit" value="Залогиниться" /></p>`);
-res.write(`</form>`);
-*/
 			}
 			res.statusCode = 200;
 			res.setHeader("Content-Type", "text/html; charset=utf-8");
@@ -716,12 +710,11 @@ res.write(`</form>`);
 				  .replace(/>/g, "»")
 				  .replace(/\.+/g, "…")
 				  .replace(/\*/g, "×")
+				  .replace(/\|/g, "±")
 				  .replace(/\\/g, "÷") + "</pre>");
 			res.write("</pre>");
 			if(theUsers[theIP].login >= 0 && ("ChatLogin" in Config) && Config.ChatLogin) {
-				res.write(`<a target='_blank' href='${Config.ChatLogin + ' ' + theUsers[theIP].login}'>За</a>`);
-				res.write(`<a target='_blank' href='${Config.ChatLogin + '?' + theUsers[theIP].login}'>логин</a>`);
-				res.write(`<a target='_blank' href='${Config.ChatLogin + ' ' + theUsers[theIP].login}'>иться</a>`);
+				res.write(`<a target='_blank' href='${Config.ChatLogin + '?' + theUsers[theIP].login}'>Залогиниться</a>`);
 			}
 			res.end("</body>");
 		}
@@ -732,5 +725,5 @@ res.write(`</form>`);
 	}
 });
 server.listen(port, hosting, () => {
-  console.log(`Server running at http://${hosting}:${port}/`);
+	console.log(`Server running at http://${hosting}:${port}/`);
 });
