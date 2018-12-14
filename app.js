@@ -652,7 +652,7 @@ const server = http.createServer((req, res) => {
 		} else {
 			var	tmp = [];
 			theChat.forEach(function(msg) {
-				tmp.push("" + msg.time + "|«" + msg.nick + "»:" + msg.text.shifted);
+				tmp.push("" + msg.time + "|«" + msg.nick + "»:" + msg.text);
 			});
 			if(("ChatPrompt" in Config) && Config.ChatPrompt.length)
 				Config
@@ -682,7 +682,7 @@ const server = http.createServer((req, res) => {
 				  //.replace(/\*/g, "×")
 				  //.replace(/\|/g, "±")
 				  //.replace(/\\/g, "÷")
-				  + "</pre>");
+				 );
 			res.write("</pre>");
 			if(theUsers[theIP].login >= 0 && ("ChatLogin" in Config) && Config.ChatLogin) {
 				res.write(`<a target='_blank' href='${Config.ChatLogin + '?' + theUsers[theIP].login}'>Залогиниться</a>`);
