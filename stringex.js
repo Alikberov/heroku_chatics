@@ -83,6 +83,6 @@ Object.defineProperty(
 );
 
 module.exports = {
-	iconv	:iconv
+	iconv	:iconv,
 	String	:String
 };
