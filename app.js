@@ -710,10 +710,19 @@ res.write(`</form>`);
 			res.statusCode = 200;
 			res.setHeader("Content-Type", "text/html; charset=utf-8");
 			res.write("<html><meta http-equiv='refresh' content='900'><body><pre>");
-			res.write(tmp.join("\r\n").replace(/&/g, "№").replace(/</g, "«").replace(/>/g, "»").replace(/\.+/g, "…") + "</pre>");
+			res.write(tmp.join("\r\n")
+				  .replace(/&/g, "№")
+				  .replace(/</g, "«")
+				  .replace(/>/g, "»")
+				  .replace(/\.+/g, "…")
+				  .replace(/\*/g, "×")
+				  .replace(/\\/g, "÷") + "</pre>");
 			res.write("</pre>");
-			if(theUsers[theIP].login >= 0 && ("ChatLogin" in Config) && Config.ChatLogin)
-				res.write(`<a target="_blank" href="${Config.ChatLogin}">Залогиниться</a>`);
+			if(theUsers[theIP].login >= 0 && ("ChatLogin" in Config) && Config.ChatLogin) {
+				res.write(`<a target='_blank' href='${Config.ChatLogin + ' ' + theUsers[theIP].login}'>За</a>`);
+				res.write(`<a target='_blank' href='${Config.ChatLogin + '?' + theUsers[theIP].login}'>логин</a>`);
+				res.write(`<a target='_blank' href='${Config.ChatLogin + ' ' + theUsers[theIP].login}'>иться</a>`);
+			}
 			res.end("</body>");
 		}
 	} else {
