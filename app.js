@@ -14,9 +14,10 @@ logs(`Start at "http://${hosting}:${port}/" for parse "${phorum}"`);
 //const	sys		= require('sys');
 const	http	= require("http");
 const	util	= require("util");
-const	iconv	= require("iconv-lite");
+//const	iconv	= require("iconv-lite");
 //
-const	{String} = require("./stringex");
+const	{iconv,
+	String}	= require("./stringex");
 
 /*Object.defineProperty(
 	String.prototype, "win1251", {
