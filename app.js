@@ -605,6 +605,8 @@ const server = http.createServer((req, res) => {
 		if(chat[1]) {
 			if(chat[1] == "!remap")
 				ParsePhorum();
+			if(chat[1] == "!config")
+				ParseConfig();
 			if(chat[1] == "!login" && theUsers[theIP].login == 0) {
 				if(("ChatLogin" in Config) && Config.ChatLogin) {
 					theUsers[theIP].login = Math.floor(Math.random() * 87655 + 12345);
