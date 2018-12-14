@@ -9,37 +9,7 @@ const	port	= process.env.PORT || 5000;
 
 var		log;
 
-Object.defineProperty(
-	String.prototype, "shifted", {
-		//	"3(_14159)".shifted == "3₁₄₁₅₉"
-		//	"23(^59)30".shifted == "23⁵⁹30"
-		//	"31(|12)18".shifted == "31Ⅻ18"
-		get: function () {
-			return this
-				.replace(
-					/\((_|\^|\|)(\d+)\)/gm
-					,function(match, prefix, numbers) {
-						var	pattern = {
-								"_"	:"₀₁₂₃₄₅₆₇₈₉",
-								"^"	:"⁰¹²³⁴⁵⁶⁷⁸⁹",
-								"|"	:"ØⅠⅡⅢⅣⅤⅥⅦⅧⅨⅩⅪⅫ"
-							}[prefix].split("");
-						return	numbers
-							.replace(
-								"|" == prefix
-									? (/10|11|12|\d/g)
-									: (/\d/g)
-								,function(n) {
-									return	pattern[n];
-								}
-							)
-						;
-					}
-				)
-			;
-		}
-	}
-);
+const	{String} = require("./stringex");
 
 logs(`Start at "http://${hosting}:${port}/" for parse "${phorum}"`);
 
@@ -526,7 +496,7 @@ var	theChat	= [
 		{
 			nick	:"Нуль-Пост",
 			text	:"Добро Пожаловать!",
-			time	:dateFmt(new Date(), "(_dd)(|m)yyyy/HH(^MM)(_ss)").shifted
+			time	:dateFmt(new Date(), "(.dd)(|m)yyyy/HH(^MM)(.ss)").shifted
 		}
 	];
 var	theUsers = {};
@@ -704,14 +674,15 @@ const server = http.createServer((req, res) => {
 			res.statusCode = 200;
 			res.setHeader("Content-Type", "text/html; charset=utf-8");
 			res.write("<html><meta http-equiv='refresh' content='900'><body><pre>");
-			res.write(tmp.join("\r\n")
-				  .replace(/&/g, "№")
-				  .replace(/</g, "«")
-				  .replace(/>/g, "»")
-				  .replace(/\.+/g, "…")
-				  .replace(/\*/g, "×")
-				  .replace(/\|/g, "±")
-				  .replace(/\\/g, "÷") + "</pre>");
+			res.write(tmp.join("\r\n").shifted
+				  //.replace(/&/g, "№")
+				  //.replace(/</g, "«")
+				  //.replace(/>/g, "»")
+				  //.replace(/\.+/g, "…")
+				  //.replace(/\*/g, "×")
+				  //.replace(/\|/g, "±")
+				  //.replace(/\\/g, "÷")
+				  + "</pre>");
 			res.write("</pre>");
 			if(theUsers[theIP].login >= 0 && ("ChatLogin" in Config) && Config.ChatLogin) {
 				res.write(`<a target='_blank' href='${Config.ChatLogin + '?' + theUsers[theIP].login}'>Залогиниться</a>`);
