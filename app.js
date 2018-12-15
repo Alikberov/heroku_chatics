@@ -395,7 +395,13 @@ function showMap(aMaps, nick, place, piece, hGif) {
 					else
 						hCtx.fillStyle = "rgb(" + (c & 1 ? [192,192,192]:[128,128,128]).join() + ")";
 					//hCtx.fillRect(x * 64 - osx, y * 64 - osy, 64, 64);
-					if(!(flash && y == Locations.common.cell_y && x == Locations.common.cell_x))
+					//if(!(flash && y == Locations.common.cell_y && x == Locations.common.cell_x))
+					if((flash && y == Locations.common.cell_y && x == Locations.common.cell_x)) {
+						if(c != Locations.common.colour)
+							c = Locations.common.colour;
+						else
+							c = 0;
+					}
 						try { hCtx.drawImage(hImage, 128 * +c, 0, 128, 128, x * 64 - osx - 64, y * 64 - osy - 64, 128, 128); } catch(e) { console.log(e); }
 				} else {
 				//if(d > 0 && map.images.length > d) {
