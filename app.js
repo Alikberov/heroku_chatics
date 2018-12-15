@@ -102,7 +102,7 @@ loadImage(sprites).then((image) => {
 	logs(`// Sprites loaded...`);
 });
 
-loadImage("NullWall.png").then((image) => {
+loadImage("NullWall_1.png").then((image) => {
 	hImage = image;
 	logs(`// Image loaded...`);
 });
