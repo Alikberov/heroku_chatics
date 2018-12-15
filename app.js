@@ -350,19 +350,21 @@ function bashMap(cells) {
 	var	res	= "";
 	var	str;
 	var	i, c;
+	var	y = 0;
 	cells.forEach
 	(function(row) {
 		str = "";
 		for(i = 0; i < row.length; ++ i) {
 			c = +row[i];
 			if(c < 8)
-				str += `\x1b[4${(c & 1 ? 4 : 0) | (c & 2) | (c & 4 ? 1 : 0)}m   `;
+				str += `\x1b[4${(c & 1 ? 4 : 0) | (c & 2) | (c & 4 ? 1 : 0)}m${Locations.common.cell_x == i && Locations.common.cell_y == y ? "+++" : "   "}`;
 			else
-				str += `\x1b[${c & 1 ? 1 : 2}m###`;
+				str += `\x1b[${c & 1 ? 1 : 2}m${Locations.common.cell_x == i && Locations.common.cell_y == y ? "###" : "---"}`;
 		}
 		res += `\r\n` + str;
 		res += `\r\n` + str;
 		res += `\r\n` + str;
+		++ y;
 	});
 	logs(`${res}\x1B[39;49m`)
 }
