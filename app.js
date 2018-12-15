@@ -346,10 +346,30 @@ function showWorld(aMaps, nick, place, piece, hGif) {
 //	hGif.addFrame(hCtx);
 	//Dropbox.save("/", "nullpost.jpeg", "");
 }
-
+function bashMap(cells) {
+	var	res	= "";
+	var	str;
+	var	i, c;
+	cells.forEach
+	(function(row) {
+		str = "";
+		for(i = 0; i < row.length; ++ i) {
+			c = +row[i];
+			if(c < 8)
+				str += `\x1b[4${(c & 1 ? 4 : 0) | (c & 2) | (c & 4 ? 1 : 0)}m   `;
+			else
+				str += `\x1b[${c & 1 ? 1 : 2}m###`;
+		}
+		res += `\r\n` + str;
+		res += `\r\n` + str;
+		res += `\r\n` + str;
+	});
+	logs(`${res}\x1B[39;49m`)
+}
 function showMap(aMaps, nick, place, piece, hGif) {
 	//var	nick = info[0];
 	//var	place = info[1];
+	var	ansi	= [];
 	hCtx.save();
 	hCtx.clearRect(0, 0, hCanvas.width, hCanvas.height);
 	try {
@@ -384,12 +404,14 @@ function showMap(aMaps, nick, place, piece, hGif) {
 		.forEach
 		(function(plot) {
 			var	x = 0;
+			ansi.push([]);
 			while(plot.length) {
 				var	c = plot.charAt(0);
 				var	d = plot.charCodeAt(0) - 64;
 				if(isFinite(c)) {
 					if(Matrix[y][x] < 10)
 						c = Matrix[y][x];
+					ansi[y][x] = +c;
 					if(c < 8)
 						hCtx.fillStyle = "rgb(" + [(c & 4 ? 255:0), (c & 2 ? 255:0), (c & 1 ? 255:0)].join() + ")";
 					else
@@ -425,6 +447,7 @@ function showMap(aMaps, nick, place, piece, hGif) {
 	hCtx.stroke();
 	hGif.addFrame(hCtx);*/
 	hCtx.restore();
+	try { bashMap(ansi); } catch(e) { console.log(e); }
 	//Dropbox.save("/", "nullpost.jpeg", "");
 }
 
