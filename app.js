@@ -368,37 +368,42 @@ function showMap(aMaps, nick, place, piece, hGif) {
 	osx *= 213;
 	osy *= 320;
 	//
-	map
-	.design.split(/\r?\n/)
-	.forEach
-	(function(plot) {
-		var	x = 0;
-		while(plot.length) {
-			var	c = plot.charAt(0);
-			var	d = plot.charCodeAt(0) - 64;
-			if(isFinite(c)) {
-				if(Matrix[y][x] < 10)
-					c = Matrix[y][x];
-				if(c < 8)
-					hCtx.fillStyle = "rgb(" + [(c & 4 ? 255:0), (c & 2 ? 255:0), (c & 1 ? 255:0)].join() + ")";
-				else
-					hCtx.fillStyle = "rgb(" + (c & 1 ? [192,192,192]:[128,128,128]).join() + ")";
-				//hCtx.fillRect(x * 64 - osx, y * 64 - osy, 64, 64);
-				try { hCtx.drawImage(hImage, 128 * +c, 0, 128, 128, x * 64 - osx - 64, y * 64 - osy - 64, 128, 128); } catch(e) { console.log(e); }
-			} else {
-			//if(d > 0 && map.images.length > d) {
-				//hCtx.drawImage(map.images[d], x * 24, y * 24);
-				hCtx.fillStyle = "red";
-				if(Matrix[y][x] > 9)
-					hCtx.fillText(plot.charAt(0), x * 64 - osx, y * 64+64 - osy);
+	var	flash	= false;
+	do {
+		hCtx.clearRect(0, 0, hCanvas.width, hCanvas.height);
+		map
+		.design.split(/\r?\n/)
+		.forEach
+		(function(plot) {
+			var	x = 0;
+			while(plot.length) {
+				var	c = plot.charAt(0);
+				var	d = plot.charCodeAt(0) - 64;
+				if(isFinite(c)) {
+					if(Matrix[y][x] < 10)
+						c = Matrix[y][x];
+					if(c < 8)
+						hCtx.fillStyle = "rgb(" + [(c & 4 ? 255:0), (c & 2 ? 255:0), (c & 1 ? 255:0)].join() + ")";
+					else
+						hCtx.fillStyle = "rgb(" + (c & 1 ? [192,192,192]:[128,128,128]).join() + ")";
+					//hCtx.fillRect(x * 64 - osx, y * 64 - osy, 64, 64);
+					if(flash || y != Locations.common.cell_y || x != Locations.common.cell_x)
+						try { hCtx.drawImage(hImage, 128 * +c, 0, 128, 128, x * 64 - osx - 64, y * 64 - osy - 64, 128, 128); } catch(e) { console.log(e); }
+				} else {
+				//if(d > 0 && map.images.length > d) {
+					//hCtx.drawImage(map.images[d], x * 24, y * 24);
+					hCtx.fillStyle = "red";
+					if(Matrix[y][x] > 9)
+						hCtx.fillText(plot.charAt(0), x * 64 - osx, y * 64+64 - osy);
+				}
+				plot = plot.substr(1);
+				++ x;
 			}
-			plot = plot.substr(1);
-			++ x;
-		}
-		++ y;
-	});
-	hGif.addFrame(hCtx);
-	hCtx.fillStyle = "rgba(227,167,127,0.75)";
+			++ y;
+		});
+		hGif.addFrame(hCtx);
+	} while(flash = !flash);
+/*	hCtx.fillStyle = "rgba(227,167,127,0.75)";
 	hCtx.fillRect(Locations.common.cell_x * 64, Locations.common.cell_y * 64, 64, 64);
 	hCtx.beginPath();
 	hCtx.strokeStyle = "rgba(127,227,167,0.75)";
@@ -406,7 +411,7 @@ function showMap(aMaps, nick, place, piece, hGif) {
 	hCtx.stroke();
 	hCtx.restore();
 	hGif.addFrame(hCtx);
-	//Dropbox.save("/", "nullpost.jpeg", "");
+*/	//Dropbox.save("/", "nullpost.jpeg", "");
 }
 
 function ParseLogin(PassWord) {
