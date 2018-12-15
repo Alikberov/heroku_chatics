@@ -351,7 +351,7 @@ function bashMap(cells) {
 	var	str;
 	var	i, c;
 	var	y = 0;
-	cells.forEach
+	cells.slice(0, 10).forEach
 	(function(row) {
 		str = "";
 		for(i = 0; i < row.length; ++ i) {
@@ -361,17 +361,17 @@ function bashMap(cells) {
 			else
 				str += `\x1b[${c & 1 ? 1 : 2}m${Locations.common.cell_x == i && Locations.common.cell_y == y ? "###" : "---"}`;
 		}
-		res += `\r\n` + str;
-		res += `\r\n` + str;
-		res += `\r\n` + str;
+		res += `\r\n` + str + `\x1B[39;49m`;
+		res += `\r\n` + str + `\x1B[39;49m`;
+		res += `\r\n` + str + `\x1B[39;49m`;
 		++ y;
 	});
-	logs(`${res}\x1B[39;49m`)
+	logs(`${res}`)
 }
+var	ansi;
 function showMap(aMaps, nick, place, piece, hGif) {
 	//var	nick = info[0];
 	//var	place = info[1];
-	var	ansi	= [];
 	hCtx.save();
 	hCtx.clearRect(0, 0, hCanvas.width, hCanvas.height);
 	try {
@@ -398,6 +398,7 @@ function showMap(aMaps, nick, place, piece, hGif) {
 	osy *= 320;
 	//
 	var	flash	= false;
+	ansi	= [];
 	do {
 		hCtx.clearRect(0, 0, hCanvas.width, hCanvas.height);
 		y = 0;
@@ -449,7 +450,6 @@ function showMap(aMaps, nick, place, piece, hGif) {
 	hCtx.stroke();
 	hGif.addFrame(hCtx);*/
 	hCtx.restore();
-	try { bashMap(ansi); } catch(e) { console.log(e); }
 	//Dropbox.save("/", "nullpost.jpeg", "");
 }
 
@@ -763,6 +763,7 @@ const server = http.createServer((req, res) => {
 			if(theUsers[theIP].login >= 0 && ("ChatLogin" in Config) && Config.ChatLogin) {
 				res.write(`<a target='_blank' href='${Config.ChatLogin + '?' + theUsers[theIP].login}'>Залогиниться</a>`);
 			}
+			try { bashMap(ansi); } catch(e) { console.log(e); }
 			res.end("</body>");
 		}
 	} else {
