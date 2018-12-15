@@ -252,7 +252,15 @@ function GetUp(hSecret) {
 	return aMaps;
 }
 
-var	PosX = 0, PosY = 0;
+var	Locations =
+	{
+		common:
+		{
+			cell_x	:5,
+			cell_y	:5,
+			colour	:9
+		}
+	};
 
 function showWorld(aMaps, nick, place, piece, hGif) {
 	//var	nick = info[0];
@@ -358,7 +366,7 @@ function showMap(aMaps, nick, place, piece, hGif) {
 	//
 	//
 	osx *= 213;
-	osy *= 160;
+	osy *= 320;
 	//
 	map
 	.design.split(/\r?\n/)
@@ -391,10 +399,10 @@ function showMap(aMaps, nick, place, piece, hGif) {
 	});
 	hGif.addFrame(hCtx);
 	hCtx.fillStyle = "rgba(227,167,127,0.75)";
-	hCtx.fillRect(PosX * 64, PosY * 64, 64, 64);
+	hCtx.fillRect(Locations.common.cell_x * 64, Locations.common.cell_y * 64, 64, 64);
 	hCtx.beginPath();
 	hCtx.strokeStyle = "rgba(127,227,167,0.75)";
-	hCtx.rect(PosX * 64 + 16, PosY * 64 + 16, 32, 32);
+	hCtx.rect(Locations.common.cell_x * 64 + 16, Locations.common.cell_y * 64 + 16, 32, 32);
 	hCtx.stroke();
 	hCtx.restore();
 	hGif.addFrame(hCtx);
@@ -591,18 +599,20 @@ const server = http.createServer((req, res) => {
 		}
 	} else
 	if(click) {
+		Locations.common.cell_y = +click[1];
+		Locations.common.cell_x = +click[2];
+		Matrix
+			[Locations.common.cell_y]
+			[Locations.common.cell_x]
+			= Locations.common.colour;
 		res.statusCode = 302;
 		res.setHeader("Location", "https://gamedev.ru/pages/nullpost/play");
-		if(PosX != click[2] || PosY != click[1])
-			PosX = click[2], PosY = click[1];
-		else
-			Matrix[PosY][PosX] = (Matrix[PosY][PosX] + 1) % 11;
 		res.end();
 	} else
 	if(choice) {
+		Locations.common.colour = +choice[1];
 		res.statusCode = 302;
 		res.setHeader("Location", "https://gamedev.ru/pages/nullpost/play");
-		Matrix[PosY][PosX] = +choice[1];
 		res.end();
 	} else
 	if(chat) {
