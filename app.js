@@ -134,7 +134,8 @@ function loadImages(image, err) {
   f(link, callback);
 }
 */loadImage("./NullPost_1.png").then(loadImages);
-function downloadImage(url, cb) {
+
+//function downloadImage(url, cb) {
 	find_link(url, function(link) {
 		logs(`The_Link "${link}"`);
 		var h = link.charAt(4) == 's' ? https : http;
@@ -159,7 +160,7 @@ function downloadImage(url, cb) {
 	});
 }
 
-downloadImage(images, loadImages);
+//downloadImage(images, loadImages);
 
 function LoginUser(hSecret, PassWord) {
 	var	html;
