@@ -227,7 +227,7 @@ function GetUp(hSecret) {
 //							console.log(mp);
 							if(mp) {
 								place = mp[2];
-								design = mp[3];
+								design = mp[3].split(/\r?\n/).slice(1).join("\r\n");
 								if(!(nick in aMaps))
 									aMaps[nick] = [[]];
 								aMaps[nick].push({
