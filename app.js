@@ -115,10 +115,23 @@ function loadImages(image, err) {
 	} else
 		logs(err);
 };
-
+function find_link(link, callback) {
+  var root ='';
+  var f = function(link) {
+    http.get(link, function(res) {
+      if(res.statusCode == 301) {
+        f(res.headers.location);
+      } else {
+        callback(link);
+      }
+    });
+ }
+  f(link, function(t){i(t,'*')});
+}
 //loadImage("./NullPost_1.png").then(loadImages);
 function downloadImage(url, cb) {
-  http.get(url)
+	find_link(url, function(link) {
+  http.get(link)
     .on('response', function(res) {
 
       // http://stackoverflow.com/a/14269536/478603
@@ -135,7 +148,8 @@ function downloadImage(url, cb) {
     })
     .on('error', function(err) {
       cb(null, err);
-    })
+    });
+	});
 }
 
 downloadImage(images, loadImages);
