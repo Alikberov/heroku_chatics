@@ -103,12 +103,37 @@ loadImage(sprites).then((image) => {
 	logs(`// Sprites loaded...`);
 });
 
-function loadImages(image) {
-	hImage = image;
-	logs(`// Image loaded from DropBox...`);
+function loadImages(image, err) {
+	if(image) {
+		hImage = image;
+		logs(`// Image loaded from DropBox...`);
+	} else
+		logs(err);
 };
 
-loadImage(images).then(loadImages);
+//loadImage("./NullPost_1.png").then(loadImages);
+function downloadImage(url, cb) {
+  http.get(url)
+    .on('response', function(res) {
+
+      // http://stackoverflow.com/a/14269536/478603
+      var chunks = []
+      res.on('data', function(data) {
+        chunks.push(data)
+      })
+      res.on('end', function() {
+        var img = new Canvas.Image()
+        img.src = Buffer.concat(chunks)
+        cb(img)
+      })
+
+    })
+    .on('error', function(err) {
+      cb(null, err)
+    })
+}
+
+downloadImage(images, loadImages);
 
 function LoginUser(hSecret, PassWord) {
 	var	html;
@@ -673,7 +698,8 @@ const server = http.createServer((req, res) => {
 	if(chat) {
 		if(chat[1]) {
 			if(chat[1] == "!image") {
-				loadImage(images).then(loadImages);
+				//loadImage(images).then(loadImages);
+				downloadImage(images, loadImages);
 			}
 			if(chat[1] == "!remap") {
 				ParsePhorum();
