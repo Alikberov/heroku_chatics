@@ -135,7 +135,7 @@ function loadImages(image, err) {
 }
 */loadImage("./NullPost_1.png").then(loadImages);
 
-//function downloadImage(url, cb) {
+function downloadImage(url, cb) {
 	find_link(url, function(link) {
 		logs(`The_Link "${link}"`);
 		var h = link.charAt(4) == 's' ? https : http;
