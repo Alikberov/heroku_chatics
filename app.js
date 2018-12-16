@@ -120,7 +120,7 @@ function find_link(link, callback) {
   var root ='';
   var f = function(link) {
 	var h = link.charAt(4) == 's' ? https : http;
-	  logs(`Link "${link}"`);
+	  logs(`FindLink "${link}"`);
     h.get(link, function(res) {
       if(res.statusCode == 301) {
         f(res.headers.location);
@@ -129,12 +129,12 @@ function find_link(link, callback) {
       }
     });
  }
-  f(link, function(t){i(t,'*')});
+  f(link, callback);
 }
 //loadImage("./NullPost_1.png").then(loadImages);
 function downloadImage(url, cb) {
 	find_link(url, function(link) {
-		logs(`Link "${link}"`);
+		logs(`The_Link "${link}"`);
 		var h = link.charAt(4) == 's' ? https : http;
     h.get(link)
     .on('response', function(res) {
