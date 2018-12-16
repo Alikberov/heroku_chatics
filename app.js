@@ -116,7 +116,7 @@ function loadImages(image, err) {
 	} else
 		logs(err);
 };
-function find_link(link, callback) {
+/*function find_link(link, callback) {
   var root ='';
 	var	dlink;
   var f = function(link) {
@@ -133,7 +133,7 @@ function find_link(link, callback) {
  }
   f(link, callback);
 }
-//loadImage("./NullPost_1.png").then(loadImages);
+*/loadImage("./NullPost_1.png").then(loadImages);
 function downloadImage(url, cb) {
 	find_link(url, function(link) {
 		logs(`The_Link "${link}"`);
