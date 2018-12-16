@@ -1,7 +1,7 @@
 const	logs	= console.log;
 
 const	Owner	= "Alikberov";
-const	images	= "https://www.dropbox.com/s/0di1pktgtrl3xex/NullWall.png?raw=1";
+const	images	= "http://www.dropbox.com/s/0di1pktgtrl3xex/NullWall.png?raw=1";
 const	sprites	= "./collection.png";
 const	config	= "https://gamedev.ru/pages/nullpost/forum/?id=240744";
 const	phorum	= "https://gamedev.ru/pages/nullpost/forum/?id=240744#m1";
