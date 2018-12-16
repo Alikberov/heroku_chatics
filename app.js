@@ -355,11 +355,19 @@ function bashMap(cells) {
 	(function(row) {
 		str = "";
 		for(i = 0; i < row.length; ++ i) {
-			c = +row[i];
-			if(c < 8)
-				str += `\x1b[4${(c & 1 ? 4 : 0) | (c & 2) | (c & 4 ? 1 : 0)}m${Locations.common.cell_x == i && Locations.common.cell_y == y ? "+++" : "   "}`;
-			else
-				str += `\x1b[${c & 1 ? 1 : 2}m${Locations.common.cell_x == i && Locations.common.cell_y == y ? "###" : "---"}`;
+			switch(row[i]) {
+			case 0:	str += `\x1b[30;40m`; break;
+			case 1: str += `\x1b[31;40m`; break;
+			case 2: str += `\x1b[31;43m`; break;
+			case 3: str += `\x1b[33;40m`; break;
+			case 4: str += `\x1b[32;40m`; break;
+			case 5: str += `\x1b[36;40m`; break;
+			case 6: str += `\x1b[34;40m`; break;
+			case 7: str += `\x1b[35;40m`; break;
+			case 8: str += `\x1b[37;47m`; break;
+			case 9: str += `\x1b[37;40m`; break;
+			}
+			str += `${Locations.common.cell_x == i && Locations.common.cell_y == y ? "\u2592\u2592\u2592" : "\u2593\u2593\u2593"}`;
 		}
 		res += `\r\n` + str + `\x1B[39;49m`;
 		res += `\r\n` + str + `\x1B[39;49m`;
