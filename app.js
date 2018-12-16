@@ -109,9 +109,9 @@ loadImage(sprites).then((image) => {
 });
 
 function loadImages(image, err) {
-	if(image) {
+	if(image != null) {
 		hImage = image;
-		logs(`// Image loaded from DropBox...`);
+		logs(`// Image ${image} loaded from DropBox...`);
 	} else
 		logs(err);
 };
