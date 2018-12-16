@@ -133,7 +133,7 @@ function loadImages(image, err) {
  }
   f(link, callback);
 }
-*/loadImage("./NullPost_1.png").then(loadImages);
+*/loadImage("./NullWall_1.png").then(loadImages);
 
 function downloadImage(url, cb) {
 	find_link(url, function(link) {
