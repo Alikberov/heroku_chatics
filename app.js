@@ -1,6 +1,7 @@
 const	logs	= console.log;
 
 const	Owner	= "Alikberov";
+const	images	= "https://www.dropbox.com/sh/jkozyt735dcqb6c/AADk_19NsdjdxQtcmuPk_Stia?raw=1";
 const	sprites	= "./collection.png";
 const	config	= "https://gamedev.ru/pages/nullpost/forum/?id=240744";
 const	phorum	= "https://gamedev.ru/pages/nullpost/forum/?id=240744#m1";
@@ -102,10 +103,12 @@ loadImage(sprites).then((image) => {
 	logs(`// Sprites loaded...`);
 });
 
-loadImage("NullWall_1.png").then((image) => {
+function loadImages(image) {
 	hImage = image;
-	logs(`// Image loaded...`);
-});
+	logs(`// Image loaded from DropBox...`);
+};
+
+loadImage(images).then(loadImages);
 
 function LoginUser(hSecret, PassWord) {
 	var	html;
@@ -669,6 +672,9 @@ const server = http.createServer((req, res) => {
 	} else
 	if(chat) {
 		if(chat[1]) {
+			if(chat[1] == "!image") {
+				loadImage(images).then(loadImages);
+			}
 			if(chat[1] == "!remap") {
 				ParsePhorum();
 				theChat.push({
