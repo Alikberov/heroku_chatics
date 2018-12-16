@@ -122,7 +122,7 @@ function downloadImage(url, cb) {
         chunks.push(data)
       })
       res.on('end', function() {
-        var img = new Canvas.Image()
+        var img = new hCanvas.Image()
         img.src = Buffer.concat(chunks)
         cb(img)
       })
