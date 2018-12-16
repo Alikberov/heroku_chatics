@@ -13,6 +13,7 @@ var		log;
 logs(`Start at "http://${hosting}:${port}/" for parse "${phorum}"`);
 
 //const	sys		= require('sys');
+const	https	= require("https");
 const	http	= require("http");
 const	util	= require("util");
 //const	iconv	= require("iconv-lite");
@@ -118,7 +119,7 @@ function loadImages(image, err) {
 function find_link(link, callback) {
   var root ='';
   var f = function(link) {
-    http.get(link, function(res) {
+    https.get(link, function(res) {
       if(res.statusCode == 301) {
         f(res.headers.location);
       } else {
@@ -131,7 +132,7 @@ function find_link(link, callback) {
 //loadImage("./NullPost_1.png").then(loadImages);
 function downloadImage(url, cb) {
 	find_link(url, function(link) {
-  http.get(link)
+  https.get(link)
     .on('response', function(res) {
 
       // http://stackoverflow.com/a/14269536/478603
