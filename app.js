@@ -119,7 +119,9 @@ function loadImages(image, err) {
 function find_link(link, callback) {
   var root ='';
   var f = function(link) {
-    https.get(link, function(res) {
+	var h = link.charAt(4) == 's' ? https : http;
+	  logs(`Link "${link}"`);
+    h.get(link, function(res) {
       if(res.statusCode == 301) {
         f(res.headers.location);
       } else {
@@ -132,7 +134,9 @@ function find_link(link, callback) {
 //loadImage("./NullPost_1.png").then(loadImages);
 function downloadImage(url, cb) {
 	find_link(url, function(link) {
-  https.get(link)
+		logs(`Link "${link}"`);
+		var h = link.charAt(4) == 's' ? https : http;
+    h.get(link)
     .on('response', function(res) {
 
       // http://stackoverflow.com/a/14269536/478603
