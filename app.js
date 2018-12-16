@@ -118,7 +118,7 @@ function loadImages(image, err) {
 
 //loadImage("./NullPost_1.png").then(loadImages);
 function downloadImage(url, cb) {
-  http.get(url);
+  http.get(url)
     .on('response', function(res) {
 
       // http://stackoverflow.com/a/14269536/478603
