@@ -43,7 +43,7 @@ logs(`require("${log}") is ` + (XMLhttprequest ? "loaded..." : "fails."));
 if(!XMLhttprequest)
 	return 3;
 
-const	{createCanvas, loadImage} = require(log = 'canvas');
+const	{Canvas, createCanvas, loadImage} = require(log = 'canvas');
 logs(`require("${log}") is ` + (createCanvas ? "loaded..." : "fails."));
 if(!createCanvas)
 	return 4;
@@ -122,7 +122,7 @@ function downloadImage(url, cb) {
         chunks.push(data)
       })
       res.on('end', function() {
-        var img = new createCanvas.Image();
+        var img = new Canvas.Image();
         img.src = Buffer.concat(chunks)
         cb(img)
       })
