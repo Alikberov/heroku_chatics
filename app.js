@@ -118,14 +118,16 @@ function loadImages(image, err) {
 };
 function find_link(link, callback) {
   var root ='';
+	var	dlink;
   var f = function(link) {
+	  dlink = link;
 	var h = link.charAt(4) == 's' ? https : http;
 	  logs(`FindLink "${link}"`);
     h.get(link, function(res) {
       if(res.statusCode == 301) {
         f(res.headers.location);
       } else {
-        callback(link);
+        callback(link.substr(0,4) == 'http' ? link : dlink);
       }
     });
  }
