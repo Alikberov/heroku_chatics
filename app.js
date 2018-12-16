@@ -43,7 +43,7 @@ logs(`require("${log}") is ` + (XMLhttprequest ? "loaded..." : "fails."));
 if(!XMLhttprequest)
 	return 3;
 
-const	{Canvas, createCanvas, loadImage} = require(log = 'canvas');
+const	{createCanvas, loadImage} = require(log = 'canvas');
 logs(`require("${log}") is ` + (createCanvas ? "loaded..." : "fails."));
 if(!createCanvas)
 	return 4;
@@ -57,6 +57,11 @@ const	dateFmt = require(log = 'dateformat');
 logs(`require("${log}") is ` + (dateFmt ? "loaded..." : "fails."));
 if(!dateFmt)
 	return 6;
+
+const	Canvas = require(log = 'canvas');
+logs(`require("${log}") is ` + (Canvas ? "loaded..." : "fails."));
+if(!Canvas)
+	return 7;
 
 const	XMLHttpRequest = XMLhttprequest.XMLHttpRequest;
 const	hXML	= new XMLHttpRequest();
