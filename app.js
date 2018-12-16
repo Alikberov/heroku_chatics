@@ -111,30 +111,30 @@ loadImage(sprites).then((image) => {
 function loadImages(image, err) {
 	if(image != null) {
 		hImage = image;
-		logs(`// Image ${image} loaded from DropBox...`);
+		logs(`// Image ${image} ${image.width}x${image.height} loaded from DropBox...`);
 	} else
 		logs(err);
 };
 
 //loadImage("./NullPost_1.png").then(loadImages);
 function downloadImage(url, cb) {
-  http.get(url)
+  http.get(url);
     .on('response', function(res) {
 
       // http://stackoverflow.com/a/14269536/478603
-      var chunks = []
+      var chunks = [];
       res.on('data', function(data) {
-        chunks.push(data)
-      })
+        chunks.push(data);
+      });
       res.on('end', function() {
         var img = new Canvas.Image();
-        img.src = Buffer.concat(chunks)
-        cb(img)
-      })
+        img.src = Buffer.concat(chunks);
+        cb(img);
+      });
 
     })
     .on('error', function(err) {
-      cb(null, err)
+      cb(null, err);
     })
 }
 
