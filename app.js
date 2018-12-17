@@ -664,6 +664,7 @@ log(util.inspect(Config, false, null, true));
 const server = http.createServer((req, res) => {
 	var	requrl	= unescape(req.url).replace(/\+/g, " ");
 	//
+	var	login	= requrl.match(/login/);
 	var	advision= requrl.match(/advision/);
 	var	picture = requrl.match(/nick="(.*?)"&post=(\d)(?:&piece=(\d))/);
 	var	ortho	= requrl.match(/ortho/);
@@ -705,6 +706,11 @@ const server = http.createServer((req, res) => {
 		}
 	}
 	log(req.url);
+	if(login) {
+		res.statusCode = 200;
+		res.setHeader("Content-Type", "text/plane; charset=utf-8");
+		res.end(theUsers[theIP].login > 0 ? theUsers[theIP].login.toString() : `Не требуется - «${nick}»`);
+	} else
 	if(advision) {
 		res.statusCode = 200;
 		res.setHeader("Content-Type", "text/html; charset=utf-8");
