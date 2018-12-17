@@ -695,7 +695,7 @@ const server = http.createServer((req, res) => {
 	if(advision) {
 		res.statusCode = 200;
 		res.setHeader("Content-Type", "text/html; charset=utf-8");
-		res.end(szAdvision.replace(/{{CHAT:LAST}}/gm, szChatLast);
+		res.end(szAdvision.replace(/{{CHAT:LAST}}/gm, szChatLast));
 	} else
 	if(picture) {
 		log("hXML.open::get?nick::" + picture[1] + "//" + picture[2] + " // " + picture[3]);
