@@ -627,6 +627,8 @@ hCtx.lineTo(50, 102)
 hCtx.lineTo(50 + text.width, 102)
 hCtx.stroke()
 
+var	szChatLast	= `This is last line from NullPost-chat…`;
+
 var	nickun;
 var	pictun;
 var	pieced;
@@ -693,7 +695,7 @@ const server = http.createServer((req, res) => {
 	if(advision) {
 		res.statusCode = 200;
 		res.setHeader("Content-Type", "text/html; charset=utf-8");
-		res.end(szAdvision);
+		res.end(szAdvision.replace(/{{CHAT:LAST}}/gm, szChatLast);
 	} else
 	if(picture) {
 		log("hXML.open::get?nick::" + picture[1] + "//" + picture[2] + " // " + picture[3]);
@@ -824,7 +826,7 @@ const server = http.createServer((req, res) => {
 		} else {
 			var	tmp = [];
 			theChat.forEach(function(msg) {
-				tmp.push("" + msg.time + "|«" + msg.nick + "»:" + msg.text);
+				tmp.push(szChatLast = "" + msg.time + "|«" + msg.nick + "»:" + msg.text);
 			});
 			if(("ChatPrompt" in Config) && Config.ChatPrompt.length)
 				Config
