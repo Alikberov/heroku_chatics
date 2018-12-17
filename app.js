@@ -64,6 +64,11 @@ logs(`require("${log}") is ` + (Canvas ? "loaded..." : "fails."));
 if(!Canvas)
 	return 7;
 
+const	firebase = require(log = `firebase`);
+logs(`require("${log}") is ` + (firebase ? "loaded..." : "fails."));
+if(!firebase)
+	return 8;
+
 const	XMLHttpRequest = XMLhttprequest.XMLHttpRequest;
 const	hXML	= new XMLHttpRequest();
 const	{JSDOM}	= jsdom;
@@ -100,6 +105,27 @@ for(i = 0; i < 100; ++ i) {
 	for(j = 0; j < 100; ++ j)
 		Matrix[i][j] = 10;
 }
+
+var	app = firebase.initializeApp(
+	{
+		apiKey: "AIzaSyDj--njV63QvHG_R7Ov0pP3VXijKJoUx44",
+		authDomain: "null-post.firebaseapp.com",
+		databaseURL: "https://null-post.firebaseio.com",
+		projectId: "null-post",
+		storageBucket: "null-post.appspot.com",
+		messagingSenderId: "149431388574"
+	}
+);
+var	database = firebase.app().database();
+var	hAdvision = database.ref("advision");
+var	szAdvision = "";
+
+hAdvision.on("value",
+	function(snap) {
+		szAdvision = snap.val();
+		log(`Advision changed…`);
+	}
+);
 
 var	hImage	= null;
 var	hSprites= null;
@@ -623,6 +649,7 @@ logs(util.inspect(Config, false, null, true));
 const server = http.createServer((req, res) => {
 	var	requrl	= unescape(req.url).replace(/\+/g, " ");
 	//
+	var	advision= requrl.match(/advision/);
 	var	picture = requrl.match(/nick="(.*?)"&post=(\d)(?:&piece=(\d))/);
 	var	ortho	= requrl.match(/ortho/);
 	var	click	= requrl.match(/\/(\d)(\d)/);
@@ -663,6 +690,11 @@ const server = http.createServer((req, res) => {
 		}
 	}
 	console.log(req.url);
+	if(advision) {
+		res.statusCode = 200;
+		res.setHeader("Content-Type", "text/html; charset=utf-8");
+		res.end(szAdvision);
+	} else
 	if(picture) {
 		console.log("hXML.open::get?nick::" + picture[1] + "//" + picture[2] + " // " + picture[3]);
 		if(!dom)
