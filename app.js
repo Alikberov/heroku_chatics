@@ -710,7 +710,7 @@ const server = http.createServer((req, res) => {
 		res.statusCode = 200;
 		res.setHeader("Content-Type", "text/plain; charset=utf-8");
 		log(`Login:#${theUsers[theIP].login} for «${nick}»`);
-		res.end(theUsers[theIP].login > 0 ? theUsers[theIP].login.toString() : `Не требуется - «${nick}»`);
+		res.end(theUsers[theIP].login > 0 ? theUsers[theIP].login.toString() : `Не требуется: Вы - «${nick}»!`);
 	} else
 	if(advision) {
 		res.statusCode = 200;
