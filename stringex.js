@@ -3,6 +3,12 @@ const	iconv		= require("iconv-lite");
 Object.defineProperty(
 	String.prototype, "win1251", {
 		get: function () {
+			console.log(`--- win1251 ---`);
+			console.log(iconv.decode(Buffer.from(this, "binary"), "utf8").toString());
+			console.log(iconv.decode(Buffer.from(this, "ascii"), "utf8").toString());
+			console.log(iconv.decode(Buffer.from(this, "binary"), "win1251").toString());
+			console.log(iconv.decode(Buffer.from(this, "ascii"), "win1251").toString());
+			console.log(`--- win1251 ---`);
 			return	iconv.decode(Buffer.from(this, "binary"), "utf8").toString();
 		}
 	}
