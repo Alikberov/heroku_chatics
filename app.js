@@ -829,7 +829,7 @@ const server = http.createServer((req, res) => {
 				try {
 					theChat.push({
 						nick	:nick,
-						text	:_Win1251(iconv, chat[1].win1251),
+						text	:_Win1251(chat[1], iconv),
 						time	:time
 					});
 				} catch(e) {
