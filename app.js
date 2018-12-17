@@ -14,18 +14,17 @@ log(`Start at "http://${hosting}:${port}/" for parse "${phorum}"`);
 const	https	= require("https");
 const	http	= require("http");
 const	util	= require("util");
-//const	iconv	= require("iconv-lite");
+const	iconv	= require("iconv-lite");
 //
-const	{iconv,
-	String}	= require("./stringex");
+const	{String}	= require("./stringex");
 
-/*Object.defineProperty(
+Object.defineProperty(
 	String.prototype, "win1251", {
 		get: function () {
 			return	iconv.decode(Buffer.from(this, "binary"), "utf8").toString();
 		}
 	}
-);*/
+);
 
 var	logs;
 
