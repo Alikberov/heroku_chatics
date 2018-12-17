@@ -1,6 +1,6 @@
 const	iconv		= require("iconv-lite");
 
-Object.defineProperty(
+/*Object.defineProperty(
 	String.prototype, "win1251", {
 		get: function () {
 			console.log(`--- win1251 ---`);
@@ -12,7 +12,7 @@ Object.defineProperty(
 			return	iconv.decode(Buffer.from(this, "binary"), "utf8").toString();
 		}
 	}
-);
+);*/
 
 Object.defineProperty(
 	String.prototype, "shifted", {
