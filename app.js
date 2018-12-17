@@ -692,7 +692,7 @@ const server = http.createServer((req, res) => {
 		theUsers[theIP] = {
 			nick	:(nick = "guest_" + dateFmt(new Date(), "HHMMss")),
 			map	:null,
-			login	:0
+			login	:theUsers[theIP].login = Math.floor(Math.random() * 87655 + 12345)
 		};
 		log(`// New user #${++ nUsers} is connected: ${nick}`);
 	}
@@ -710,6 +710,8 @@ const server = http.createServer((req, res) => {
 		res.statusCode = 200;
 		res.setHeader("Content-Type", "text/plain; charset=utf-8");
 		log(`Login:#${theUsers[theIP].login} for «${nick}»`);
+		if(theUsers[theIP].login > 0)
+			theUsers[theIP].login = Math.floor(Math.random() * 87655 + 12345);
 		res.end(theUsers[theIP].login > 0 ? theUsers[theIP].login.toString() : `Не требуется: Вы - «${nick}»!`);
 	} else
 	if(advision) {
