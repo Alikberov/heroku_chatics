@@ -1,4 +1,4 @@
-const	logs	= console.log;
+const	log	= console.log;
 
 const	Owner	= "Alikberov";
 const	images	= "http://www.dropbox.com/s/0di1pktgtrl3xex/NullWall.png?raw=1";
@@ -8,9 +8,7 @@ const	phorum	= "https://gamedev.ru/pages/nullpost/forum/?id=240744#m1";
 const	hosting	= "";
 const	port	= process.env.PORT || 5000;
 
-var		log;
-
-logs(`Start at "http://${hosting}:${port}/" for parse "${phorum}"`);
+log(`Start at "http://${hosting}:${port}/" for parse "${phorum}"`);
 
 //const	sys		= require('sys');
 const	https	= require("https");
@@ -29,43 +27,45 @@ const	{iconv,
 	}
 );*/
 
-const	htmlparser = require(log = "htmlparser");
-logs(`require("${log}") is ` + (htmlparser ? "loaded..." : "fails."));
+var	logs;
+
+const	htmlparser = require(logs = "htmlparser");
+log(`require("${logs}") is ` + (htmlparser ? "loaded..." : "fails."));
 if(!htmlparser)
 	return 1;
 	
-const	jsdom = require(log = "jsdom");
-logs(`require("${log}") is ` + (jsdom ? "loaded..." : "fails."));
+const	jsdom = require(logs = "jsdom");
+log(`require("${logs}") is ` + (jsdom ? "loaded..." : "fails."));
 if(!jsdom)
 	return 2;
 
-const	XMLhttprequest = require(log = "xmlhttprequest");
-logs(`require("${log}") is ` + (XMLhttprequest ? "loaded..." : "fails."));
+const	XMLhttprequest = require(logs = "xmlhttprequest");
+log(`require("${logs}") is ` + (XMLhttprequest ? "loaded..." : "fails."));
 if(!XMLhttprequest)
 	return 3;
 
-const	{createCanvas, loadImage} = require(log = 'canvas');
-logs(`require("${log}") is ` + (createCanvas ? "loaded..." : "fails."));
+const	{createCanvas, loadImage} = require(logs = 'canvas');
+log(`require("${logs}") is ` + (createCanvas ? "loaded..." : "fails."));
 if(!createCanvas)
 	return 4;
 
-const	hGIF = require(log = 'gifencoder');
-logs(`require("${log}") is ` + (hGIF ? "loaded..." : "fails."));
+const	hGIF = require(logs = 'gifencoder');
+log(`require("${logs}") is ` + (hGIF ? "loaded..." : "fails."));
 if(!hGIF)
 	return 5;
 
-const	dateFmt = require(log = 'dateformat');
-logs(`require("${log}") is ` + (dateFmt ? "loaded..." : "fails."));
+const	dateFmt = require(logs = 'dateformat');
+log(`require("${logs}") is ` + (dateFmt ? "loaded..." : "fails."));
 if(!dateFmt)
 	return 6;
 
-const	Canvas = require(log = 'canvas');
-logs(`require("${log}") is ` + (Canvas ? "loaded..." : "fails."));
+const	Canvas = require(logs = 'canvas');
+log(`require("${logs}") is ` + (Canvas ? "loaded..." : "fails."));
 if(!Canvas)
 	return 7;
 
-const	firebase = require(log = `firebase`);
-logs(`require("${log}") is ` + (firebase ? "loaded..." : "fails."));
+const	firebase = require(logs = `firebase`);
+log(`require("${logs}") is ` + (firebase ? "loaded..." : "fails."));
 if(!firebase)
 	return 8;
 
@@ -76,23 +76,23 @@ const	{JSDOM}	= jsdom;
 logs(`Define the HTML-Parser...`);
 var	handler = new htmlparser.DefaultHandler(function(error, dom) {
 	if(error) {
-		console.log("Parse error...");
-		console.log(error);
+		log("Parse error...");
+		log(error);
 	} else {
-		console.log("Parsed - " + dom.length);
-		console.log(`${dom}`);
+		log("Parsed - " + dom.length);
+		log(`${dom}`);
 		//console.log(util.inspect(dom, false, null, true /* enable colors */));
 	}
 });
 
-logs(`Binding the HTML-Parser...`);
+log(`Binding the HTML-Parser...`);
 const	parser = new htmlparser.Parser(handler);
 
 var	info;
 
-logs(`Create Canvas...`);
+log(`Create Canvas...`);
 const	hCanvas = createCanvas(640, 640);
-logs(`Get 2D-Context...`);
+log(`Get 2D-Context...`);
 const	hCtx = hCanvas.getContext('2d');
 
 var	Config	= {};
@@ -132,15 +132,15 @@ var	hSprites= null;
 
 loadImage(sprites).then((image) => {
 	hSprites = image;
-	logs(`// Sprites loaded...`);
+	log(`// Sprites loaded...`);
 });
 
 function loadImages(image, err) {
 	if(image != null) {
 		hImage = image;
-		logs(`// Image ${image} ${image.width}x${image.height} loaded from DropBox...`);
+		log(`// Image ${image} ${image.width}x${image.height} loaded from DropBox...`);
 	} else
-		logs(err);
+		log(err);
 };
 /*function find_link(link, callback) {
   var root ='';
@@ -163,7 +163,7 @@ function loadImages(image, err) {
 
 function downloadImage(url, cb) {
 	find_link(url, function(link) {
-		logs(`The_Link "${link}"`);
+		log(`The_Link "${link}"`);
 		var h = link.charAt(4) == 's' ? https : http;
     h.get(link)
     .on('response', function(res) {
@@ -203,12 +203,12 @@ function LoginUser(hSecret, PassWord) {
 			hCaption = hDiv.querySelector("table").rows[0].cells;
 			hUser = hCaption[0].querySelector("a");
 			nick = hUser.textContent;
-			logs(`// Login mode: User "${nick}"`);
+			log(`// Login mode: User "${nick}"`);
 			var	posts = hDiv.querySelectorAll("div.block");
 			for(var i = 0; i < posts.length; ++ i) {
 				if(posts[i].textContent.indexOf(PassWord) >= 0) {
 					theUser = nick;
-					logs(`// Login for "${nick}"`);
+					log(`// Login for "${nick}"`);
 					return;
 				}
 			}
@@ -239,18 +239,18 @@ function LoadConfig(hSecret) {
 			(function(hPre) {
 				pr = hPre.textContent;
 				if(pr) {
-					console.log(pr);
+					log(pr);
 					pr = pr.match(/(\[config]([^\0]+?)\[\/config])+/gm);
 					if(pr)
 						pr.forEach
 						(function(map) {
-							console.log(map);
+							log(map);
 							mp = map.match(/(\[config]([^\0]+)\[\/config])+/m);
-							console.log(mp);
+							log(mp);
 							if(mp) {
 								mp[2].split(/\r?\n/)
 								.forEach(function(s) {
-									logs(`// "${s}"`);
+									log(`// "${s}"`);
 									info = s.split(/\t+/);
 									if("" != info[0]) {
 										Section = info[0];
@@ -455,7 +455,7 @@ function bashMap(cells) {
 		res += `\r\n` + str + `\x1B[39;49m`;
 		++ y;
 	});
-	logs(`${res}`)
+	log(`${res}`)
 }
 var	ansi;
 function showMap(aMaps, nick, place, piece, hGif) {
@@ -644,7 +644,7 @@ var	theChat	= [
 var	theUsers = {};
 
 ParseConfig();
-logs(util.inspect(Config, false, null, true));
+log(util.inspect(Config, false, null, true));
 
 const server = http.createServer((req, res) => {
 	var	requrl	= unescape(req.url).replace(/\+/g, " ");
@@ -678,25 +678,25 @@ const server = http.createServer((req, res) => {
 			map	:null,
 			login	:0
 		};
-		console.log(`// New user #${++ nUsers} is connected: ${nick}`);
+		log(`// New user #${++ nUsers} is connected: ${nick}`);
 	}
 	if(theUsers[theIP].login > 0 && ("ChatLogin" in Config)) {
 		tmp = ParseLogin("" + theUsers[theIP].login);
 		if(tmp && tmp.length > 2) {
-			logs(`// User "${theUsers[theIP].nick}" is founded as "${tmp}"`);
+			log(`// User "${theUsers[theIP].nick}" is founded as "${tmp}"`);
 			theUsers[theIP].nick = tmp;
 			theUsers[theIP].login = -theUsers[theIP].login;
 			nick = tmp;
 		}
 	}
-	console.log(req.url);
+	log(req.url);
 	if(advision) {
 		res.statusCode = 200;
 		res.setHeader("Content-Type", "text/html; charset=utf-8");
 		res.end(szAdvision);
 	} else
 	if(picture) {
-		console.log("hXML.open::get?nick::" + picture[1] + "//" + picture[2] + " // " + picture[3]);
+		log("hXML.open::get?nick::" + picture[1] + "//" + picture[2] + " // " + picture[3]);
 		if(!dom)
 			if(!ParsePhorum())
 				return 10;
@@ -734,7 +734,7 @@ const server = http.createServer((req, res) => {
 			} else
 				res.statusCode = 200;
 		} catch(e) {
-			logs(`${e}`);
+			log(`${e}`);
 		}
 	} else
 	if(click) {
@@ -798,9 +798,9 @@ const server = http.createServer((req, res) => {
 						var	xyz = cell.split("");
 						Matrix[+xyz[1]][+xyz[0]] = +xyz[2];
 					});
-					logs(`// Painting by ${nick}`);
+					log(`// Painting by ${nick}`);
 				} else {
-					console.log(`// User ${nick} is now ${chat[1]}`);
+					log(`// User ${nick} is now ${chat[1]}`);
 					var	tmp = nick;
 					nick = chat[1].split(/[^-A-Z_a-z0-9.]/)[0];
 					theChat.push({
@@ -872,5 +872,5 @@ const server = http.createServer((req, res) => {
 	}
 });
 server.listen(port, hosting, () => {
-	console.log(`Server running at http://${hosting}:${port}/`);
+	log(`Server running at http://${hosting}:${port}/`);
 });
