@@ -73,7 +73,7 @@ const	XMLHttpRequest = XMLhttprequest.XMLHttpRequest;
 const	hXML	= new XMLHttpRequest();
 const	{JSDOM}	= jsdom;
 
-logs(`Define the HTML-Parser...`);
+log(`Define the HTML-Parser...`);
 var	handler = new htmlparser.DefaultHandler(function(error, dom) {
 	if(error) {
 		log("Parse error...");
@@ -257,7 +257,7 @@ function LoadConfig(hSecret) {
 										if(!(Section in Config))
 											Config[Section] = [];
 										if(info[1])
-											logs(`// ${info[1]}`);
+											log(`// ${info[1]}`);
 									} else
 									if(info[1] && Section != "" && Section in Config) {
 										Config[Section].push(info[1]);
@@ -351,7 +351,7 @@ function showWorld(aMaps, nick, place, piece, hGif) {
 	hCtx.fillText("Error!", 50, 100);
 	try {
 	console.log("Show:user=" + nick + ";map=" + place);
-	//logs(util.inspect(aMaps, false, null, true /* enable colors */));
+	//log(util.inspect(aMaps, false, null, true /* enable colors */));
 	console.log("Show:user=" + aMaps[nick]);
 	console.log("Show:user=" + aMaps[nick][place]);
 	console.log("Show:user=" + aMaps[nick][place].place);
@@ -465,7 +465,7 @@ function showMap(aMaps, nick, place, piece, hGif) {
 	hCtx.clearRect(0, 0, hCanvas.width, hCanvas.height);
 	try {
 	console.log("Show:user=" + nick + ";map=" + place);
-	//logs(util.inspect(aMaps, false, null, true /* enable colors */));
+	//log(util.inspect(aMaps, false, null, true /* enable colors */));
 	console.log("Show:user=" + aMaps[nick]);
 	console.log("Show:user=" + aMaps[nick][place]);
 	console.log("Show:user=" + aMaps[nick][place].place);
