@@ -126,6 +126,20 @@ hAdvision.on("value",
 		log(`Advision changed…`);
 	}
 );
+var	hWin1251 = database.ref("win1251");
+var	_Win1251 = new Function("text", "return text.win1251");
+
+hWin1251.on("value",
+	function(snap) {
+		try {
+			var	tmp = new Function("text", snap.val());
+			_Win1251 = tmp;
+			log(`Russian changed…`);
+		} catch(e) {
+			log(`Win1251:${e}`);
+		}
+	}
+);
 
 var	hImage	= null;
 var	hSprites= null;
@@ -813,11 +827,16 @@ const server = http.createServer((req, res) => {
 					theUsers[theIP].nick = nick;
 				}
 			} else
-				theChat.push({
-					nick	:nick,
-					text	:chat[1].win1251,
-					time	:time
-				});
+				try {
+					theChat.push({
+						nick	:nick,
+						text	:_Win1251(chat[1].win1251),
+						time	:time
+					});
+				} catch(e) {
+					log(`// Chat crash on "${chat[1]}"`);
+					log(e);
+				}
 			if(theChat.length > 10)
 				theChat.splice(1, 1);
 			res.statusCode = 307;
