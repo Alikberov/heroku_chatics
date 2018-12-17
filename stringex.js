@@ -3,7 +3,7 @@ const	iconv		= require("iconv-lite");
 Object.defineProperty(
 	String.prototype, "win1251", {
 		get: function () {
-			return	return	iconv.decode(Buffer.from(this, "binary"), "utf8").toString();
+			return	iconv.decode(Buffer.from(this, "binary"), "utf8").toString();
 		}
 	}
 );
