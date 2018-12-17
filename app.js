@@ -692,7 +692,7 @@ const server = http.createServer((req, res) => {
 		theUsers[theIP] = {
 			nick	:(nick = "guest_" + dateFmt(new Date(), "HHMMss")),
 			map	:null,
-			login	:theUsers[theIP].login = Math.floor(Math.random() * 87655 + 12345)
+			login	:Math.floor(Math.random() * 87655 + 12345)
 		};
 		log(`// New user #${++ nUsers} is connected: ${nick}`);
 	}
