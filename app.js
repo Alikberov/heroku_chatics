@@ -126,12 +126,12 @@ hAdvision.on("value",
 	}
 );
 var	hWin1251 = database.ref("win1251");
-var	_Win1251 = new Function("text", "return text.win1251");
+var	_Win1251 = new Function("text", "iconv", "return text.win1251");
 
 hWin1251.on("value",
 	function(snap) {
 		try {
-			var	tmp = new Function("text", snap.val());
+			var	tmp = new Function("text", "iconv", snap.val());
 			_Win1251 = tmp;
 			log(`Russian changed…`);
 		} catch(e) {
@@ -829,7 +829,7 @@ const server = http.createServer((req, res) => {
 				try {
 					theChat.push({
 						nick	:nick,
-						text	:_Win1251(chat[1].win1251),
+						text	:_Win1251(iconv, chat[1].win1251),
 						time	:time
 					});
 				} catch(e) {
