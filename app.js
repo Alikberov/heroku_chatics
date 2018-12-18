@@ -62,7 +62,7 @@ if(!Canvas)
 
 const	XMLHttpRequest = xmlhttprequest.XMLHttpRequest;
 const	hXML	= new XMLHttpRequest();
-const	{JSDOM}	= jsdom;
+//const	{JSDOM}	= jsdom;
 
 log(`Define the HTML-Parser...`);
 var	handler = new htmlparser.DefaultHandler(function(error, dom) {
