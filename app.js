@@ -592,7 +592,7 @@ function ParseLogin(PassWord) {
 		console.log(`// Calling JSDOM...`);
 				//var		document = parser.Parse(hXML.responseText);
 				//sys.puts(sys.inspect(handler.dom, false, null));
-		var	dom = new JSDOM(hXML.responseText);
+		var	dom = new jsdom(hXML.responseText);
 		console.log(`// Search for user`);
 		return LoginUser(dom.window.document, PassWord);
 	}
@@ -614,7 +614,7 @@ function ParseConfig() {
 		console.log(`// Calling JSDOM...`);
 				//var		document = parser.Parse(hXML.responseText);
 				//sys.puts(sys.inspect(handler.dom, false, null));
-		var	dom = new JSDOM(hXML.responseText);
+		var	dom = new jsdom(hXML.responseText);
 		console.log(`// Parse the Phorum`);
 		LoadConfig(dom.window.document);
 		return true;
@@ -640,7 +640,7 @@ function ParsePhorum() {
 		console.log(`// Calling JSDOM...`);
 				//var		document = parser.Parse(hXML.responseText);
 				//sys.puts(sys.inspect(handler.dom, false, null));
-		dom = new JSDOM(hXML.responseText);
+		dom = new jsdom(hXML.responseText);
 		hSecret = dom.window.document;
 		console.log(`// Parse the Phorum`);
 		aMaps = GetUp(hSecret);
