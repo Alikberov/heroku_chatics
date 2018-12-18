@@ -43,7 +43,7 @@ const	firebase			= requiry("firebase");
 const	https				= requiry("https");
 const	http				= requiry("http");
 const	util				= requiry("util");
-const	iconv				= requiry("iconv-lite");
+//const	iconv				= requiry("iconv-lite");
 //
 const	{String}			= requiry("./stringex");
 
