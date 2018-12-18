@@ -37,6 +37,7 @@ const	xmlhttprequest			= requiry("xmlhttprequest");
 const	htmlparser			= requiry("htmlparser");
 const	{jsdom, JSDOM}			= requiry("jsdom");
 const	{createCanvas, loadImage}	= requiry("canvas");
+const	Canvas				= requiry("canvas");
 const	gifencoder			= requiry("gifencoder");
 const	firebase			= requiry("firebase");
 //const	sys		= require('sys');
@@ -54,11 +55,6 @@ Object.defineProperty(
 );
 
 var	logs;
-
-const	Canvas = require(logs = 'canvas');
-log(`require("${logs}") is ` + (Canvas ? "loaded..." : "fails."));
-if(!Canvas)
-	return 7;
 
 const	XMLHttpRequest = xmlhttprequest.XMLHttpRequest;
 const	hXML	= new XMLHttpRequest();
@@ -108,21 +104,53 @@ var	app = firebase.initializeApp(
 	}
 );
 var	database = firebase.app().database();
-var	hAdvision = database.ref("advision");
+
+var	dbRefs = {
+	win1251		:database.ref("win1251"),
+	advision	:database.ref("advision"),
+	images_blank	:database.ref("images/blank"),
+	images_boxes	:database.ref("images/boxes"),
+	images_orthos	:database.ref("images/orthos")
+};
+var	hImages = {
+	blank	:new Canvas.Image(),
+	boxes	:new Canvas.Image(),
+	orthos	:new Canvas.Image()
+};
+
 var	szAdvision = "";
 
-hAdvision.on("value",
+dbRefs.advision.on("value",
 	function(snap) {
 		szAdvision = snap.val();
 		log(`Advision changed…`);
 	}
 );
-var	hWin1251 = database.ref("win1251");
+
+dbRefs.images_blank.on("value",
+	function(snap) {
+		hImages.blank.src = snap.val();
+		log("//Blank changed…`);
+	}
+);
+dbRefs.images_boxes.on("value",
+	function(snap) {
+		hImages.boxes.src = snap.val();
+		log("//Boxes changed…`);
+	}
+);
+dbRefs.images_orthos.on("value",
+	function(snap) {
+		hImages.orthos.src = snap.val();
+		log("//Orthos changed…`);
+	}
+);
+
 var	_Win1251 = new Function("text", "iconv", "return text.win1251");
 
 var	theLogins = [];
 
-hWin1251.on("value",
+dbRefs.win1251.on("value",
 	function(snap) {
 		try {
 			var	tmp = new Function("text", "iconv", snap.val());
@@ -161,17 +189,17 @@ function ReadUser() {
 	}
 }
 
-var	hImage	= null;
-var	hSprites= null;
-
 loadImage(sprites).then((image) => {
-	hSprites = image;
-	log(`// Sprites loaded...`);
+	if(null != image) {
+		hImages.orthos = image;
+		log(`// Orthos loaded...`);
+	} else {
+	}
 });
 
 function loadImages(image, err) {
 	if(image != null) {
-		hImage = image;
+		hImages.boxes = image;
 		log(`// Image ${image} ${image.width}x${image.height} loaded from DropBox...`);
 	} else
 		log(err);
@@ -409,6 +437,8 @@ function showWorld(aMaps, nick, place, piece, hGif) {
 	var	flash = false;
 	do {
 		hCtx.clearRect(0, 0, hCanvas.width, hCanvas.height);
+		if(hImages.blank)
+			hCtx.drawImage(hImages.blank, 0, 0, hImages.blank.width, hImages.blank.height, 0, 0, hCanvas.width, hCanvas.height);
 		y = 0;
 		map
 		.design.split(/\r?\n/)
@@ -429,7 +459,7 @@ function showWorld(aMaps, nick, place, piece, hGif) {
 					if(!(flash && y == Locations.common.cell_y && x == Locations.common.cell_x))
 						try {
 							hCtx.drawImage
-								(hSprites
+								(hImages.orthos
 								,256 * Math.floor(Math.random() * 4)
 								,256 * +c, 256, 256
 								,160 + x * 64 - y * 64 - osx
@@ -524,6 +554,8 @@ function showMap(aMaps, nick, place, piece, hGif) {
 	ansi	= [];
 	do {
 		hCtx.clearRect(0, 0, hCanvas.width, hCanvas.height);
+		if(hImages.blank)
+			hCtx.drawImage(hImages.blank, 0, 0, hImages.blank.width, hImages.blank.height, 0, 0, hCanvas.width, hCanvas.height);
 		y = 0;
 		map
 		.design.split(/\r?\n/)
@@ -550,7 +582,7 @@ function showMap(aMaps, nick, place, piece, hGif) {
 						else
 							c = 0;
 					}
-						try { hCtx.drawImage(hImage, 128 * +c, 0, 128, 128, x * 64 - osx - 64, y * 64 - osy - 64, 128, 128); } catch(e) { console.log(e); }
+						try { hCtx.drawImage(hImage.boxes, 128 * +c, 0, 128, 128, x * 64 - osx - 64, y * 64 - osy - 64, 128, 128); } catch(e) { console.log(e); }
 				} else {
 				//if(d > 0 && map.images.length > d) {
 					//hCtx.drawImage(map.images[d], x * 24, y * 24);
