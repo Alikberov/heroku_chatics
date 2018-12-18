@@ -35,7 +35,7 @@ const	{iconv, String}			= requiry("./stringex");
 const	datefmt				= requiry("dateformat");
 const	xmlhttprequest			= requiry("xmlhttprequest");
 const	htmlparser			= requiry("htmlparser");
-const	{jsdom}				= requiry("jsdom");
+const	{jsdom, JSDOM}			= requiry("jsdom");
 const	{createCanvas, loadImage}	= requiry("canvas");
 const	gifencoder			= requiry("gifencoder");
 const	firebase			= requiry("firebase");
@@ -592,7 +592,7 @@ function ParseLogin(PassWord) {
 		console.log(`// Calling JSDOM...`);
 				//var		document = parser.Parse(hXML.responseText);
 				//sys.puts(sys.inspect(handler.dom, false, null));
-		var	dom = new jsdom(hXML.responseText);
+		var	dom = new JSDOM(hXML.responseText);
 		console.log(`// Search for user`);
 		return LoginUser(dom.window.document, PassWord);
 	}
@@ -614,7 +614,7 @@ function ParseConfig() {
 		console.log(`// Calling JSDOM...`);
 				//var		document = parser.Parse(hXML.responseText);
 				//sys.puts(sys.inspect(handler.dom, false, null));
-		var	dom = new jsdom(hXML.responseText);
+		var	dom = new JSDOM(hXML.responseText);
 		console.log(`// Parse the Phorum`);
 		LoadConfig(dom.window.document);
 		return true;
@@ -640,7 +640,7 @@ function ParsePhorum() {
 		console.log(`// Calling JSDOM...`);
 				//var		document = parser.Parse(hXML.responseText);
 				//sys.puts(sys.inspect(handler.dom, false, null));
-		dom = new jsdom(hXML.responseText);
+		dom = new JSDOM(hXML.responseText);
 		hSecret = dom.window.document;
 		console.log(`// Parse the Phorum`);
 		aMaps = GetUp(hSecret);
