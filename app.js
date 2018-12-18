@@ -128,6 +128,8 @@ hAdvision.on("value",
 var	hWin1251 = database.ref("win1251");
 var	_Win1251 = new Function("text", "iconv", "return text.win1251");
 
+var	theLogins = [];
+
 hWin1251.on("value",
 	function(snap) {
 		try {
@@ -139,6 +141,33 @@ hWin1251.on("value",
 		}
 	}
 );
+
+var	LoadUser = null;
+
+function ReadUser() {
+	while(theLogins.length > 0) {
+		LoadUser = database.ref("users/" + theUsers[theLogins[0]].nick);
+		theUsers[theLogins[0]].ref = LoadUser;
+		LoadedUser = function(snap) {
+			var	v = snap.val();
+			if(null == v) {
+				theUsers[this.theIP].reach = {
+					visits	:0,
+					scores	:Math.floor(Math.random() * 100)
+				};
+				log(`// User «${theUsers[this.theIP].nick}» created...`);
+				this.ref.set(theUsers[this.theIP].reach);
+			} else {
+				theUsers[this.theIP].reach = v;
+				log(`// User «${theUsers[this.theIP].nick}» loaded...`);
+			}
+		}
+		LoadedUser.theIP = theLogins[0];
+		LoadedUser.ref = LoadUser;
+		LoadUser.on("value", LoadedUser);
+		theLogins.shift();
+	}
+}
 
 var	hImage	= null;
 var	hSprites= null;
@@ -692,7 +721,8 @@ const server = http.createServer((req, res) => {
 		theUsers[theIP] = {
 			nick	:(nick = "guest_" + dateFmt(new Date(), "HHMMss")),
 			map	:null,
-			login	:Math.floor(Math.random() * 87655 + 12345)
+			login	:Math.floor(Math.random() * 87655 + 12345),
+			reach	:null
 		};
 		log(`// New user #${++ nUsers} is connected: ${nick}`);
 	}
@@ -702,6 +732,9 @@ const server = http.createServer((req, res) => {
 			log(`// User "${theUsers[theIP].nick}" is founded as "${tmp}"`);
 			theUsers[theIP].nick = tmp;
 			theUsers[theIP].login = -theUsers[theIP].login;
+			theUsers[theIP].reach = null;
+			theLogins.push(theIP);
+			ReadUser();
 			nick = tmp;
 		}
 	}
@@ -863,6 +896,12 @@ const server = http.createServer((req, res) => {
 					str = str.replace(/\(\\Nick\)/g, nick);
 					str = str.replace(/\(\\Guests\)/g, nUsers);
 					str = str.replace(/\(\\IP\)/g, req.connection.remoteAddress);
+					if(theUsers[theIP].reach) {
+						str = str.replace(/\(\\Scores\)/g, theUsers[theIP].reach.scores);
+						str = str.replace(/\(\\Visits\)/g, theUsers[theIP].reach.visits);
+					} else {
+						str = str.replace(/\(\\(Scores|Visits)\)/g, "---");
+					}
 					tmp.push(str.shifted);
 				});
 			tmp.push(`Your Nick is ${nick}`);
