@@ -10,13 +10,42 @@ const	port	= process.env.PORT || 5000;
 
 log(`Start at "http://${hosting}:${port}/" for parse "${phorum}"`);
 
+var	eTimes	= 0;	// Error Times
+var	eBits	= 0;	// Error Flags
+var	ePos	= 1;	// Error Position
+
+//	Extension of "require"
+function requiry(name) {
+	try {
+		var	imports	= require(name);
+		log(`module "${name}" is loaded...`);
+		ePos	<<= 1;
+		return	imports;
+	} catch(e) {
+		var	error	= `module "${name}" not found!!!`;
+		log(error);
+		eBits	|= ePos;
+		ePos	<<= 1;
+		eTimes	++;
+		return	false;
+	}
+}
+
+const	{iconv, String}			= requiry("./stringex");
+const	datefmt				= requiry("dateformat");
+const	xmlhttprequest			= requiry("xmlhttprequest");
+const	htmlparser			= requiry("htmlparser");
+const	{jsdom}				= requiry("jsdom");
+const	{createCanvas, loadImage}	= requiry("canvas");
+const	gifencoder			= requiry("gifencoder");
+const	firebase			= requiry("firebase");
 //const	sys		= require('sys');
-const	https	= require("https");
-const	http	= require("http");
-const	util	= require("util");
-const	iconv	= require("iconv-lite");
+const	https				= requiry("https");
+const	http				= requiry("http");
+const	util				= requiry("util");
+const	iconv				= requiry("iconv-lite");
 //
-const	{String}	= require("./stringex");
+const	{String}			= requiry("./stringex");
 
 Object.defineProperty(
 	String.prototype, "win1251", {
@@ -28,47 +57,12 @@ Object.defineProperty(
 
 var	logs;
 
-const	htmlparser = require(logs = "htmlparser");
-log(`require("${logs}") is ` + (htmlparser ? "loaded..." : "fails."));
-if(!htmlparser)
-	return 1;
-	
-const	jsdom = require(logs = "jsdom");
-log(`require("${logs}") is ` + (jsdom ? "loaded..." : "fails."));
-if(!jsdom)
-	return 2;
-
-const	XMLhttprequest = require(logs = "xmlhttprequest");
-log(`require("${logs}") is ` + (XMLhttprequest ? "loaded..." : "fails."));
-if(!XMLhttprequest)
-	return 3;
-
-const	{createCanvas, loadImage} = require(logs = 'canvas');
-log(`require("${logs}") is ` + (createCanvas ? "loaded..." : "fails."));
-if(!createCanvas)
-	return 4;
-
-const	hGIF = require(logs = 'gifencoder');
-log(`require("${logs}") is ` + (hGIF ? "loaded..." : "fails."));
-if(!hGIF)
-	return 5;
-
-const	dateFmt = require(logs = 'dateformat');
-log(`require("${logs}") is ` + (dateFmt ? "loaded..." : "fails."));
-if(!dateFmt)
-	return 6;
-
 const	Canvas = require(logs = 'canvas');
 log(`require("${logs}") is ` + (Canvas ? "loaded..." : "fails."));
 if(!Canvas)
 	return 7;
 
-const	firebase = require(logs = `firebase`);
-log(`require("${logs}") is ` + (firebase ? "loaded..." : "fails."));
-if(!firebase)
-	return 8;
-
-const	XMLHttpRequest = XMLhttprequest.XMLHttpRequest;
+const	XMLHttpRequest = xmlhttprequest.XMLHttpRequest;
 const	hXML	= new XMLHttpRequest();
 const	{JSDOM}	= jsdom;
 
@@ -763,7 +757,7 @@ const server = http.createServer((req, res) => {
 		var tmp = GetUp(hSecret);
 		aMaps = tmp;
 		try {
-			var	hGif = new hGIF(640, 640);
+			var	hGif = new gifencoder(640, 640);
 			hGif.createReadStream().pipe(res);
 			hGif.start();
 			hGif.setRepeat(0);
