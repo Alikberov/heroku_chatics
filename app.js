@@ -164,7 +164,7 @@ function ReadUser() {
 		}
 		LoadedUser.theIP = theLogins[0];
 		LoadedUser.ref = LoadUser;
-		LoadUser.on("value", LoadedUser);
+		LoadUser.on("value", LoadedUser.bind(LoadedUser));
 		theLogins.shift();
 	}
 }
