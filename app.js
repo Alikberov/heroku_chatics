@@ -129,19 +129,19 @@ dbRefs.advision.on("value",
 
 dbRefs.images_blank.on("value",
 	function(snap) {
-		hImages.blank.src = snap.val();
+		hImages.blank.src = new Buffer(snap.val().replace(/^[\.]+,/, ""), "base64");
 		log(`//Blank changed…`);
 	}
 );
 dbRefs.images_boxes.on("value",
 	function(snap) {
-		hImages.boxes.src = snap.val();
+		hImages.boxes.src = new Buffer(snap.val().replace(/^[\.]+,/, ""), "base64");
 		log(`//Boxes changed…`);
 	}
 );
 dbRefs.images_orthos.on("value",
 	function(snap) {
-		hImages.orthos.src = snap.val();
+		hImages.orthos.src = new Buffer(snap.val().replace(/^[\.]+,/, ""), "base64");
 		log(`//Orthos changed…`);
 	}
 );
