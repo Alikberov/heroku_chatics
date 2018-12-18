@@ -135,7 +135,12 @@ dbRefs.images_boxes.on("value",
 			function(image, err) {
 				if(image != null) {
 					log(`// Image ${image} ${image.width}x${image.height} loaded from DataBase...`);
-					hImages.boxes = image;
+					try {
+						hCtx.drawImage(image, 0, 0, 99, 99, 0, 0, 99, 99);
+						hImages.boxes = image;
+					} catch(e) {
+						log(e);
+					}
 				} else
 					log(err);
 			}
@@ -151,7 +156,12 @@ dbRefs.images_orthos.on("value",
 			function(image, err) {
 				if(image != null) {
 					log(`// Image ${image} ${image.width}x${image.height} loaded from DataBase...`);
-					hImages.orthos = image;
+					try {
+						hCtx.drawImage(image, 0, 0, 99, 99, 0, 0, 99, 99);
+						hImages.orthos = image;
+					} catch(e) {
+						log(e);
+					}
 				} else
 					log(err);
 			}
