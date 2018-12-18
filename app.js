@@ -127,7 +127,7 @@ dbRefs.advision.on("value",
 	}
 );
 
-dbRef.images_boxes.on("value",
+dbRefs.images_boxes.on("value",
 	function(snap) {
 		var	s = snap.val();
 		log(`images/boxes ${s ? "loaded" : "fault"}...` );
@@ -143,7 +143,7 @@ dbRef.images_boxes.on("value",
 	}
 );
 
-dbRef.images_orthos.on("value",
+dbRefs.images_orthos.on("value",
 	function(snap) {
 		var	s = snap.val();
 		log(`images/orthos ${s ? "loaded" : "fault"}...` );
