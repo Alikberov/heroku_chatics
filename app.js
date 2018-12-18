@@ -113,9 +113,9 @@ var	dbRefs = {
 	images_orthos	:database.ref("images/orthos")
 };
 var	hImages = {
-	blank	:new Canvas.Image(),
-	boxes	:new Canvas.Image(),
-	orthos	:new Canvas.Image()
+	blank	:null,
+	boxes	:null,
+	orthos	:null
 };
 
 var	szAdvision = "";
@@ -134,12 +134,12 @@ dbRefs.images_boxes.on("value",
 		loadImage(s).then(
 			function(image, err) {
 				if(image != null) {
-					log(`// Image ${image} ${image.width}x${image.height} loaded from DataBase...`);
+					log(`// Image/Boxes ${image} ${image.width}x${image.height} loaded from DataBase...`);
 					try {
 						hCtx.drawImage(image, 0, 0, 99, 99, 0, 0, 99, 99);
 						hImages.boxes = image;
 					} catch(e) {
-						log(e);
+						log(`//Image boxes ${e}`);
 					}
 				} else
 					log(err);
@@ -155,12 +155,12 @@ dbRefs.images_orthos.on("value",
 		loadImage(s).then(
 			function(image, err) {
 				if(image != null) {
-					log(`// Image ${image} ${image.width}x${image.height} loaded from DataBase...`);
+					log(`// Image/orthos ${image} ${image.width}x${image.height} loaded from DataBase...`);
 					try {
 						hCtx.drawImage(image, 0, 0, 99, 99, 0, 0, 99, 99);
 						hImages.orthos = image;
 					} catch(e) {
-						log(e);
+						log(`//Image orthos ${e}`);
 					}
 				} else
 					log(err);
@@ -226,7 +226,7 @@ function ReadUser() {
 loadImage(sprites).then((image) => {
 	if(null != image) {
 		hImages.orthos = image;
-		log(`// Orthos loaded...`);
+		log(`// Image orthos ${image} ${image.width}x${image.height} loaded from folder ${sprites}...`);
 	} else {
 	}
 });
@@ -234,7 +234,7 @@ loadImage(sprites).then((image) => {
 function loadImages(image, err) {
 	if(image != null) {
 		hImages.boxes = image;
-		log(`// Image ${image} ${image.width}x${image.height} loaded from DropBox...`);
+		log(`// Image boxes ${image} ${image.width}x${image.height} loaded from floder...`);
 	} else
 		log(err);
 };
