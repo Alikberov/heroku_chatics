@@ -130,19 +130,19 @@ dbRefs.advision.on("value",
 dbRefs.images_blank.on("value",
 	function(snap) {
 		hImages.blank.src = snap.val();
-		log("//Blank changed…`);
+		log(`//Blank changed…`);
 	}
 );
 dbRefs.images_boxes.on("value",
 	function(snap) {
 		hImages.boxes.src = snap.val();
-		log("//Boxes changed…`);
+		log(`//Boxes changed…`);
 	}
 );
 dbRefs.images_orthos.on("value",
 	function(snap) {
 		hImages.orthos.src = snap.val();
-		log("//Orthos changed…`);
+		log(`//Orthos changed…`);
 	}
 );
 
