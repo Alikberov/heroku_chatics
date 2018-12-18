@@ -127,6 +127,38 @@ dbRefs.advision.on("value",
 	}
 );
 
+dbRef.images_boxes.on("value",
+	function(snap) {
+		var	s = snap.val();
+		log(`images/boxes ${s ? "loaded" : "fault"}...` );
+		loadImage(s).then(
+			function(image, err) {
+				if(image != null) {
+					log(`// Image ${image} ${image.width}x${image.height} loaded from DataBase...`);
+					hImages.boxes = image;
+				} else
+					log(err);
+			}
+		);
+	}
+);
+
+dbRef.images_orthos.on("value",
+	function(snap) {
+		var	s = snap.val();
+		log(`images/orthos ${s ? "loaded" : "fault"}...` );
+		loadImage(s).then(
+			function(image, err) {
+				if(image != null) {
+					log(`// Image ${image} ${image.width}x${image.height} loaded from DataBase...`);
+					hImages.orthos = image;
+				} else
+					log(err);
+			}
+		);
+	}
+);
+
 dbRefs.images_blank.on("value",
 	function(snap) {
 		var	s = snap.val();
@@ -135,26 +167,6 @@ dbRefs.images_blank.on("value",
 			log(`//Blank changed…`);
 		} else
 			log(`//Blank fault...`);
-	}
-);
-dbRefs.images_boxes.on("value",
-	function(snap) {
-		var	s = snap.val();
-		if(s) {
-			hImages.boxes.src = new Buffer(s.replace(/^[\.]+,/, ""), "base64");
-			log(`//Boxes changed…`);
-		} else
-			log(`//Boxes fault...`);
-	}
-);
-dbRefs.images_orthos.on("value",
-	function(snap) {
-		var	s = snap.val();
-		if(s) {
-			hImages.orthos.src = new Buffer(s.replace(/^[\.]+,/, ""), "base64");
-			log(`//Orthos changed…`);
-		} else
-			log(`//Orthos fault...`);
 	}
 );
 
