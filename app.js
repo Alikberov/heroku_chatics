@@ -616,7 +616,7 @@ function showMap(aMaps, nick, place, piece, hGif) {
 						else
 							c = 0;
 					}
-						try { hCtx.drawImage(hImage.boxes, 128 * +c, 0, 128, 128, x * 64 - osx - 64, y * 64 - osy - 64, 128, 128); } catch(e) { console.log(e); }
+						try { hCtx.drawImage(hImages.boxes, 128 * +c, 0, 128, 128, x * 64 - osx - 64, y * 64 - osy - 64, 128, 128); } catch(e) { console.log(e); }
 				} else {
 				//if(d > 0 && map.images.length > d) {
 					//hCtx.drawImage(map.images[d], x * 24, y * 24);
