@@ -44,8 +44,6 @@ const	https				= requiry("https");
 const	http				= requiry("http");
 const	util				= requiry("util");
 //const	iconv				= requiry("iconv-lite");
-//
-const	{String}			= requiry("./stringex");
 
 Object.defineProperty(
 	String.prototype, "win1251", {
