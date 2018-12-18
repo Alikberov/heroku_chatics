@@ -108,6 +108,8 @@ var	database = firebase.app().database();
 var	dbRefs = {
 	win1251		:database.ref("win1251"),
 	advision	:database.ref("advision"),
+	logoff		:database.ref("logoff"),
+	logon		:database.ref("logon"),
 	images_blank	:database.ref("images/blank"),
 	images_boxes	:database.ref("images/boxes"),
 	images_orthos	:database.ref("images/orthos")
@@ -119,11 +121,26 @@ var	hImages = {
 };
 
 var	szAdvision = "";
+var	szLogOff = "";
+var	szLogOn = "";
 
 dbRefs.advision.on("value",
 	function(snap) {
 		szAdvision = snap.val();
 		log(`Advision changed…`);
+	}
+);
+dbRefs.logoff.on("value",
+	function(snap) {
+		szLogOff = snap.val();
+		log(`LogOff-message changed…`);
+	}
+);
+
+dbRefs.logon.on("value",
+	function(snap) {
+		szLogOn = snap.val();
+		log(`LogOn-message changed…`);
 	}
 );
 
@@ -290,6 +307,7 @@ function LoginUser(hSecret, PassWord) {
 	var	res	= [];
 	var	Section	= "";
 	var	theUser	= null;
+	var	userName= null;
 	hSecret
 	.querySelector("#main_body")
 	.querySelectorAll(".mes")
@@ -304,13 +322,14 @@ function LoginUser(hSecret, PassWord) {
 			for(var i = 0; i < posts.length; ++ i) {
 				if(posts[i].textContent.indexOf(PassWord) >= 0) {
 					theUser = nick;
+					userName = hUser.title;
 					log(`// Login for "${nick}"`);
 					return;
 				}
 			}
 		}
 	});
-	return theUser;
+	return {nick:theUser, name:userName};
 }
 
 function LoadConfig(hSecret) {
@@ -750,6 +769,7 @@ ParseConfig();
 
 var	theValues = {
 		"Nick"		:`nick`,
+		"Name"		:`name`,
 		"IP"		:`req.connection.remoteAddress`,
 		"Guests"	:`nUsers`,
 		"Scores"	:`theUsers[theIP].reach ? theUsers[theIP].reach.scores : "---"`,
@@ -779,7 +799,7 @@ const server = http.createServer((req, res) => {
 	else
 		ipAddr	= req.connection.remoteAddress;
 	var	theIP	= ipAddr.split(/:+/).pop().split(".").join("");
-	var	nick;
+	var	nick, name;
 	var	fail	= false;
 	var	time	= datefmt(new Date(),
 			("ChatTimeStamp" in Config
@@ -788,10 +808,12 @@ const server = http.createServer((req, res) => {
 			 )).shifted;
 	//
 	if(theIP in theUsers)
-		nick = theUsers[theIP].nick;
+		nick = theUsers[theIP].nick,
+		name = theUsers[theIP].name;
 	else {
 		theUsers[theIP] = {
 			nick	:(nick = "guest_" + datefmt(new Date(), "HHMMss")),
+			name	:"anonymous",
 			map	:null,
 			login	:0,
 			reach	:null
@@ -800,6 +822,8 @@ const server = http.createServer((req, res) => {
 	}
 	if(theUsers[theIP].login > 0 && ("ChatLogin" in Config)) {
 		tmp = ParseLogin("" + theUsers[theIP].login);
+		name = tmp.name;
+		tmp = tmp.nick;
 		if(tmp && tmp.length > 2) {
 			log(`// User "${theUsers[theIP].nick}" is founded as "${tmp}"`);
 			nUsers = 1;
@@ -810,6 +834,7 @@ const server = http.createServer((req, res) => {
 					++ nUsers;
 			}
 			theUsers[theIP].nick = tmp;
+			theUsers[theIP].name = name;
 			theUsers[theIP].login = -theUsers[theIP].login;
 			theUsers[theIP].reach = null;
 			theLogins.push(theIP);
@@ -824,9 +849,19 @@ const server = http.createServer((req, res) => {
 		log(`Login:#${theUsers[theIP].login} for «${nick}»`);
 		if(theUsers[theIP].login >= 0)
 			theUsers[theIP].login = Math.floor(Math.random() * 87655 + 12345);
-		res.end(theUsers[theIP].login > 0 ? theUsers[theIP].login.toString() : `Не требуется: Вы - «${nick}»!`);
+		var	tmp = theUsers[theIP].login < 0 ? szLogOn : szLogOff;
+		tmp = tmp
+			.replace(/\(\\PassWord\)/g, "" + theUsers[theIP].login)
+			.replace(theValuex, function(s, t) {
+				try {
+					return eval(theValues[t]);
+				} catch(e) {
+					return "---";
+				}
+			});
+		res.end(tmp);
 	} else
-	if([advision][(theUsers[theIP].login = 0)]) {
+	if([advision][(theUsers[theIP].login = theUsers[theIP].login < 0 ? theUsers[theIP].login : 0) * 0]) {
 		res.statusCode = 200;
 		res.setHeader("Content-Type", "text/html; charset=utf-8");
 		str = szAdvision;
