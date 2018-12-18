@@ -738,7 +738,7 @@ const server = http.createServer((req, res) => {
 			log(`// User "${theUsers[theIP].nick}" is founded as "${tmp}"`);
 			nUsers = 1;
 			for(var id in theUsers) {
-				if(theUsers[id].nick == nick)
+				if(theUsers[id].nick == nick && id != theIP)
 					delete theUsers[id];
 				else
 					++ nUsers;
