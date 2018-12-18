@@ -129,20 +129,32 @@ dbRefs.advision.on("value",
 
 dbRefs.images_blank.on("value",
 	function(snap) {
-		hImages.blank.src = new Buffer(snap.val().replace(/^[\.]+,/, ""), "base64");
-		log(`//Blank changed…`);
+		var	s = snap.val();
+		if(s) {
+			hImages.blank.src = new Buffer(s.replace(/^[\.]+,/, ""), "base64");
+			log(`//Blank changed…`);
+		} else
+			log(`//Blank fault...`);
 	}
 );
 dbRefs.images_boxes.on("value",
 	function(snap) {
-		hImages.boxes.src = new Buffer(snap.val().replace(/^[\.]+,/, ""), "base64");
-		log(`//Boxes changed…`);
+		var	s = snap.val();
+		if(s) {
+			hImages.boxes.src = new Buffer(s.replace(/^[\.]+,/, ""), "base64");
+			log(`//Boxes changed…`);
+		} else
+			log(`//Boxes fault...`);
 	}
 );
 dbRefs.images_orthos.on("value",
 	function(snap) {
-		hImages.orthos.src = new Buffer(snap.val().replace(/^[\.]+,/, ""), "base64");
-		log(`//Orthos changed…`);
+		var	s = snap.val();
+		if(s) {
+			hImages.orthos.src = new Buffer(s.replace(/^[\.]+,/, ""), "base64");
+			log(`//Orthos changed…`);
+		} else
+			log(`//Orthos fault...`);
 	}
 );
 
