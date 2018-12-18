@@ -711,7 +711,7 @@ const server = http.createServer((req, res) => {
 		nick = theUsers[theIP].nick;
 	else {
 		theUsers[theIP] = {
-			nick	:(nick = "guest_" + dateFmt(new Date(), "HHMMss")),
+			nick	:(nick = "guest_" + datefmt(new Date(), "HHMMss")),
 			map	:null,
 			login	:Math.floor(Math.random() * 87655 + 12345),
 			reach	:null
