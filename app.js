@@ -564,10 +564,10 @@ function showWorld(aMaps, nick, place, piece, hGif) {
 			}
 			++ y;
 		});
+		if(hImages.screen)
+			try { hCtx.drawImage(hImages.screen, 0, 0, hImages.screen.width, hImages.screen.height, 0, 0, hCanvas.width, hCanvas.height); } catch(e) {}
 		hGif.addFrame(hCtx);
 	} while(flash = !flash);
-	if(hImages.screen)
-		try { hCtx.drawImage(hImages.screen, 0, 0, hImages.screen.width, hImages.screen.height, 0, 0, hCanvas.width, hCanvas.height); } catch(e) {}
 /*	hGif.addFrame(hCtx);
 	hCtx.fillStyle = "rgba(227,167,127,0.75)";
 	hCtx.fillRect(PosX * 64, PosY * 64, 64, 64);
@@ -683,10 +683,10 @@ function showMap(aMaps, nick, place, piece, hGif) {
 			}
 			++ y;
 		});
+		if(hImages.screen)
+			try { hCtx.drawImage(hImages.screen, 0, 0, hImages.screen.width, hImages.screen.height, 0, 0, hCanvas.width, hCanvas.height); } catch(e) {}
 		hGif.addFrame(hCtx);
 	} while(flash = !flash);
-	if(hImages.screen)
-		try { hCtx.drawImage(hImages.screen, 0, 0, hImages.screen.width, hImages.screen.height, 0, 0, hCanvas.width, hCanvas.height); } catch(e) {}
 /*	hCtx.fillStyle = "rgba(227,167,127,0.75)";
 	hCtx.fillRect(Locations.common.cell_x * 64, Locations.common.cell_y * 64, 64, 64);
 	hCtx.beginPath();
