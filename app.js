@@ -112,12 +112,14 @@ var	dbRefs = {
 	logon		:database.ref("logon"),
 	images_blank	:database.ref("images/blank"),
 	images_boxes	:database.ref("images/boxes"),
-	images_orthos	:database.ref("images/orthos")
+	images_orthos	:database.ref("images/orthos"),
+	images_screen	:database.ref("images/screen")
 };
 var	hImages = {
 	blank	:null,
 	boxes	:null,
-	orthos	:null
+	orthos	:null,
+	screen	:null
 };
 
 var	szAdvision = "";
@@ -189,11 +191,42 @@ dbRefs.images_orthos.on("value",
 dbRefs.images_blank.on("value",
 	function(snap) {
 		var	s = snap.val();
-		if(s) {
-			hImages.blank.src = new Buffer(s.replace(/^[\.]+,/, ""), "base64");
-			log(`//Blank changed…`);
-		} else
-			log(`//Blank fault...`);
+		log(`images/blank ${s ? "loaded" : "fault"}...` );
+		loadImage(s).then(
+			function(image, err) {
+				if(image != null) {
+					log(`// Image/blank ${image} ${image.width}x${image.height} loaded from DataBase...`);
+					try {
+						hCtx.drawImage(image, 0, 0, 99, 99, 0, 0, 99, 99);
+						hImages.blank = image;
+					} catch(e) {
+						log(`//Image blank ${e}`);
+					}
+				} else
+					log(err);
+			}
+		);
+	}
+);
+
+dbRefs.images_screen.on("value",
+	function(snap) {
+		var	s = snap.val();
+		log(`images/screen ${s ? "loaded" : "fault"}...` );
+		loadImage(s).then(
+			function(image, err) {
+				if(image != null) {
+					log(`// Image/screen ${image} ${image.width}x${image.height} loaded from DataBase...`);
+					try {
+						hCtx.drawImage(image, 0, 0, 99, 99, 0, 0, 99, 99);
+						hImages.screen = image;
+					} catch(e) {
+						log(`//Image screen ${e}`);
+					}
+				} else
+					log(err);
+			}
+		);
 	}
 );
 
@@ -491,7 +524,7 @@ function showWorld(aMaps, nick, place, piece, hGif) {
 	do {
 		hCtx.clearRect(0, 0, hCanvas.width, hCanvas.height);
 		if(hImages.blank)
-			hCtx.drawImage(hImages.blank, 0, 0, hImages.blank.width, hImages.blank.height, 0, 0, hCanvas.width, hCanvas.height);
+			try { hCtx.drawImage(hImages.blank, 0, 0, hImages.blank.width, hImages.blank.height, 0, 0, hCanvas.width, hCanvas.height); } catch(e) {}
 		y = 0;
 		map
 		.design.split(/\r?\n/)
@@ -533,6 +566,8 @@ function showWorld(aMaps, nick, place, piece, hGif) {
 		});
 		hGif.addFrame(hCtx);
 	} while(flash = !flash);
+	if(hImages.screen)
+		try { hCtx.drawImage(hImages.screen, 0, 0, hImages.screen.width, hImages.screen.height, 0, 0, hCanvas.width, hCanvas.height); } catch(e) {}
 /*	hGif.addFrame(hCtx);
 	hCtx.fillStyle = "rgba(227,167,127,0.75)";
 	hCtx.fillRect(PosX * 64, PosY * 64, 64, 64);
@@ -608,7 +643,7 @@ function showMap(aMaps, nick, place, piece, hGif) {
 	do {
 		hCtx.clearRect(0, 0, hCanvas.width, hCanvas.height);
 		if(hImages.blank)
-			hCtx.drawImage(hImages.blank, 0, 0, hImages.blank.width, hImages.blank.height, 0, 0, hCanvas.width, hCanvas.height);
+			try { hCtx.drawImage(hImages.blank, 0, 0, hImages.blank.width, hImages.blank.height, 0, 0, hCanvas.width, hCanvas.height); } catch(e) {}
 		y = 0;
 		map
 		.design.split(/\r?\n/)
@@ -650,6 +685,8 @@ function showMap(aMaps, nick, place, piece, hGif) {
 		});
 		hGif.addFrame(hCtx);
 	} while(flash = !flash);
+	if(hImages.screen)
+		try { hCtx.drawImage(hImages.screen, 0, 0, hImages.screen.width, hImages.screen.height, 0, 0, hCanvas.width, hCanvas.height); } catch(e) {}
 /*	hCtx.fillStyle = "rgba(227,167,127,0.75)";
 	hCtx.fillRect(Locations.common.cell_x * 64, Locations.common.cell_y * 64, 64, 64);
 	hCtx.beginPath();
@@ -845,7 +882,7 @@ const server = http.createServer((req, res) => {
 	log(req.url);
 	if(login) {
 		res.statusCode = 200;
-		res.setHeader("Content-Type", "text/plain; charset=utf-8");
+		res.setHeader("Content-Type", "text/html; charset=utf-8");
 		log(`Login:#${theUsers[theIP].login} for «${nick}»`);
 		if(theUsers[theIP].login >= 0)
 			theUsers[theIP].login = Math.floor(Math.random() * 87655 + 12345);
