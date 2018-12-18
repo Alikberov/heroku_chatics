@@ -793,7 +793,7 @@ const server = http.createServer((req, res) => {
 		theUsers[theIP] = {
 			nick	:(nick = "guest_" + datefmt(new Date(), "HHMMss")),
 			map	:null,
-			login	:Math.floor(Math.random() * 87655 + 12345),
+			login	:0,
 			reach	:null
 		};
 		log(`// New user #${++ nUsers} is connected: ${nick}`);
@@ -826,7 +826,7 @@ const server = http.createServer((req, res) => {
 			theUsers[theIP].login = Math.floor(Math.random() * 87655 + 12345);
 		res.end(theUsers[theIP].login > 0 ? theUsers[theIP].login.toString() : `Не требуется: Вы - «${nick}»!`);
 	} else
-	if(advision) {
+	if([advision][(theUsers[theIP].login = 0)]) {
 		res.statusCode = 200;
 		res.setHeader("Content-Type", "text/html; charset=utf-8");
 		str = szAdvision;
@@ -849,13 +849,13 @@ const server = http.createServer((req, res) => {
 			console.log(`OnLoad:user=${nickun};map=${pictun};secret=${dom}:${hSecret}`);
 		var tmp = GetUp(hSecret);
 		aMaps = tmp;
+		var	hGif = new gifencoder(640, 640);
+		hGif.createReadStream().pipe(res);
+		hGif.start();
+		hGif.setRepeat(0);
+		hGif.setDelay(500);
+		hGif.setQuality(10);
 		try {
-			var	hGif = new gifencoder(640, 640);
-			hGif.createReadStream().pipe(res);
-			hGif.start();
-			hGif.setRepeat(0);
-			hGif.setDelay(500);
-			hGif.setQuality(10);
 			pieced = picture[3];
 			pictun = picture[2];
 			nickun = picture[1];
@@ -867,6 +867,14 @@ const server = http.createServer((req, res) => {
 			res.setHeader("Content-Type", "image/gif");
 			hGif.finish();
 		} catch(e) {
+			hGif.addFrame(hCtx);
+			hCtx.fillText("Error!", 50, 100);
+			hCtx.fillText(e, 50, 200);
+			hGif.addFrame(hCtx);
+			res.statusCode = 200;
+			res.setHeader("Content-Type", "image/gif");
+			hGif.finish();
+			return;
 			fail = e;
 		}
 		try {
