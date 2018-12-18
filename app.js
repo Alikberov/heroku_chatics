@@ -674,7 +674,7 @@ var	theChat	= [
 		{
 			nick	:"Нуль-Пост",
 			text	:"Добро Пожаловать!",
-			time	:dateFmt(new Date(), "(.dd)(|m)yyyy/HH(^MM)(.ss)").shifted
+			time	:datefmt(new Date(), "(.dd)(|m)/HH(~(^MM))(.ss)").shifted
 		}
 	];
 var	theUsers = {};
@@ -701,7 +701,7 @@ const server = http.createServer((req, res) => {
 	var	theIP	= ipAddr.split(/:+/).pop().split(".").join("");
 	var	nick;
 	var	fail	= false;
-	var	time	= dateFmt(new Date(),
+	var	time	= datefmt(new Date(),
 			("ChatTimeStamp" in Config
 			 	? Config.ChatTimeStamp
 			 	: "(_dd)(|m)/HH(^MM)"
