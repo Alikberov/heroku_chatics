@@ -680,7 +680,21 @@ var	theChat	= [
 var	theUsers = {};
 
 ParseConfig();
-log(util.inspect(Config, false, null, true));
+//log(util.inspect(Config, false, null, true));
+
+var	theValues = {
+		"Nick"		:`nick`,
+		"IP"		:`req.connection.remoteAddress`,
+		"Guests"	:`nUsers`,
+		"Scores"	:`theUsers[theIP].reach ? theUsers[theIP].reach.scores : "---"`,
+		"Visits"	:`theUsers[theIP].reach ? theUsers[theIP].reach.visits : "---"`,
+		"ChatLast"	:`szChatLast`
+	};
+var	theValuex = [];
+
+for(var id in theValues)
+	theValuex.push(id);
+theValuex = new RegExp("\\(\\\\(" + theValuex.join("|") + ")\\)", "gm");
 
 const server = http.createServer((req, res) => {
 	var	requrl	= unescape(req.url).replace(/\+/g, " ");
@@ -722,6 +736,13 @@ const server = http.createServer((req, res) => {
 		tmp = ParseLogin("" + theUsers[theIP].login);
 		if(tmp && tmp.length > 2) {
 			log(`// User "${theUsers[theIP].nick}" is founded as "${tmp}"`);
+			nUsers = 1;
+			for(var id in theUsers) {
+				if(theUsers[id].nick == nick)
+					delete theUsers[id];
+				else
+					++ nUsers;
+			}
 			theUsers[theIP].nick = tmp;
 			theUsers[theIP].login = -theUsers[theIP].login;
 			theUsers[theIP].reach = null;
@@ -742,7 +763,15 @@ const server = http.createServer((req, res) => {
 	if(advision) {
 		res.statusCode = 200;
 		res.setHeader("Content-Type", "text/html; charset=utf-8");
-		res.end(szAdvision.replace(/{{CHAT:LAST}}/gm, szChatLast));
+		str = szAdvision;
+		str = str.replace(theValuex, function(s, t) {
+			try {
+				return eval(theValues[t]);
+			} catch(e) {
+				return "---";
+			}
+		});
+		res.end(str);
 	} else
 	if(picture) {
 		log("hXML.open::get?nick::" + picture[1] + "//" + picture[2] + " // " + picture[3]);
@@ -885,20 +914,27 @@ const server = http.createServer((req, res) => {
 				.ChatPrompt
 				.forEach(
 				function(str) {
-					str = str.replace(/\(\\Nick\)/g, nick);
+					/*str = str.replace(/\(\\Nick\)/g, nick);
 					str = str.replace(/\(\\Guests\)/g, nUsers);
-					str = str.replace(/\(\\IP\)/g, req.connection.remoteAddress);
-					if(theUsers[theIP].reach) {
+					str = str.replace(/\(\\IP\)/g, req.connection.remoteAddress);*/
+					str = str.replace(theValuex, function(s, t) {
+						try {
+							return eval(theValues[t]);
+						} catch(e) {
+							return "---";
+						}
+					});
+					/*if(theUsers[theIP].reach) {
 						str = str.replace(/\(\\Scores\)/g, theUsers[theIP].reach.scores);
 						str = str.replace(/\(\\Visits\)/g, theUsers[theIP].reach.visits);
 					} else {
 						str = str.replace(/\(\\(Scores|Visits)\)/g, "---");
-					}
+					}*/
 					tmp.push(str.shifted);
 				});
-			tmp.push(`Your Nick is ${nick}`);
-			tmp.push(`Total users is ${nUsers}`);
-			tmp.push(`Your IP is ${req.connection.remoteAddress}`);
+			//tmp.push(`Your Nick is ${nick}`);
+			//tmp.push(`Total users is ${nUsers}`);
+			//tmp.push(`Your IP is ${req.connection.remoteAddress}`);
 			if(theUsers[theIP].login >= 0 && ("ChatLogin" in Config) && Config.ChatLogin) {
 				theUsers[theIP].login = Math.floor(Math.random() * 87655 + 12345);
 				tmp.push(`Логин-код для форума:${theUsers[theIP].login}`);
