@@ -792,6 +792,7 @@ var	dom;
 var	hSecret;
 var	aMaps = {};
 var	nUsers = 0;
+var	nGuests = 0;
 var	theChat	= [
 		{
 			nick	:"Нуль-Пост",
@@ -808,7 +809,8 @@ var	theValues = {
 		"Nick"		:`nick`,
 		"Name"		:`name`,
 		"IP"		:`req.connection.remoteAddress`,
-		"Guests"	:`nUsers`,
+		"Guests"	:`nGuests`,
+		"Users"		:`nUsers`,
 		"Scores"	:`theUsers[theIP].reach ? theUsers[theIP].reach.scores : "---"`,
 		"Visits"	:`theUsers[theIP].reach ? theUsers[theIP].reach.visits : "---"`,
 		"ChatLast"	:`szChatLast`
@@ -855,7 +857,7 @@ const server = http.createServer((req, res) => {
 			login	:0,
 			reach	:null
 		};
-		log(`// New user #${++ nUsers} is connected: ${nick}`);
+		log(`// New user #${++ nGuests} is connected: ${nick}`);
 	}
 	if(theUsers[theIP].login > 0 && ("ChatLogin" in Config)) {
 		tmp = ParseLogin("" + theUsers[theIP].login);
@@ -865,9 +867,10 @@ const server = http.createServer((req, res) => {
 			log(`// User "${theUsers[theIP].nick}" is founded as "${tmp}"`);
 			nUsers = 1;
 			for(var id in theUsers) {
-				if(theUsers[id].nick == nick && id != theIP)
+				if(theUsers[id].nick == nick && id != theIP) {
 					delete theUsers[id];
-				else
+					-- nGuests;
+				} else
 					++ nUsers;
 			}
 			theUsers[theIP].nick = tmp;
