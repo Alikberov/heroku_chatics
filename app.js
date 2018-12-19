@@ -79,8 +79,12 @@ var	info;
 
 log(`Create Canvas...`);
 const	hCanvas = createCanvas(640, 640);
-log(`Get 2D-Context...`);
+log(`//Get 2D-Context...`);
 const	hCtx = hCanvas.getContext('2d');
+log(`////Canvas.imageSmoothingEnabled = ${hCtx.imageSmoothingEnabled}`);
+	hCtx.imageSmoothingEnabled = false;
+log(`////Canvas.filter = ${hCtx.filter}`);
+	hCtx.filter = "none";
 
 var	Config	= {};
 var	Matrix	= [];
@@ -108,6 +112,8 @@ var	database = firebase.app().database();
 var	dbRefs = {
 	win1251		:database.ref("win1251"),
 	advision	:database.ref("advision"),
+	timefmt		:database.ref("timefmt"),
+	chatbody	:database.ref("chatbody"),
 	logoff		:database.ref("logoff"),
 	logon		:database.ref("logon"),
 	images_blank	:database.ref("images/blank"),
@@ -123,26 +129,69 @@ var	hImages = {
 };
 
 var	szAdvision = "";
-var	szLogOff = "";
-var	szLogOn = "";
+var	szTimeFormat = "(.dd)(|m)/HH(~(^MM))(.ss)";
+var	szChatBody = [
+		`<html><head>`,
+		`<meta http-equiv='refresh' content='900'>`,
+		`<style>em { position:absolute; } </style></head>`,
+		`<body><pre>(\\ChatLogs)</pre>`,
+		`(\\ChatNotice)</body>`
+	].join("\r\n");
+
+var	szLogOff = "Используйте код (\\PassWord) для идентификации";
+var	szLogOn = [
+		`<head\t\t\t\t\t\t\t\t\t\t\t  >`,
+		`<meta content='text/html; charset=UTF-16'\t\thttp-equiv='Content-Type'\t />`,
+		`</head\t\t\t\t\t\t\t\t\t\t\t  >`,
+		`<body>`,
+		`Вы идентифицированы как «(\\Nick)» ((\\Name))`,
+		`</body>`
+	].join("\r\n");
 
 dbRefs.advision.on("value",
 	function(snap) {
-		szAdvision = snap.val();
-		log(`Advision changed…`);
+		var	s = snap.val();
+		if(s) {
+			szAdvision = s;
+			log(`Advision changed…`);
+		}
+	}
+);
+dbRefs.timefmt.on("value",
+	function(snap) {
+		var	s = snap.val();
+		if(s) {
+			szTimeFormat = s;
+			log(`Time-Format changed…`);
+		}
+	}
+);
+dbRefs.chatbody.on("value",
+	function(snap) {
+		var	s = snap.val();
+		if(s) {
+			szChatBody = s;
+			log(`Chat-Body changed…`);
+		}
 	}
 );
 dbRefs.logoff.on("value",
 	function(snap) {
-		szLogOff = snap.val();
-		log(`LogOff-message changed…`);
+		var	s = snap.val();
+		if(s) {
+			szLogOff = s;
+			log(`LogOff-message changed…`);
+		}
 	}
 );
 
 dbRefs.logon.on("value",
 	function(snap) {
-		szLogOn = snap.val();
-		log(`LogOn-message changed…`);
+		var	s = snap.val();
+		if(s) {
+			szLogOn = s;
+			log(`LogOn-message changed…`);
+		}
 	}
 );
 
@@ -245,6 +294,31 @@ dbRefs.win1251.on("value",
 		}
 	}
 );
+
+function Owner_Cmd(cmd) {
+	switch(cmd) {
+	case	"!image":
+		//loadImage(images).then(loadImages);
+		downloadImage(images, loadImages);
+		return true;
+	case	"!remap":
+		ParsePhorum();
+		return true;
+	case	"!config":
+		ParseConfig();
+		return true;
+	case	"!clear":
+		theChat =
+			[
+				{
+					nick	:"Нуль-Пост",
+					text	:"Добро Пожаловать!",
+					time	:datefmt(new Date(), szTimeFormat).shifted
+				}
+			];
+		return true;
+	return false;
+}
 
 var	LoadUser = null;
 
@@ -793,15 +867,10 @@ var	hSecret;
 var	aMaps = {};
 var	nUsers = 0;
 var	nGuests = 0;
-var	theChat	= [
-		{
-			nick	:"Нуль-Пост",
-			text	:"Добро Пожаловать!",
-			time	:datefmt(new Date(), "(.dd)(|m)/HH(~(^MM))(.ss)").shifted
-		}
-	];
+var	theChat	= [];
 var	theUsers = {};
 
+Owner_Cmd("!clear");
 ParseConfig();
 //log(util.inspect(Config, false, null, true));
 
@@ -832,6 +901,7 @@ const server = http.createServer((req, res) => {
 	var	choice	= requrl.match(/\/(\d)/);
 	var	chat	= requrl.match(/chat(?:=(.*))?/);
 	//
+	var	chatNotes=[];
 	var	ipAddr	= req.headers["x-forwarded-for"];
 	if(ipAddr) 
 		ipAddr	= ipAddr.split(",").pop();
@@ -843,7 +913,7 @@ const server = http.createServer((req, res) => {
 	var	time	= datefmt(new Date(),
 			("ChatTimeStamp" in Config
 			 	? Config.ChatTimeStamp
-			 	: "(_dd)(|m)/HH(^MM)"
+			 	: szTimeFormat
 			 )).shifted;
 	//
 	if(theIP in theUsers)
@@ -987,31 +1057,17 @@ const server = http.createServer((req, res) => {
 	} else
 	if(chat) {
 		if(chat[1]) {
-			if(chat[1] == "!image") {
-				//loadImage(images).then(loadImages);
-				downloadImage(images, loadImages);
-			}
-			if(chat[1] == "!remap") {
-				ParsePhorum();
-				theChat.push({
-					nick	:"Server",
-					text	:"!remap",
-					time	:time
-				});
-			}
-			if(chat[1] == "!config") {
-				ParseConfig();
-				theChat.push({
-					nick	:"Server",
-					text	:"!config",
-					time	:time
-				});
+			if((nick == Owner) && Owner_Cmd(chat[1])) {
+				res.statusCode = 307;
+				res.setHeader("Location", "https://gamedev.ru/pages/nullpost/play");
+				res.end();
+				return;
 			}
 			if(chat[1] == "!login" && theUsers[theIP].login == 0) {
 				if(("ChatLogin" in Config) && Config.ChatLogin) {
 					theUsers[theIP].login = Math.floor(Math.random() * 87655 + 12345);
 					res.statusCode = 307;
-					res.setHeader("Location", Config.ChatLogin + "&YourPassWord=" + theUsers[theIP].login);
+					res.setHeader("Location", Config.ChatLogin);
 					res.end();
 					return;
 				} else
@@ -1059,6 +1115,8 @@ const server = http.createServer((req, res) => {
 			res.end();
 		} else {
 			var	tmp = [];
+			if(theUsers[theIP].login >= 0 && ("ChatLogin" in Config) && Config.ChatLogin)
+				chatNotes.push(`<a target='_blank' href='${Config.ChatLogin}'>Залогиниться</a>`);
 			theChat.forEach(function(msg) {
 				tmp.push(szChatLast = "" + msg.time + "|«" + msg.nick + "»:" + msg.text);
 			});
@@ -1088,31 +1146,13 @@ const server = http.createServer((req, res) => {
 			//tmp.push(`Your Nick is ${nick}`);
 			//tmp.push(`Total users is ${nUsers}`);
 			//tmp.push(`Your IP is ${req.connection.remoteAddress}`);
-			if(theUsers[theIP].login >= 0 && ("ChatLogin" in Config) && Config.ChatLogin) {
-				theUsers[theIP].login = Math.floor(Math.random() * 87655 + 12345);
-				tmp.push(`Логин-код для форума:${theUsers[theIP].login}`);
-			}
 			res.statusCode = 200;
 			res.setHeader("Content-Type", "text/html; charset=utf-8");
-			res.write(`<html><head>\r\n`);
-			res.write(`<meta http-equiv='refresh' content='900'>\r\n`);
-			res.write(`<style>blink { position:absolute; } </style></head>\r\n`);
-			res.write(`<body><pre>`);
-			res.write(tmp.join("\r\n")
-				  //.replace(/&/g, "№")
-				  //.replace(/</g, "«")
-				  //.replace(/>/g, "»")
-				  //.replace(/\.+/g, "…")
-				  //.replace(/\*/g, "×")
-				  //.replace(/\|/g, "±")
-				  //.replace(/\\/g, "÷")
-				 );
-			res.write("</pre>");
-			if(theUsers[theIP].login >= 0 && ("ChatLogin" in Config) && Config.ChatLogin) {
-				res.write(`<a target='_blank' href='${Config.ChatLogin + '?' + theUsers[theIP].login}'>Залогиниться</a>`);
-			}
+			res.end(szChatBody.
+				  replace(/\(\\ChatNotice\)/gm, chatNotes.join("\r\n")).
+				  replace(/\(\\ChatLogs\)/gm, tmp.join("\r\n")
+			);
 			try { bashMap(ansi); } catch(e) { console.log(e); }
-			res.end("</body>");
 		}
 	} else {
 		res.statusCode = 404;
