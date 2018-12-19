@@ -865,18 +865,22 @@ const server = http.createServer((req, res) => {
 		tmp = tmp.nick;
 		if(tmp && tmp.length > 2) {
 			log(`// User "${theUsers[theIP].nick}" is founded as "${tmp}"`);
-			nUsers = 1;
+			nUsers = 0;
+			nGuests = 0;
 			for(var id in theUsers) {
-				if(theUsers[id].nick == nick && id != theIP) {
+				if(theUsers[id].nick == nick && id != theIP)
 					delete theUsers[id];
-					-- nGuests;
-				} else
-					++ nUsers;
 			}
 			theUsers[theIP].nick = tmp;
 			theUsers[theIP].name = name;
 			theUsers[theIP].login = -theUsers[theIP].login;
 			theUsers[theIP].reach = null;
+			for(var id in theUsers) {
+				if(theUsers[id].login < 0)
+					++ nUsers;
+				else
+					++ nGuests;
+			}
 			theLogins.push(theIP);
 			ReadUser();
 			nick = tmp;
