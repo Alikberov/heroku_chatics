@@ -317,6 +317,7 @@ function Owner_Cmd(cmd) {
 				}
 			];
 		return true;
+	}
 	return false;
 }
 
