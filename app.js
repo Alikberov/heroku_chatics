@@ -916,7 +916,7 @@ const server = http.createServer((req, res) => {
 				return "---";
 			}
 		});
-		res.end(str.shifted);
+		res.end(str.shiftedHTML);
 	} else
 	if(picture) {
 		log("hXML.open::get?nick::" + picture[1] + "//" + picture[2] + " // " + picture[3]);
