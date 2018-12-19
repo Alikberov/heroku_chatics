@@ -78,15 +78,17 @@ Object.defineProperty(
 					}
 				)
 				//	"(*bold)".shifted == "<b>bold</b>"
+				//	"(!em)".shifted == "<em>em</em>"
 				.replace(
-					/\(([-*_\/~])(.*)\)/gm
+					/\(([=*_\/!~])(.*)\)/gm
 					,function(match, prefix, text) {
 						var	tag = {
 								"*"	:"b",
 								"/"	:"i",
-								"-"	:"s",
+								"="	:"s",
 								"_"	:"u",
-								"~"	:"blink"
+								"~"	:"blink",
+								"!"	:"em"
 							}[prefix];
 						return	`<${tag}>${text}</${tag}>`;
 					}
