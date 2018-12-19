@@ -141,23 +141,6 @@ Object.defineProperty(
 						;
 					}
 				)
-				//	"(*bold)".shifted == "<b>bold</b>"
-				.replace(
-					/\(([-*_\/~])(.*)\)/gm
-					,function(match, prefix, text) {
-						var	tag = {
-								"*"	:"b",
-								"/"	:"i",
-								"-"	:"s",
-								"_"	:"u",
-								"~"	:"blink"
-							}[prefix];
-						return	`<${tag}>${text}</${tag}>`;
-					}
-				)
-				.replace(
-					/(http(s*):\/\/[-a-z.A-Z_0-9%/]+)/g, "<a href='$1'>$1</a>"
-				)
 			;
 		}
 	}
