@@ -18,6 +18,17 @@ Object.defineProperty(
 	String.prototype, "shifted", {
 		get: function () {
 			return	this
+				.replace(
+					/\(#([-0-9+(*)/%]+)\)/gm
+					,function(match, expression) {
+						try {
+							return eval(expression);
+						} catch(e) {
+							console.log(`// String.shifted:: Bad expression (${expression})`);
+						}
+						return	0;
+					}
+				)
 				//	"3(.14159)".shifted == "3₁₄₁₅₉"
 				//	"23(^59)30".shifted == "23⁵⁹30"
 				//	"31(|12)18".shifted == "31Ⅻ18"
