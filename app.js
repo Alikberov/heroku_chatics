@@ -1168,8 +1168,7 @@ async function my_server(req, res) {
 				else
 					++ nGuests;
 			}
-			theLogins.push(theIP);
-			ReadUser();
+			LoadUser(theIP);
 			nick = tmp;
 		}
 	}
