@@ -955,7 +955,7 @@ async function ParseLogin_async(PassWord) {
 				if (err) {
 				    reject(err);
 				}
-					data = Buffer.concat(data); // Make one large Buffer of it
+				//	data = Buffer.concat(data); // Make one large Buffer of it
 					var txt = new Buffer(data, 'binary');
 					    txt=iconv.decode(txt, 'win1251').toString();
 					//var myMessage = MyMessage.decode(data);
