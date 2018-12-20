@@ -86,17 +86,6 @@ log(`////Canvas.imageSmoothingEnabled = ${hCtx.imageSmoothingEnabled}`);
 log(`////Canvas.filter = ${hCtx.filter}`);
 	hCtx.filter = "none";
 
-var	Config	= {};
-var	Matrix	= [];
-
-var	i, j;
-
-for(i = 0; i < 100; ++ i) {
-	Matrix[i] = [];
-	for(j = 0; j < 100; ++ j)
-		Matrix[i][j] = 10;
-}
-
 var	app = firebase.initializeApp(
 	{
 		apiKey: "AIzaSyDj--njV63QvHG_R7Ov0pP3VXijKJoUx44",
@@ -108,6 +97,126 @@ var	app = firebase.initializeApp(
 	}
 );
 var	database = firebase.app().database();
+//////////////////////////////////////////////////////////////////////////////////////////
+var	Config	= {
+	advision	:"",
+	chatbody	:[
+				`<html><head>`,
+				`<meta http-equiv='refresh' content='900'>`,
+				`<style>em { position:absolute; } </style></head>`,
+				`<body><pre>(\\ChatLogs)</pre>`,
+				`(\\ChatNotice)</body>`
+			].join("\r\n"),
+	images		:{
+				blank	:undefined,
+				boxes	:undefined,
+				orthos	:undefined,
+				screen	:undefined
+			},
+	logoff		:"Используйте код (\\PassWord) для идентификации",
+	logon		:[
+				`<head\t\t\t\t\t\t\t\t\t\t\t  >`,
+				`<meta content='text/html; charset=UTF-16'\t\thttp-equiv='Content-Type'\t />`,
+				`</head\t\t\t\t\t\t\t\t\t\t\t  >`,
+				`<body>`,
+				`Вы идентифицированы как «(\\Nick)» ((\\Name))`,
+				`</body>`
+			].join("\r\n"),
+	timefmt		:"(.dd)(|m)/HH(~(^MM))(.ss)"
+};
+
+function HotConfig_Image(image, err) {
+	var	info	= `DataBase::«${this.path}${this.branch}» is `;
+	if(image != null) {
+		info += `Image(${image.width}x${image.height}) - `;
+		try {
+			hCtx.drawImage(image, 0, 0, 99, 99, 0, 0, 99, 99);
+			this.config[this.branch] = image;
+			info += `ready`
+		} catch(e) {
+			info += `${e}`;
+		}
+	} else
+		info += `${err}`;
+	log(`${info}…`);
+}
+
+function HotConfig_Set(snap) {
+	const	max = 24;
+	var	s = snap.val();
+	var	old = this.config[this.branch];
+	var	info	= `DataBase::«${this.path}${this.branch}» is `;
+	info += `changed from `;
+	if("image" == typeof old)
+		info += `changed from Image(${old.width}x${old.height})`
+	else
+	if("string" == typeof old)
+		info += `changed from "${old.substr(0,max)}${old.length > max ? "…" : ""}"`;
+	else
+	if("number" == typeof old)
+		info += `changed from (${old})`;
+	else
+	if(null == old && s == null)
+		info += `steel «${old}»`;
+	else
+		info += `«${old}»`;
+	if("string" == typeof s) {
+		if(!s.indexOf("data:image/")) {
+			info += ` to Image`;
+			loadImage(s).then(
+				HotConfig_Image
+				.bind(
+					{
+						config	:this.config,
+						branch	:this.branch,
+						path	:this.path
+					}
+				)
+			);
+		} else {
+			info += ` to "${s.substr(0,max)}${old.length > max ? "…" : ""}"`;
+			this.config[this.branch] = s;
+		}
+	} else
+	if("number" == typeof s) {
+		info += ` to (${s})`;
+		this.config[this.branch] = s;
+	} else
+	if(null != old)
+		info += ` to lost - ${s}`;
+	log(`${info}…`);
+}
+function HotConfig_Init(map, callback, ref, path) {
+	for(var id in map) {
+		if("object" != typeof map[id]) {
+			log(`${path}${id} binding…`);
+			ref.child(id)
+			.on("value",
+				callback
+				.bind(
+					{
+						config	:map,
+						branch	:id,
+						path	:path
+					}
+				)
+			);
+		} else {
+			HotConfig_Init(map[id], callback, ref.child(id), path + id + "/");
+		}
+	}
+}
+HotConfig_Init(Config, HotConfig_Set, database.ref("/"), "/");
+//////////////////////////////////////////////////////////////////////////////////////////
+var	Matrix	= [];
+
+var	i, j;
+
+for(i = 0; i < 100; ++ i) {
+	Matrix[i] = [];
+	for(j = 0; j < 100; ++ j)
+		Matrix[i][j] = 10;
+}
 
 var	dbRefs = {
 	win1251		:database.ref("win1251"),
@@ -598,6 +707,9 @@ function showWorld(aMaps, nick, place, piece, hGif) {
 	var	flash = false;
 	do {
 		hCtx.clearRect(0, 0, hCanvas.width, hCanvas.height);
+		if(Config.images.blank)
+			try { hCtx.drawImage(Config.images.blank, 0, 0, Config.images.blank.width, Config.images.blank.height, 0, 0, hCanvas.width, hCanvas.height); } catch(e) {}
+		else
 		if(hImages.blank)
 			try { hCtx.drawImage(hImages.blank, 0, 0, hImages.blank.width, hImages.blank.height, 0, 0, hCanvas.width, hCanvas.height); } catch(e) {}
 		y = 0;
@@ -620,7 +732,8 @@ function showWorld(aMaps, nick, place, piece, hGif) {
 					if(!(flash && y == Locations.common.cell_y && x == Locations.common.cell_x))
 						try {
 							hCtx.drawImage
-								(hImages.orthos
+								//(hImages.orthos
+								(Config.images.orthos
 								,256 * Math.floor(Math.random() * 4)
 								,256 * +c, 256, 256
 								,160 + x * 64 - y * 64 - osx
@@ -639,6 +752,9 @@ function showWorld(aMaps, nick, place, piece, hGif) {
 			}
 			++ y;
 		});
+		if(Config.images.screen)
+			try { hCtx.drawImage(Config.images.screen, 0, 0, Config.images.screen.width, Config.images.screen.height, 0, 0, hCanvas.width, hCanvas.height); } catch(e) {}
+		else
 		if(hImages.screen)
 			try { hCtx.drawImage(hImages.screen, 0, 0, hImages.screen.width, hImages.screen.height, 0, 0, hCanvas.width, hCanvas.height); } catch(e) {}
 		hGif.addFrame(hCtx);
@@ -717,6 +833,9 @@ function showMap(aMaps, nick, place, piece, hGif) {
 	ansi	= [];
 	do {
 		hCtx.clearRect(0, 0, hCanvas.width, hCanvas.height);
+		if(Config.images.blank)
+			try { hCtx.drawImage(Config.images.blank, 0, 0, Config.images.blank.width, Config.images.blank.height, 0, 0, hCanvas.width, hCanvas.height); } catch(e) {}
+		else
 		if(hImages.blank)
 			try { hCtx.drawImage(hImages.blank, 0, 0, hImages.blank.width, hImages.blank.height, 0, 0, hCanvas.width, hCanvas.height); } catch(e) {}
 		y = 0;
@@ -745,6 +864,9 @@ function showMap(aMaps, nick, place, piece, hGif) {
 						else
 							c = 0;
 					}
+					if(Config.images.boxes)
+						try { hCtx.drawImage(Config.images.boxes, 128 * +c, 0, 128, 128, x * 64 - osx - 64, y * 64 - osy - 64, 128, 128); } catch(e) { console.log(e); }
+					else
 						try { hCtx.drawImage(hImages.boxes, 128 * +c, 0, 128, 128, x * 64 - osx - 64, y * 64 - osy - 64, 128, 128); } catch(e) { console.log(e); }
 				} else {
 				//if(d > 0 && map.images.length > d) {
@@ -758,6 +880,9 @@ function showMap(aMaps, nick, place, piece, hGif) {
 			}
 			++ y;
 		});
+		if(Config.images.screen)
+			try { hCtx.drawImage(Config.images.screen, 0, 0, Config.images.screen.width, Config.images.screen.height, 0, 0, hCanvas.width, hCanvas.height); } catch(e) {}
+		else
 		if(hImages.screen)
 			try { hCtx.drawImage(hImages.screen, 0, 0, hImages.screen.width, hImages.screen.height, 0, 0, hCanvas.width, hCanvas.height); } catch(e) {}
 		hGif.addFrame(hCtx);
@@ -911,11 +1036,7 @@ const server = http.createServer((req, res) => {
 	var	theIP	= ipAddr.split(/:+/).pop().split(".").join("");
 	var	nick, name;
 	var	fail	= false;
-	var	time	= datefmt(new Date(),
-			("ChatTimeStamp" in Config
-			 	? Config.ChatTimeStamp
-			 	: szTimeFormat
-			 )).shifted;
+	var	time	= datefmt(new Date(), Config.timefmt).shifted;
 	//
 	if(theIP in theUsers)
 		nick = theUsers[theIP].nick,
@@ -930,7 +1051,7 @@ const server = http.createServer((req, res) => {
 		};
 		log(`// New user #${++ nGuests} is connected: ${nick}`);
 	}
-	if(theUsers[theIP].login > 0 && ("ChatLogin" in Config)) {
+	if(theUsers[theIP].login > 0 && ("logoff" in Config)) {
 		tmp = ParseLogin("" + theUsers[theIP].login);
 		name = tmp.name;
 		tmp = tmp.nick;
@@ -964,7 +1085,7 @@ const server = http.createServer((req, res) => {
 		log(`Login:#${theUsers[theIP].login} for «${nick}»`);
 		if(theUsers[theIP].login >= 0)
 			theUsers[theIP].login = Math.floor(Math.random() * 87655 + 12345);
-		var	tmp = theUsers[theIP].login < 0 ? szLogOn : szLogOff;
+		var	tmp = theUsers[theIP].login < 0 ? Config.logon : Config.logoff;
 		tmp = tmp
 			.replace(/\(\\PassWord\)/g, "" + theUsers[theIP].login)
 			.replace(theValuex, function(s, t) {
@@ -979,7 +1100,7 @@ const server = http.createServer((req, res) => {
 	if([advision][(theUsers[theIP].login = theUsers[theIP].login < 0 ? theUsers[theIP].login : 0) * 0]) {
 		res.statusCode = 200;
 		res.setHeader("Content-Type", "text/html; charset=utf-8");
-		str = szAdvision;
+		str = Config.advision;
 		str = str.replace(theValuex, function(s, t) {
 			try {
 				return eval(theValues[t]);
@@ -1065,10 +1186,10 @@ const server = http.createServer((req, res) => {
 				return;
 			}
 			if(chat[1] == "!login" && theUsers[theIP].login == 0) {
-				if(("ChatLogin" in Config) && Config.ChatLogin) {
+				if(("logoff" in Config) && Config.logoff) {
 					theUsers[theIP].login = Math.floor(Math.random() * 87655 + 12345);
 					res.statusCode = 307;
-					res.setHeader("Location", Config.ChatLogin);
+					res.setHeader("Location", Config.logoff);
 					res.end();
 					return;
 				} else
@@ -1116,8 +1237,8 @@ const server = http.createServer((req, res) => {
 			res.end();
 		} else {
 			var	tmp = [];
-			if(theUsers[theIP].login >= 0 && ("ChatLogin" in Config) && Config.ChatLogin)
-				chatNotes.push(`<a target='_blank' href='${Config.ChatLogin}'>Залогиниться</a>`);
+			if(theUsers[theIP].login >= 0 && ("logoff" in Config) && Config.logoff)
+				chatNotes.push(`<a target='_blank' href='${Config.logoff}'>Залогиниться</a>`);
 			theChat.forEach(function(msg) {
 				tmp.push(szChatLast = "" + msg.time + "|«" + msg.nick + "»:" + msg.text);
 			});
@@ -1149,9 +1270,9 @@ const server = http.createServer((req, res) => {
 			//tmp.push(`Your IP is ${req.connection.remoteAddress}`);
 			res.statusCode = 200;
 			res.setHeader("Content-Type", "text/html; charset=utf-8");
-			res.end(szChatBody.
-				  replace(/\(\\ChatNotice\)/gm, chatNotes.join("\r\n")).
-				  replace(/\(\\ChatLogs\)/gm, tmp.join("\r\n"))
+			res.end(Config.chatbody
+				  .replace(/\(\\ChatNotice\)/gm, chatNotes.join("\r\n"))
+				  .replace(/\(\\ChatLogs\)/gm, tmp.join("\r\n"))
 			);
 			try { bashMap(ansi); } catch(e) { console.log(e); }
 		}
