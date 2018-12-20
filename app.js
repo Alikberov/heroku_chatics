@@ -133,11 +133,11 @@ var	app = firebase.initializeApp(
 var	database = firebase.app().database();
 
 var	journal	= {
-		chatLog	:database.ref("chat/log"),
-		pointXY	:database.ref("map/xy"),
-		colour	:database.ref("map/colour"),
-		user	:database.ref("user"),
-		users	:database.ref("users")
+		chatLog	:database.ref("journal/chat/log"),
+		pointXY	:database.ref("journal/map/xy"),
+		colour	:database.ref("journal/map/colour"),
+		user	:database.ref("journal/user"),
+		users	:database.ref("journal/users")
 };
 //////////////////////////////////////////////////////////////////////////////////////////
 function HotConfig_Image(image, err) {
