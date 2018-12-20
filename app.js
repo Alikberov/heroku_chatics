@@ -609,7 +609,9 @@ function LoadConfig(hSecret) {
 											log(`// ${info[1]}`);
 									} else
 									if(info[1] && Section != "" && Section in Config) {
-										Config[Section].push(info[1]);
+										try {
+											Config[Section].push(info[1]);
+										} catch(e) {log(`Config/${info[1]}: ${e}`); }
 									}
 								});
 							}
@@ -1123,8 +1125,9 @@ async function my_server(req, res) {
 		log(`// New user #${++ nGuests} is connected: ${nick}`);
 	}
 	if(theUsers[theIP].login > 0 && ("logoff" in Config)) {
+		log(`await ParseLogin`);
 		tmp = await ParseLogin_async("" + theUsers[theIP].login);
-		;
+		log(`await ParseLogin == ${tmp}`);
 		name = tmp.name;
 		tmp = tmp.nick;
 		if(tmp && tmp.length > 2) {
