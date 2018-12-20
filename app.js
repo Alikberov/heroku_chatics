@@ -913,6 +913,55 @@ function showMap(aMaps, nick, place, piece, hGif) {
 	//Dropbox.save("/", "nullpost.jpeg", "");
 }
 
+function ParseLogin_new(PassWord) {
+	console.log(`// Find user in phorum...`);
+	https.get(Config.ChatLogin, function(res) {
+		var data = []; // List of Buffer objects
+		res.on("data", function(chunk) {
+			data.push(chunk); // Append Buffer object
+		});
+		res.on("end", function() {
+			data = Buffer.concat(data); // Make one large Buffer of it
+			var txt = new Buffer(data, 'binary');
+			    txt=iconv.decode(txt, 'win1251').toString();
+			//var myMessage = MyMessage.decode(data);
+		console.log(`// Parse the Phorum page...`);
+		parser.parseComplete(txt);
+		console.log(`// Calling JSDOM...`);
+				//var		document = parser.Parse(hXML.responseText);
+				//sys.puts(sys.inspect(handler.dom, false, null));
+		var	dom = new JSDOM(txt);
+		console.log(`// Search for user`);
+		return LoginUser(dom.window.document, PassWord);
+		});
+	});
+}
+async function ParseLogin_async(PassWord) {
+    return new Promise((resolve, reject) => {
+        https.get(Config.ChatLogin, response => {
+            response.setEncoding('utf8');
+            response.pipe(bl((err, data) => {
+                if (err) {
+                    reject(err);
+                }
+			data = Buffer.concat(data); // Make one large Buffer of it
+			var txt = new Buffer(data, 'binary');
+			    txt=iconv.decode(txt, 'win1251').toString();
+			//var myMessage = MyMessage.decode(data);
+		console.log(`// Parse the Phorum page...`);
+		parser.parseComplete(txt);
+		console.log(`// Calling JSDOM...`);
+				//var		document = parser.Parse(hXML.responseText);
+				//sys.puts(sys.inspect(handler.dom, false, null));
+		var	dom = new JSDOM(txt);
+		console.log(`// Search for user`);
+		//return LoginUser(dom.window.document, PassWord);
+                resolve(LoginUser(dom.window.document, PassWord));
+            }));
+        });
+    });
+}
+
 function ParseLogin(PassWord) {
 	console.log(`// Find user in phorum...`);
 	hXML.open("GET", Config.ChatLogin, false);
@@ -1032,7 +1081,7 @@ for(var id in theValues)
 	theValuex.push(id);
 theValuex = new RegExp("\\(\\\\(" + theValuex.join("|") + ")\\)", "gm");
 
-const server = http.createServer((req, res) => {
+async function my_server(req, res) {
 	var	requrl	= unescape(req.url).replace(/\+/g, " ");
 	//
 	var	login	= requrl.match(/login/);
@@ -1068,7 +1117,8 @@ const server = http.createServer((req, res) => {
 		log(`// New user #${++ nGuests} is connected: ${nick}`);
 	}
 	if(theUsers[theIP].login > 0 && ("logoff" in Config)) {
-		tmp = ParseLogin("" + theUsers[theIP].login);
+		tmp = await ParseLogin_async("" + theUsers[theIP].login);
+		;
 		name = tmp.name;
 		tmp = tmp.nick;
 		if(tmp && tmp.length > 2) {
@@ -1303,7 +1353,10 @@ const server = http.createServer((req, res) => {
 		res.setHeader('Content-Type', 'image/png');
 		res.end();
 	}
-});
+};
+
+const server = http.createServer(my_server);
+
 server.listen(port, hosting, () => {
 	log(`Server running at http://${hosting}:${port}/`);
 });
