@@ -556,7 +556,7 @@ function LoginUser(hSecret, PassWord) {
 			for(var i = 0; i < posts.length; ++ i) {
 				if(posts[i].textContent.indexOf(PassWord) >= 0) {
 					theUser = nick;
-					userName = _Win1251(hUser.title, iconv);
+					userName = hUser.title;
 					log(`// Login for "${nick}"`);
 					return;
 				}
