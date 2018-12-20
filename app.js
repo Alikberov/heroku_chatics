@@ -945,6 +945,7 @@ async function ParseLogin_async(PassWord) {
     return new Promise((resolve, reject) => {
 	    log(`ParseLogin_async(PassWord)::Promise`);
         https.get(Config.ChatLogin, response => {
+		log(`ParseLogin_async(PassWord)::get.response=${response} setEncoding=${response.setEncoding}`);
             response.setEncoding('utf8');
 		log(`ParseLogin_async(PassWord)::get.response=${response} bl=${bl}`);
             response.pipe(bl((err, data) => {
