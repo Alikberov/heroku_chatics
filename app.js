@@ -1,3 +1,37 @@
+var	Config	= {
+	advision	:"",
+	chat		:{
+				body	:[
+						`<html><head>`,
+						`<meta http-equiv='refresh' content='900'>`,
+						`<style>em { position:absolute; } </style></head>`,
+						`<body><pre>(\\ChatLogs)</pre>`,
+						`(\\ChatNotice)</body>`
+					].join("\r\n"),
+				prompt	:[
+						`Your Nick is (\\Nick)`,
+						`Now is (\\Guests) users in chat`
+					].join("\r\n"),
+			},
+	images		:{
+				blank	:undefined,
+				boxes	:undefined,
+				orthos	:undefined,
+				screen	:undefined
+			},
+	login		:"<a href='https://gamedev.ru/pages/nullpost/forum/?id=240914'>Залогиниться</a>",
+	logoff		:"Используйте код (\\PassWord) для идентификации",
+	logon		:[
+				`<head\t\t\t\t\t\t\t\t\t\t\t  >`,
+				`<meta content='text/html; charset=UTF-16'\t\thttp-equiv='Content-Type'\t />`,
+				`</head\t\t\t\t\t\t\t\t\t\t\t  >`,
+				`<body>`,
+				`Вы идентифицированы как «(\\Nick)» ((\\Name))`,
+				`</body>`
+			].join("\r\n"),
+	timefmt		:`(.dd)(|m)/HH(!(^MM))(.ss)`
+};
+
 const	log	= console.log;
 
 const	Owner	= "Alikberov";
@@ -97,35 +131,15 @@ var	app = firebase.initializeApp(
 	}
 );
 var	database = firebase.app().database();
-//////////////////////////////////////////////////////////////////////////////////////////
-var	Config	= {
-	advision	:"",
-	chatbody	:[
-				`<html><head>`,
-				`<meta http-equiv='refresh' content='900'>`,
-				`<style>em { position:absolute; } </style></head>`,
-				`<body><pre>(\\ChatLogs)</pre>`,
-				`(\\ChatNotice)</body>`
-			].join("\r\n"),
-	images		:{
-				blank	:undefined,
-				boxes	:undefined,
-				orthos	:undefined,
-				screen	:undefined
-			},
-	login		:"<a href='https://gamedev.ru/pages/nullpost/forum/?id=240914'>Залогиниться</a>",
-	logoff		:"Используйте код (\\PassWord) для идентификации",
-	logon		:[
-				`<head\t\t\t\t\t\t\t\t\t\t\t  >`,
-				`<meta content='text/html; charset=UTF-16'\t\thttp-equiv='Content-Type'\t />`,
-				`</head\t\t\t\t\t\t\t\t\t\t\t  >`,
-				`<body>`,
-				`Вы идентифицированы как «(\\Nick)» ((\\Name))`,
-				`</body>`
-			].join("\r\n"),
-	timefmt		:"(.dd)(|m)/HH(~(^MM))(.ss)"
-};
 
+var	journal	= {
+		chatLog	:database.ref("chat/log"),
+		pointXY	:database.ref("map/xy"),
+		colour	:database.ref("map/colour"),
+		user	:database.ref("user"),
+		users	:database.ref("users")
+};
+//////////////////////////////////////////////////////////////////////////////////////////
 function HotConfig_Image(image, err) {
 	var	info	= `DataBase::«${this.path}${this.branch}» is `;
 	if(image != null) {
@@ -1080,6 +1094,10 @@ const server = http.createServer((req, res) => {
 		}
 	}
 	log(req.url);
+	tmp = [];
+	for(var id in theUsers)
+		tmp.push(theUsers[id].nick);
+	try { journal.user.set(nick); journal.users.set(tmp.join("\r\n")); } catch(e) { log(e); }
 	if(login) {
 		res.statusCode = 200;
 		res.setHeader("Content-Type", "text/html; charset=utf-8");
@@ -1171,12 +1189,14 @@ const server = http.createServer((req, res) => {
 		res.statusCode = 302;
 		res.setHeader("Location", "https://gamedev.ru/pages/nullpost/play");
 		res.end();
+		try { journal.pointXY.set(`${click[2]},${click[1]}`); } catch(e) { log(e); }
 	} else
 	if(choice) {
 		Locations.common.colour = +choice[1];
 		res.statusCode = 302;
 		res.setHeader("Location", "https://gamedev.ru/pages/nullpost/play");
 		res.end();
+		try { journal.colour.set(`${choice[1]}`); } catch(e) { log(e); }
 	} else
 	if(chat) {
 		if(chat[1]) {
@@ -1233,6 +1253,12 @@ const server = http.createServer((req, res) => {
 				}
 			if(theChat.length > 10)
 				theChat.splice(1, 1);
+			aChatBlank = [];
+			theChat.forEach(function(msg) {
+				szChatLast = "" + msg.time + "|«" + msg.nick + "»:" + msg.text;
+				aChatBlank.push(szChatLast);
+			});
+			try { journal.chatLog.set(aChatBlank.join("\r\n")); } catch(e) { log(e); }
 			res.statusCode = 307;
 			res.setHeader("Location", "https://gamedev.ru/pages/nullpost/play");
 			res.end();
@@ -1240,40 +1266,34 @@ const server = http.createServer((req, res) => {
 			var	tmp = [];
 			if(theUsers[theIP].login >= 0 && ("login" in Config) && Config.login)
 				chatNotes.push(Config.login);
-			theChat.forEach(function(msg) {
-				tmp.push(szChatLast = "" + msg.time + "|«" + msg.nick + "»:" + msg.text);
-			});
-			if(("ChatPrompt" in Config) && Config.ChatPrompt.length)
-				Config
-				.ChatPrompt
-				.forEach(
-				function(str) {
-					/*str = str.replace(/\(\\Nick\)/g, nick);
-					str = str.replace(/\(\\Guests\)/g, nUsers);
-					str = str.replace(/\(\\IP\)/g, req.connection.remoteAddress);*/
-					str = str.replace(theValuex, function(s, t) {
-						try {
-							return eval(theValues[t]);
-						} catch(e) {
-							return "---";
-						}
-					});
-					/*if(theUsers[theIP].reach) {
-						str = str.replace(/\(\\Scores\)/g, theUsers[theIP].reach.scores);
-						str = str.replace(/\(\\Visits\)/g, theUsers[theIP].reach.visits);
-					} else {
-						str = str.replace(/\(\\(Scores|Visits)\)/g, "---");
-					}*/
-					tmp.push(str.shifted);
+			Config
+			.chat.prompt
+			.split(/\r?\n/)
+			.forEach(
+			function(str) {
+				/*str = str.replace(/\(\\Nick\)/g, nick);
+				str = str.replace(/\(\\Guests\)/g, nUsers);
+				str = str.replace(/\(\\IP\)/g, req.connection.remoteAddress);*/
+				str = str.replace(theValuex, function(s, t) {
+					try {
+						return eval(theValues[t]);
+					} catch(e) {
+						return "---";
+					}
 				});
-			//tmp.push(`Your Nick is ${nick}`);
-			//tmp.push(`Total users is ${nUsers}`);
-			//tmp.push(`Your IP is ${req.connection.remoteAddress}`);
+				/*if(theUsers[theIP].reach) {
+					str = str.replace(/\(\\Scores\)/g, theUsers[theIP].reach.scores);
+					str = str.replace(/\(\\Visits\)/g, theUsers[theIP].reach.visits);
+				} else {
+					str = str.replace(/\(\\(Scores|Visits)\)/g, "---");
+				}*/
+				tmp.push(str.shifted);
+			});
 			res.statusCode = 200;
 			res.setHeader("Content-Type", "text/html; charset=utf-8");
-			res.end(Config.chatbody
+			res.end(Config.chat.body
 				  .replace(/\(\\ChatNotice\)/gm, chatNotes.join("\r\n"))
-				  .replace(/\(\\ChatLogs\)/gm, tmp.join("\r\n"))
+				  .replace(/\(\\ChatLogs\)/gm, aChatBlank.concat(tmp).join("\r\n"))
 			);
 			try { bashMap(ansi); } catch(e) { console.log(e); }
 		}
