@@ -942,33 +942,38 @@ function ParseLogin_new(PassWord) {
 }
 async function ParseLogin_async(PassWord) {
 	log(`ParseLogin_async(PassWord)`);
-    return new Promise((resolve, reject) => {
-	    log(`ParseLogin_async(PassWord)::Promise`);
-        https.get(Config.ChatLogin, response => {
-		log(`ParseLogin_async(PassWord)::get.response=${response} setEncoding=${response.setEncoding}`);
-            response.setEncoding('utf8');
-		log(`ParseLogin_async(PassWord)::get.response=${response} bl=${bl}`);
-            response.pipe(bl((err, data) => {
-		    log(`ParseLogin_async(PassWord)::bl`);
-                if (err) {
-                    reject(err);
-                }
-			data = Buffer.concat(data); // Make one large Buffer of it
-			var txt = new Buffer(data, 'binary');
-			    txt=iconv.decode(txt, 'win1251').toString();
-			//var myMessage = MyMessage.decode(data);
-		console.log(`// Parse the Phorum page...`);
-		parser.parseComplete(txt);
-		console.log(`// Calling JSDOM...`);
-				//var		document = parser.Parse(hXML.responseText);
-				//sys.puts(sys.inspect(handler.dom, false, null));
-		var	dom = new JSDOM(txt);
-		console.log(`// Search for user`);
-		//return LoginUser(dom.window.document, PassWord);
-                resolve(LoginUser(dom.window.document, PassWord));
-            }));
-        });
-    });
+	return new Promise((resolve, reject) => {
+		log(`ParseLogin_async(PassWord)::Promise`);
+		try {
+			log(`${Config.ChatLogin}`);
+			https.get(Config.ChatLogin, response => {
+				log(`ParseLogin_async(PassWord)::get.response=${response} setEncoding=${response.setEncoding}`);
+				response.setEncoding('utf8');
+				log(`ParseLogin_async(PassWord)::get.response=${response} bl=${bl}`);
+				response.pipe(bl((err, data) => {
+				    log(`ParseLogin_async(PassWord)::bl`);
+				if (err) {
+				    reject(err);
+				}
+					data = Buffer.concat(data); // Make one large Buffer of it
+					var txt = new Buffer(data, 'binary');
+					    txt=iconv.decode(txt, 'win1251').toString();
+					//var myMessage = MyMessage.decode(data);
+				console.log(`// Parse the Phorum page...`);
+				parser.parseComplete(txt);
+				console.log(`// Calling JSDOM...`);
+						//var		document = parser.Parse(hXML.responseText);
+						//sys.puts(sys.inspect(handler.dom, false, null));
+				var	dom = new JSDOM(txt);
+				console.log(`// Search for user`);
+				//return LoginUser(dom.window.document, PassWord);
+				resolve(LoginUser(dom.window.document, PassWord));
+				}));
+			});
+		} catch(e) {
+			log(e);
+		}
+	});
 }
 
 function ParseLogin(PassWord) {
