@@ -460,10 +460,12 @@ function User_Read(snap) {
 		this.ref.set(theUsers[this.theIP].reach);
 	} else {
 		theUsers[this.theIP].reach = v;
-		if(theUsers[this.theIP].joined)
+		if(theUsers[this.theIP].joined) {
+			log(`// User «${theUsers[this.theIP].nick}» joined ${theUsers[this.theIP].reach.visits} times…`);
+			theUsers[this.theIP].joined = false;
 			this.ref.child("visits").set(1 + Number(theUsers[this.theIP].reach.visits));
-		log(`// User «${theUsers[this.theIP].nick}» ${this.joined ? "loaded" : "updated"}…`);
-		theUsers[this.theIP].joined = false;
+		} else
+			log(`// User «${theUsers[this.theIP].nick}» updated…`);
 	}
 }
 
