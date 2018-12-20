@@ -113,6 +113,7 @@ var	Config	= {
 				orthos	:undefined,
 				screen	:undefined
 			},
+	login		:"<a href='https://gamedev.ru/pages/nullpost/forum/?id=240914'>Залогиниться</a>",
 	logoff		:"Используйте код (\\PassWord) для идентификации",
 	logon		:[
 				`<head\t\t\t\t\t\t\t\t\t\t\t  >`,
@@ -1237,8 +1238,8 @@ const server = http.createServer((req, res) => {
 			res.end();
 		} else {
 			var	tmp = [];
-			if(theUsers[theIP].login >= 0 && ("logoff" in Config) && Config.logoff)
-				chatNotes.push(`<a target='_blank' href='${Config.logoff}'>Залогиниться</a>`);
+			if(theUsers[theIP].login >= 0 && ("login" in Config) && Config.login)
+				chatNotes.push(Config.login);
 			theChat.forEach(function(msg) {
 				tmp.push(szChatLast = "" + msg.time + "|«" + msg.nick + "»:" + msg.text);
 			});
