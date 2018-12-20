@@ -948,7 +948,7 @@ async function ParseLogin_async(PassWord) {
 			log(`${Config.ChatLogin}`);
 			https.get(Config.ChatLogin, response => {
 				log(`ParseLogin_async(PassWord)::get.response=${response} setEncoding=${response.setEncoding}`);
-				response.setEncoding('win1251');
+				response.setEncoding('binary');
 				log(`ParseLogin_async(PassWord)::get.response=${response} bl=${bl}`);
 				response.pipe(bl((err, data) => {
 				    log(`ParseLogin_async(PassWord)::bl`);
