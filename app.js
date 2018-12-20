@@ -13,6 +13,7 @@ var	Config	= {
 						`Now is (\\Guests) users in chat`
 					].join("\r\n"),
 			},
+	ChatLogin	:"https://gamedev.ru/pages/nullpost/forum/?id=240914",
 	images		:{
 				blank	:undefined,
 				boxes	:undefined,
