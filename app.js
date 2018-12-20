@@ -79,6 +79,7 @@ const	https				= requiry("https");
 const	http				= requiry("http");
 const	util				= requiry("util");
 //const	iconv				= requiry("iconv-lite");
+const	bl				= requiry("bl");
 
 Object.defineProperty(
 	String.prototype, "win1251", {
@@ -937,10 +938,14 @@ function ParseLogin_new(PassWord) {
 	});
 }
 async function ParseLogin_async(PassWord) {
+	log(`ParseLogin_async(PassWord)`);
     return new Promise((resolve, reject) => {
+	    log(`ParseLogin_async(PassWord)::Promise`);
         https.get(Config.ChatLogin, response => {
+		log(`ParseLogin_async(PassWord)::get`);
             response.setEncoding('utf8');
             response.pipe(bl((err, data) => {
+		    log(`ParseLogin_async(PassWord)::bl`);
                 if (err) {
                     reject(err);
                 }
