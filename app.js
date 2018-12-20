@@ -460,10 +460,10 @@ function User_Read(snap) {
 		this.ref.set(theUsers[this.theIP].reach);
 	} else {
 		theUsers[this.theIP].reach = v;
-		if(this.joined)
+		if(theUsers[this.theIP].joined)
 			this.ref.child("visits").set(1 + Number(theUsers[this.theIP].reach.visits));
 		log(`// User «${theUsers[this.theIP].nick}» ${this.joined ? "loaded" : "updated"}…`);
-		this.joined = false;
+		theUsers[this.theIP].joined = false;
 	}
 }
 
@@ -474,8 +474,7 @@ function LoadUser(theIP) {
 		User_Read
 		.bind({
 			theIP	:theIP,
-			ref	:ref,
-			joined	:true
+			ref	:ref
 		})
 	);
 }
@@ -1168,6 +1167,7 @@ async function my_server(req, res) {
 				else
 					++ nGuests;
 			}
+			theUsers[theIP].joined = true;
 			LoadUser(theIP);
 			nick = tmp;
 		}
