@@ -1010,6 +1010,7 @@ var	nUsers = 0;
 var	nGuests = 0;
 var	theChat	= [];
 var	theUsers = {};
+var	aChatBlank = [];
 
 Owner_Cmd("!clear");
 ParseConfig();
