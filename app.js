@@ -447,31 +447,37 @@ function Owner_Cmd(cmd) {
 	return false;
 }
 
-var	LoadUser = null;
-
-function ReadUser() {
-	while(theLogins.length > 0) {
-		LoadUser = database.ref("users/" + theUsers[theLogins[0]].nick);
-		theUsers[theLogins[0]].ref = LoadUser;
-		LoadedUser = function(snap) {
-			var	v = snap.val();
-			if(null == v) {
-				theUsers[this.theIP].reach = {
-					visits	:0,
-					scores	:Math.floor(Math.random() * 100)
-				};
-				log(`// User «${theUsers[this.theIP].nick}» created...`);
-				this.ref.set(theUsers[this.theIP].reach);
-			} else {
-				theUsers[this.theIP].reach = v;
-				log(`// User «${theUsers[this.theIP].nick}» loaded...`);
-			}
+function User_Read(snap) {
+	var	v = snap.val();
+	if(null == v) {
+		theUsers[this.theIP].reach = {
+			visits	:0,
+			scores	:Math.floor(Math.random() * 100),
+			name	:theUsers[this.theIP].name,
+			url	:theUsers[this.theIP].url
 		}
-		LoadedUser.theIP = theLogins[0];
-		LoadedUser.ref = LoadUser;
-		LoadUser.on("value", LoadedUser.bind(LoadedUser));
-		theLogins.shift();
+		log(`// User «${theUsers[this.theIP].nick}» created...`);
+		this.ref.set(theUsers[this.theIP].reach);
+	} else {
+		theUsers[this.theIP].reach = v;
+		if(this.joined)
+			this.ref.child("visits").set(1 + Number(theUsers[this.theIP].reach.visits));
+		log(`// User «${theUsers[this.theIP].nick}» ${this.joined ? "loaded" : "updated"}…`);
+		this.joined = false;
 	}
+}
+
+function LoadUser(theIP) {
+	var	ref = database.ref("users/" + theUsers[theIP].nick);
+	theUsers[theIP].ref = ref;
+	ref.on("value",
+		LoadedUser
+		.bind({
+			theIP	:theIP,
+			ref	:ref,
+			joined	:true
+		})
+	);
 }
 
 loadImage(sprites).then((image) => {
@@ -542,6 +548,7 @@ function LoginUser(hSecret, PassWord) {
 	var	Section	= "";
 	var	theUser	= null;
 	var	userName= null;
+	var	userLink= null;
 	hSecret
 	.querySelector("#main_body")
 	.querySelectorAll(".mes")
@@ -557,13 +564,14 @@ function LoginUser(hSecret, PassWord) {
 				if(posts[i].textContent.indexOf(PassWord) >= 0) {
 					theUser = nick;
 					userName = hUser.title;
+					userLink = hUser.href;
 					log(`// Login for "${nick}"`);
 					return;
 				}
 			}
 		}
 	});
-	return {nick:theUser, name:userName};
+	return {nick:theUser, name:userName, url:userLink};
 }
 
 function LoadConfig(hSecret) {
@@ -1133,21 +1141,25 @@ async function my_server(req, res) {
 		log(`// New user #${++ nGuests} is connected: ${nick}`);
 	}
 	if(theUsers[theIP].login > 0 && ("logoff" in Config)) {
-		log(`await ParseLogin`);
+		//log(`await ParseLogin`);
 		tmp = await ParseLogin_async("" + theUsers[theIP].login);
-		log(`await ParseLogin == ${tmp}`);
+		//log(`await ParseLogin == ${tmp}`);
 		name = tmp.name;
+		link = tmp.url;
 		tmp = tmp.nick;
 		if(tmp && tmp.length > 2) {
-			log(`// User "${theUsers[theIP].nick}" is founded as "${tmp}"`);
+			log(`// User "${theUsers[theIP].nick}" is founded as "${tmp} (${name})…"`);
 			nUsers = 0;
 			nGuests = 0;
 			for(var id in theUsers) {
-				if(theUsers[id].nick == nick && id != theIP)
+				if(theUsers[id].nick == tmp && id != theIP) {
+					log(`User «${nick}» erased…`);
 					delete theUsers[id];
+				}
 			}
 			theUsers[theIP].nick = tmp;
 			theUsers[theIP].name = name;
+			theUsers[theIP].url = link;
 			theUsers[theIP].login = -theUsers[theIP].login;
 			theUsers[theIP].reach = null;
 			for(var id in theUsers) {
@@ -1311,6 +1323,7 @@ async function my_server(req, res) {
 			} else
 				try {
 					theChat.push({
+						link	:theUsers[theIP].url,
 						nick	:nick,
 						text	:_Win1251(chat[1], iconv),
 						time	:time
