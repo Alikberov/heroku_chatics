@@ -471,7 +471,7 @@ function LoadUser(theIP) {
 	var	ref = database.ref("users/" + theUsers[theIP].nick);
 	theUsers[theIP].ref = ref;
 	ref.on("value",
-		LoadedUser
+		User_Read
 		.bind({
 			theIP	:theIP,
 			ref	:ref,
