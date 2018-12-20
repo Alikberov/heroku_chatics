@@ -948,7 +948,7 @@ async function ParseLogin_async(PassWord) {
 			log(`${Config.ChatLogin}`);
 			https.get(Config.ChatLogin, response => {
 				log(`ParseLogin_async(PassWord)::get.response=${response} setEncoding=${response.setEncoding}`);
-				response.setEncoding('utf8');
+				response.setEncoding('win1251');
 				log(`ParseLogin_async(PassWord)::get.response=${response} bl=${bl}`);
 				response.pipe(bl((err, data) => {
 				    log(`ParseLogin_async(PassWord)::bl`);
@@ -957,7 +957,9 @@ async function ParseLogin_async(PassWord) {
 				}
 				//	data = Buffer.concat(data); // Make one large Buffer of it
 					var txt = new Buffer(data, 'binary');
+					log(`Buffer ----------------------------- ${txt}`);
 					    txt=iconv.decode(txt, 'win1251').toString();
+					log(`decode ------------------------------ ${txt}`);
 					//var myMessage = MyMessage.decode(data);
 				console.log(`// Parse the Phorum page...`);
 				parser.parseComplete(txt);
