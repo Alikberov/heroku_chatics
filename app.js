@@ -30,8 +30,7 @@ var	Config	= {
 				`Вы идентифицированы как «(\\Nick)» ((\\Name))`,
 				`</body>`
 			].join("\r\n"),
-	timefmt		:`(.dd)(|m)/HH(!(^MM))(.ss)`,
-	ExitCode	:0
+	timefmt		:`(.dd)(|m)/HH(!(^MM))(.ss)`
 };
 
 const	log	= console.log;
@@ -1108,16 +1107,6 @@ for(var id in theValues)
 theValuex = new RegExp("\\(\\\\(" + theValuex.join("|") + ")\\)", "gm");
 
 async function my_server(req, res) {
-	if(Config.ExitCode > 0) {
-		server
-		.close(
-				function() {
-					console.log("Basic server closed…");
-					process.exit(0);
-				}
-		);
-		process.exit(0);
-	}
 	////////////////////////////////////////////////////////
 	var	requrl	= unescape(req.url).replace(/\+/g, " ");
 	//
@@ -1403,3 +1392,19 @@ const server = http.createServer(my_server);
 server.listen(port, hosting, () => {
 	log(`Server running at http://${hosting}:${port}/`);
 });
+
+database
+.ref("Preventive")
+.on("value",
+	function(snap) {
+		var	s = snap.val();
+		if(s != "") {
+			server.close(
+				function() {
+					console.log("Basic server closed by ${s}…");
+					process.exit(0);
+				}
+			);
+		}
+	}
+);
