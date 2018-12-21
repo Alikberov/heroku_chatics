@@ -26,11 +26,29 @@ function requiry(name) {
 	}
 }
 
-//const	sys		= require('sys');
+var	Preventive	= "";
+
 const	https				= requiry("https");
 const	http				= requiry("http");
 const	util				= requiry("util");
 const	firebase			= requiry("firebase");
+
+async function my_server(req, res) {
+	{
+		res.statusCode = 501;
+		res.setHeader('Content-Type', 'text/html');
+		if(Preventive == "")
+			res.end(`<h1>New version of script is crashed!</h1><h2>Thanks for Alikberov!</h2>`);
+		else
+			res.end(ExitCode);
+	}
+};
+
+const server = http.createServer(my_server);
+
+server.listen(port, hosting, () => {
+	log(`Stub server running at http://${hosting}:${port}/`);
+});
 
 var	app = firebase.initializeApp(
 	{
@@ -42,34 +60,21 @@ var	app = firebase.initializeApp(
 		messagingSenderId: "149431388574"
 	}
 );
-var	database = firebase.app().database();
 
-database
-.ref("ExitCode")
+firebase
+.app()
+.database()
+.ref("Preventive")
 .on("value",
 	function(snap) {
 		var	s = snap.val();
-		if(s == 0) {
+		if(s == "...") {
 			server.close(
 				function() {
-					console.log("Stub served closed…");
+					console.log("Stub server closed…");
 					process.exit(0);
 				}
 			);
 		}
 	}
 );
-
-async function my_server(req, res) {
-	{
-		res.statusCode = 501;
-		res.setHeader('Content-Type', 'text/html');
-		res.end(`<h1>New version of script is crashed!</h1><h2>Thanks for Alikberov!</h2>`);
-	}
-};
-
-const server = http.createServer(my_server);
-
-server.listen(port, hosting, () => {
-	log(`Stub server running at http://${hosting}:${port}/`);
-});
