@@ -17,7 +17,7 @@
 	"main"		:"app.js",
 	"scripts"	: {
 		"start"	:"npm run start && npm run crash",
-		"basic"	:"node app"
+		"basic"	:"node app",
 		"crash"	:"node stub"
 	},
 	"repository"	: {
