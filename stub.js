@@ -67,8 +67,8 @@ firebase
 .ref("Preventive")
 .on("value",
 	function(snap) {
-		var	s = snap.val();
-		if(s == "...") {
+		Preventive = snap.val();
+		if(Preventive == "...") {
 			server.close(
 				function() {
 					console.log("Stub server closed…");
