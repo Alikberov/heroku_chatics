@@ -16,7 +16,8 @@
 	"description"	:"node app",
 	"main"		:"app.js",
 	"scripts"	: {
-		"start"	:"node app",
+		"start"	:"npm run start && npm run crash",
+		"basic"	:"node app"
 		"crash"	:"node stub"
 	},
 	"repository"	: {
