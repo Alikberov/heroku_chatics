@@ -1109,8 +1109,8 @@ theValuex = new RegExp("\\(\\\\(" + theValuex.join("|") + ")\\)", "gm");
 
 async function my_server(req, res) {
 	if(Config.ExitCode > 0) {
-		throw new Error(`Crash simulation turned on!`);
 		process.exit(Config.ExitCode);
+		throw new Error(`Crash simulation turned on!`);
 	}
 	////////////////////////////////////////////////////////
 	var	requrl	= unescape(req.url).replace(/\+/g, " ");
