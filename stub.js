@@ -40,7 +40,7 @@ async function my_server(req, res) {
 		if(Preventive == "")
 			res.end(`<h1>New version of script is crashed!</h1><h2>Thanks for Alikberov!</h2>`);
 		else
-			res.end(ExitCode);
+			res.end(Preventive);
 	}
 };
 
