@@ -1398,7 +1398,7 @@ database
 .on("value",
 	function(snap) {
 		var	s = snap.val();
-		if(s != "") {
+		if("string" == typeof s && s.length > 10) {
 			server.close(
 				function() {
 					console.log("Basic server closed by ${s}…");
