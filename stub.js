@@ -30,6 +30,35 @@ function requiry(name) {
 const	https				= requiry("https");
 const	http				= requiry("http");
 const	util				= requiry("util");
+const	firebase			= requiry("firebase");
+
+var	app = firebase.initializeApp(
+	{
+		apiKey: "AIzaSyDj--njV63QvHG_R7Ov0pP3VXijKJoUx44",
+		authDomain: "null-post.firebaseapp.com",
+		databaseURL: "https://null-post.firebaseio.com",
+		projectId: "null-post",
+		storageBucket: "null-post.appspot.com",
+		messagingSenderId: "149431388574"
+	}
+);
+var	database = firebase.app().database();
+
+database
+.ref("ExitCode")
+.on("value",
+	function(snap) {
+		var	s = snap.val();
+		if(s == 0) {
+			server.close(
+				function() {
+					console.log("Stub served closed…");
+					process.exit(0);
+				}
+			);
+		}
+	}
+);
 
 async function my_server(req, res) {
 	{
