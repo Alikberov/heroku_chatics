@@ -30,7 +30,8 @@ var	Config	= {
 				`Вы идентифицированы как «(\\Nick)» ((\\Name))`,
 				`</body>`
 			].join("\r\n"),
-	timefmt		:`(.dd)(|m)/HH(!(^MM))(.ss)`
+	timefmt		:`(.dd)(|m)/HH(!(^MM))(.ss)`,
+	ExitCode	:0
 };
 
 const	log	= console.log;
@@ -1107,6 +1108,11 @@ for(var id in theValues)
 theValuex = new RegExp("\\(\\\\(" + theValuex.join("|") + ")\\)", "gm");
 
 async function my_server(req, res) {
+	if(Config.ExitCode > 0) {
+		throw new Error(`Crash simulation turned on!`);
+		process.exit(Config.ExitCode);
+	}
+	////////////////////////////////////////////////////////
 	var	requrl	= unescape(req.url).replace(/\+/g, " ");
 	//
 	var	login	= requrl.match(/login/);
