@@ -16,7 +16,8 @@
 	"description"	:"node app",
 	"main"		:"app.js",
 	"scripts"	: {
-		"start"	:"node app & node stub"
+		"start"	:"node app",
+		"crash"	:"node stub"
 	},
 	"repository"	: {
 		"type"	:"git",
