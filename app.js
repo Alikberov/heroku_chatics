@@ -1187,40 +1187,43 @@ async function my_server(req, res) {
 	try { journal.user.set(nick); journal.users.set(tmp.join("\r\n")); } catch(e) { log(e); }
 	if(visiting) {
 		log(`////\t${szTheme} 0:${visiting[0]} 1:${visiting[1]} 2:${visiting[2]}`);
+		if("show" == visiting[1]) {
+			try {
+				var pages = [];
+				for(var i = 0; i < pagesCounting.length; ++ i) {
+					var	sz = pagesCounting[i].split(/\t/);
+					pages.push(`<tr><td>${sz[0]}</td><td><a href='${sz[1]}'>${sz[2]}</a></td></tr>`);
+				}
+				res.statusCode = 200;
+				res.setHeader("Content-Type", "text/html; charset=utf-8");
+				res.end(`<html><body><table><tr><th>Counts</th><th>Page</th></tr>\r\n${pages.join("\r\n")}</table></body>`);
+				return;
+			} catch(e) {
+				log(`// pageCounting: ${e}`);
+			}
+		}
 		if((null != pagesCounting) && szTheme) {
 			log(`// Counting for ${szTheme} - ${visiting[1]}`);
 			try {
-				if("show" == visiting[1]) {
-					var pages = [];
-					for(var i = 0; i < pagesCounting.length; ++ i) {
-						var	sz = pagesCounting[i].split(/\t/);
-						pages.push(`<tr><td>${sz[0]}</td><td><a href='${sz[1]}'>${sz[2]}</a></td></tr>`);
+				for(var i = 0; i < pagesCounting.length; ++ i) {
+					var	sz = pagesCounting[i].split(/\t/);
+					log(`// ${pagesCounting[i]}:${sz[0]} - ${sz[1]}`);
+					if(sz[1] == szTheme) {
+						log(`match`);
+						pagesCounting[i] = `${counter = (Number(sz[0]) + 1)}\t${szTheme}\t${visiting[1]}`;
+						break;
 					}
-					res.statusCode = 200;
-					res.setHeader("Content-Type", "text/html; charset=utf-8");
-					res.end(`<html><body><table><tr><th>Counts</th><th>Page</th></tr>\r\n${pages.join("\r\n")}</table></body>`);
-					return;
-				} else {
-					for(var i = 0; i < pagesCounting.length; ++ i) {
-						var	sz = pagesCounting[i].split(/\t/);
-						log(`// ${pagesCounting[i]}:${sz[0]} - ${sz[1]}`);
-						if(sz[1] == szTheme) {
-							log(`match`);
-							pagesCounting[i] = `${counter = (Number(sz[0]) + 1)}\t${szTheme}\t${visiting[1]}`;
-							break;
-						}
-					}
-					if(i == pagesCounting.length) {
-						pagesCounting.push(`1\t${szTheme}\t${visiting[1]}`);
-						log(`unmatch`);
-					}
-					lockCounters = true;
-					database.ref("journal/counters").set(pagesCounting.join("\r\n"));
-					res.statusCode = 200;
-					res.setHeader("Content-Type", "text/html; charset=utf-8");
-					res.end("" + counter)
-					return;
 				}
+				if(i == pagesCounting.length) {
+					pagesCounting.push(`1\t${szTheme}\t${visiting[1]}`);
+					log(`unmatch`);
+				}
+				lockCounters = true;
+				database.ref("journal/counters").set(pagesCounting.join("\r\n"));
+				res.statusCode = 200;
+				res.setHeader("Content-Type", "text/html; charset=utf-8");
+				res.end("" + counter)
+				return;
 			} catch(e) {
 				log(`// pageCounting: ${e}`);
 			}
