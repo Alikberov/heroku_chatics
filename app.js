@@ -1206,7 +1206,7 @@ async function my_server(req, res) {
 				}
 				res.statusCode = 200;
 				res.setHeader("Content-Type", "text/html; charset=utf-8");
-				res.end(Config.observes.replace("(\\observes)", pages.join("\r\n"));
+				res.end(Config.observes.replace("(\\observes)", pages.join("\r\n")));
 				return;
 			} catch(e) {
 				log(`// pageCounting: ${e}`);
