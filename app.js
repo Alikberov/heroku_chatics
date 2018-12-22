@@ -1109,7 +1109,7 @@ theValuex = new RegExp("\\(\\\\(" + theValuex.join("|") + ")\\)", "gm");
 
 async function my_server(req, res) {
 	////////////////////////////////////////////////////////
-	var	requrl	= unescape(req.url).replace(/\+/g, " ");
+	var	requrl	= unescape(req.url.replace(/\+/g, " "));
 	var	szTheme	= "";
 	try { var	szTheme	= req.headers.referer.split(/[&#]/)[0]; } catch(e) { }
 	var	counter	= "";
@@ -1186,7 +1186,7 @@ async function my_server(req, res) {
 		tmp.push(theUsers[id].nick);
 	try { journal.user.set(nick); journal.users.set(tmp.join("\r\n")); } catch(e) { log(e); }
 	if(visiting) {
-		log(`////\t${szTheme}`);
+		log(`////\t${szTheme} 0:${visiting[0]} 1:${visiting[1]} 2:${visiting[2]}`);
 		if((null != pagesCounting) && szTheme) {
 			log(`// Counting for ${szTheme} - ${visiting[1]}`);
 			try {
