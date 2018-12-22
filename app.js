@@ -1109,19 +1109,25 @@ theValuex = new RegExp("\\(\\\\(" + theValuex.join("|") + ")\\)", "gm");
 async function my_server(req, res) {
 	////////////////////////////////////////////////////////
 	var	requrl	= unescape(req.url).replace(/\+/g, " ");
-	var	szTheme	= requrl.split(/[&#]/)[0];
+	var	szTheme	= req.url.split(/[&#]/)[0];
 	var	counter	= "";
+	log(`////\t${szTheme}`);
 	if((null != pagesCounting) && szTheme) {
+		log(`// Counting for ${szTheme}`);
 		try {
 			for(var i = 0; i < pagesCounting.length; ++ i) {
 				var	sz = pagesCounting[i].split(/\t/);
+				log(`// ${pagesCounting[i]}:${sz[0]} - ${sz[1]}`);
 				if(sz[1] == szTheme) {
+					log(`match`);
 					pagesCounting[i] = `${counter = (Number(sz[0]) + 1)}\t${szTheme}`;
 					break;
 				}
 			}
-			if(i == pagesCounting.length)
+			if(i == pagesCounting.length) {
 				pagesCounting.push(`1\t${szTheme}`);
+				log(`unmatch`);
+			}
 			database.ref("journal/counters").set(pagesCounting.join("\r\n"));
 		} catch(e) {
 			log(`// pageCounting: ${e}`);
