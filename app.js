@@ -30,7 +30,15 @@ var	Config	= {
 				`Вы идентифицированы как «(\\Nick)» ((\\Name))`,
 				`</body>`
 			].join("\r\n"),
-	timefmt		:`(.dd)(|m)/HH(!(^MM))(.ss)`
+	timefmt		:`(.dd)(|m)/HH(!(^MM))(.ss)`,
+	observes	:[
+				`<html>`,
+				`<head><meta http-equiv='refresh' content='60'></head>`,
+				`<body><table>`,
+				`<tr><th>Counts</th><th>Page</th></tr>`,
+				`(\\Observes)`,
+				`</table></body>`
+			].join("\r\n")
 };
 
 const	log	= console.log;
@@ -1198,7 +1206,7 @@ async function my_server(req, res) {
 				}
 				res.statusCode = 200;
 				res.setHeader("Content-Type", "text/html; charset=utf-8");
-				res.end(`<html><body><table><tr><th>Counts</th><th>Page</th></tr>\r\n${pages.join("\r\n")}</table></body>`);
+				res.end(Config.observes.replace("(\\observes)", pages.join("\r\n"));
 				return;
 			} catch(e) {
 				log(`// pageCounting: ${e}`);
