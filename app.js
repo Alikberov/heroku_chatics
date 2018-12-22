@@ -1109,8 +1109,9 @@ theValuex = new RegExp("\\(\\\\(" + theValuex.join("|") + ")\\)", "gm");
 async function my_server(req, res) {
 	////////////////////////////////////////////////////////
 	var	requrl	= unescape(req.url).replace(/\+/g, " ");
+	var	szTheme	= requrl.split(/[&#]/)[0];
 	var	counter	= "";
-	if(null != pagesCounting) {
+	if((null != pagesCounting) && szTheme) {
 		try {
 			for(var i = 0; i < pagesCounting.length; ++ i) {
 				var	sz = pagesCounting[i].split(/\t/);
