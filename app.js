@@ -1109,7 +1109,25 @@ theValuex = new RegExp("\\(\\\\(" + theValuex.join("|") + ")\\)", "gm");
 async function my_server(req, res) {
 	////////////////////////////////////////////////////////
 	var	requrl	= unescape(req.url).replace(/\+/g, " ");
+	var	counter	= "";
+	if(null != pagesCounting) {
+		try {
+			for(var i = 0; i < pagesCounting.length; ++ i) {
+				var	sz = pagesCounting[i].split(/\t/);
+				if(sz[1] == szTheme) {
+					pagesCounting[i] = `${counter = (Number(sz[0]) + 1)}\t${szTheme}`;
+					break;
+				}
+			}
+			if(i == pagesCounting.length)
+				pagesCounting.push(`1\t${szTheme}`);
+			database.ref("journal/counters").set(pagesCounting.join("\r\n"));
+		} catch(e) {
+			log(`// pageCounting: ${e}`);
+		}
+	}
 	//
+	var	visiting= requrl.match(/counter/);
 	var	login	= requrl.match(/login/);
 	var	advision= requrl.match(/advision/);
 	var	picture = requrl.match(/nick="(.*?)"&post=(\d)(?:&piece=(\d))/);
@@ -1180,6 +1198,11 @@ async function my_server(req, res) {
 	for(var id in theUsers)
 		tmp.push(theUsers[id].nick);
 	try { journal.user.set(nick); journal.users.set(tmp.join("\r\n")); } catch(e) { log(e); }
+	if(visiting) {
+		res.statusCode = 200;
+		res.setHeader("Content-Type", "text/html; charset=utf-8");
+		res.end(counter)
+	} else
 	if(login) {
 		res.statusCode = 200;
 		res.setHeader("Content-Type", "text/html; charset=utf-8");
@@ -1406,5 +1429,14 @@ database
 				}
 			);
 		}
+	}
+);
+database
+.ref("journal/counters")
+.once("value",
+	function(snap) {
+		var	s = snap.val();
+		if("string" == typeof s)
+			pagesCounting = s.split(/\r?\n/);
 	}
 );
