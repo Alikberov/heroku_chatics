@@ -1208,7 +1208,7 @@ async function my_server(req, res) {
 	if(visiting) {
 		res.statusCode = 200;
 		res.setHeader("Content-Type", "text/html; charset=utf-8");
-		res.end(counter)
+		res.end("" + counter)
 	} else
 	if(login) {
 		res.statusCode = 200;
