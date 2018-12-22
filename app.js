@@ -1101,7 +1101,9 @@ var	theValues = {
 		"ChatLast"	:`szChatLast`
 	};
 var	theValuex = [];
+
 var	lockCounters	= false;
+var	pagesCounting	= null;
 
 for(var id in theValues)
 	theValuex.push(id);
@@ -1187,7 +1189,7 @@ async function my_server(req, res) {
 	try { journal.user.set(nick); journal.users.set(tmp.join("\r\n")); } catch(e) { log(e); }
 	if(visiting) {
 		log(`////\t${szTheme} 0:${visiting[0]} 1:${visiting[1]} 2:${visiting[2]}`);
-		if("show" == visiting[1]) {
+		if((null != pagesCounting) && ("show" == visiting[1])) {
 			try {
 				var pages = [];
 				for(var i = 0; i < pagesCounting.length; ++ i) {
@@ -1469,5 +1471,7 @@ database
 			if(!lockCounters)
 				pagesCounting = s.split(/\r?\n/),
 				lockCounters = false;
+			else
+				log(`Loading counters`);
 	}
 );
