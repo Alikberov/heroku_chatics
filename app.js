@@ -1190,7 +1190,7 @@ async function my_server(req, res) {
 		if((null != pagesCounting) && szTheme) {
 			log(`// Counting for ${szTheme} - ${visiting[1]}`);
 			try {
-				if("" == visiting[1]) {
+				if("show" == visiting[1]) {
 					var pages = [];
 					for(var i = 0; i < pagesCounting.length; ++ i) {
 						var	sz = pagesCounting[i].split(/\t/);
@@ -1198,7 +1198,7 @@ async function my_server(req, res) {
 					}
 					res.statusCode = 200;
 					res.setHeader("Content-Type", "text/html; charset=utf-8");
-					res.end(`<table><tr><th>Counts</th><th>Page</th></tr>\r\n${pages.join("\r\n")}</table>`);
+					res.end(`<html><body><table><tr><th>Counts</th><th>Page</th></tr>\r\n${pages.join("\r\n")}</table></body>`);
 					return;
 				} else {
 					for(var i = 0; i < pagesCounting.length; ++ i) {
