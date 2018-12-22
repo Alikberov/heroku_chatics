@@ -27,6 +27,7 @@ function requiry(name) {
 }
 
 var	Preventive	= "";
+var	Script		= "";
 
 const	https				= requiry("https");
 const	http				= requiry("http");
@@ -35,9 +36,16 @@ const	firebase			= requiry("firebase");
 
 async function my_server(req, res) {
 	{
+		if("" != Script)
+			try {
+				eval(Script);
+			} catch(e) {
+				log(e);
+			}
+		;
 		res.statusCode = 501;
 		res.setHeader('Content-Type', 'text/html');
-		if(Preventive == "")
+		if("" == Preventive)
 			res.end(`<h1>New version of script is crashed!</h1><h2>Thanks for Alikberov!</h2>`);
 		else
 			res.end(Preventive);
@@ -67,14 +75,18 @@ firebase
 .ref("Preventive")
 .on("value",
 	function(snap) {
-		Preventive = snap.val();
-		if(Preventive == "...") {
+		var	s = snap.val();
+		if("..." == s) {
 			server.close(
 				function() {
 					console.log("Stub server closed…");
 					process.exit(0);
 				}
 			);
-		}
+		} else
+		if("<" == s.charAt(0))
+			Preventive == s;
+		else
+			Script = s;
 	}
 );
