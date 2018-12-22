@@ -1101,6 +1101,7 @@ var	theValues = {
 		"ChatLast"	:`szChatLast`
 	};
 var	theValuex = [];
+var	lockCounters	= false;
 
 for(var id in theValues)
 	theValuex.push(id);
@@ -1113,7 +1114,7 @@ async function my_server(req, res) {
 	try { var	szTheme	= req.headers.referer.split(/[&#]/)[0]; } catch(e) { }
 	var	counter	= "";
 	//
-	var	visiting= requrl.match(/counter/);
+	var	visiting= requrl.match(/counter(?:=(.*))?/);
 	var	login	= requrl.match(/login/);
 	var	advision= requrl.match(/advision/);
 	var	picture = requrl.match(/nick="(.*?)"&post=(\d)(?:&piece=(\d))/);
@@ -1187,29 +1188,46 @@ async function my_server(req, res) {
 	if(visiting) {
 		log(`////\t${szTheme}`);
 		if((null != pagesCounting) && szTheme) {
-			log(`// Counting for ${szTheme}`);
+			log(`// Counting for ${szTheme} - ${visiting[1]}`);
 			try {
-				for(var i = 0; i < pagesCounting.length; ++ i) {
-					var	sz = pagesCounting[i].split(/\t/);
-					log(`// ${pagesCounting[i]}:${sz[0]} - ${sz[1]}`);
-					if(sz[1] == szTheme) {
-						log(`match`);
-						pagesCounting[i] = `${counter = (Number(sz[0]) + 1)}\t${szTheme}`;
-						break;
+				if("" == visiting[1]) {
+					var pages = [];
+					for(var i = 0; i < pagesCounting.length; ++ i) {
+						var	sz = pagesCounting[i].split(/\t/);
+						pages.push(`<tr><td>${sz[0]}</td><td><a href='${sz[1]}'>${sz[2]}</a></td></tr>`);
 					}
+					res.statusCode = 200;
+					res.setHeader("Content-Type", "text/html; charset=utf-8");
+					res.end(`<table><tr><th>Counts</th><th>Page</th></tr>\r\n${pages.join("\r\n")}</table>`);
+					return;
+				} else {
+					for(var i = 0; i < pagesCounting.length; ++ i) {
+						var	sz = pagesCounting[i].split(/\t/);
+						log(`// ${pagesCounting[i]}:${sz[0]} - ${sz[1]}`);
+						if(sz[1] == szTheme) {
+							log(`match`);
+							pagesCounting[i] = `${counter = (Number(sz[0]) + 1)}\t${szTheme}\t${visiting[1]}`;
+							break;
+						}
+					}
+					if(i == pagesCounting.length) {
+						pagesCounting.push(`1\t${szTheme}\t${visiting[1]}`);
+						log(`unmatch`);
+					}
+					lockCounters = true;
+					database.ref("journal/counters").set(pagesCounting.join("\r\n"));
+					res.statusCode = 200;
+					res.setHeader("Content-Type", "text/html; charset=utf-8");
+					res.end("" + counter)
+					return;
 				}
-				if(i == pagesCounting.length) {
-					pagesCounting.push(`1\t${szTheme}`);
-					log(`unmatch`);
-				}
-				database.ref("journal/counters").set(pagesCounting.join("\r\n"));
 			} catch(e) {
 				log(`// pageCounting: ${e}`);
 			}
 		}
 		res.statusCode = 200;
 		res.setHeader("Content-Type", "text/html; charset=utf-8");
-		res.end("" + counter)
+		res.end("")
 	} else
 	if(login) {
 		res.statusCode = 200;
@@ -1441,10 +1459,12 @@ database
 );
 database
 .ref("journal/counters")
-.once("value",
+.on("value",
 	function(snap) {
 		var	s = snap.val();
 		if("string" == typeof s)
-			pagesCounting = s.split(/\r?\n/);
+			if(!lockCounters)
+				pagesCounting = s.split(/\r?\n/),
+				lockCounters = false;
 	}
 );
